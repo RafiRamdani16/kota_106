@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -85,7 +83,7 @@ class HistoryAttendanceController extends GetxController with CacheManager {
 
   NetworkImage setImageView(String photoName) {
     try {
-      return  NetworkImage('http:balalall/$photoName');
+      return NetworkImage('http:balalall/$photoName');
     } catch (e) {
       return NetworkImage('assets/images/Icon/AccountBox.png');
     }

@@ -4,7 +4,7 @@ import 'package:hexcolor/hexcolor.dart';
 
 
 import '../../../Controllers/AttendanceController/AttendanceController.dart';
-import '../../../Models/ScheduleModel.dart';
+// import '../../../Models/ScheduleModel.dart';
 import 'CheckInForm.dart';
 import 'CheckOutForm.dart';
 
@@ -12,7 +12,7 @@ class RemotePresensiPage extends GetView<AttendanceController> {
   @override
   Widget build(BuildContext context) {
     var screenHeightSize = MediaQuery.of(context).size.height;
-    ScheduleModel scheduleModel = Get.put(ScheduleModel());
+    // ScheduleModel scheduleModel = Get.put(ScheduleModel());
 
     var currentTime = controller.time.value;
     // var scheduleStartTime = scheduleModel.startCheckinAt;
