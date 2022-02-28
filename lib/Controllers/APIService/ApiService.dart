@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart' hide Headers;
-import 'package:get/get.dart';
+
 
 import 'package:retrofit/http.dart';
 

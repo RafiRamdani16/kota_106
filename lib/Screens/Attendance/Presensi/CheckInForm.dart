@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kota_106/Controllers/LoginController.dart';
+
 
 import '../../../Controllers/AttendanceController/AttendanceController.dart';
 
@@ -13,7 +13,6 @@ class CheckInForm extends GetView<AttendanceController> {
     // controller.currentTime();
 
     controller.currentDate();
-    LoginController loginController = Get.put(LoginController());
     var screenHeightSize = MediaQuery.of(context).size.height;
     var screenWidthSize = MediaQuery.of(context).size.width;
     final _formkey = Get.put(GlobalKey<FormState>());

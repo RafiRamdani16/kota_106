@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Controllers/LoginController.dart';
 
-import '../../Models/LoginModel.dart';
+
 import 'Presensi/OfficePresensi.dart';
 import 'Presensi/RemotePresensi.dart';
 
@@ -21,7 +21,10 @@ class AttendanceScreen extends StatelessWidget {
             EdgeInsets.only(top: screenHeightSize / 10, left: 10, right: 10),
         child: SingleChildScrollView(
           child: Center(
+            widthFactor: screenWidthSize,
+            heightFactor: screenHeightSize,
             child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
               spacing: 10,
               runSpacing: 10,
               children: [

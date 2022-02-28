@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../Controllers/AttendanceController/AttendanceController.dart';
-import '../../../Models/ScheduleModel.dart';
+// import '../../../Models/ScheduleModel.dart';
 import 'OfficeCheckInForm.dart';
 import 'OfficeCheckOutForm.dart';
 
 class OfficePresensiPage extends GetView<AttendanceController> {
   @override
   Widget build(BuildContext context) {
-    ScheduleModel scheduleModel = Get.put(ScheduleModel());
+    // ScheduleModel scheduleModel = Get.put(ScheduleModel());
     GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
     // var statusScan = controller.statusScan.value;
 
