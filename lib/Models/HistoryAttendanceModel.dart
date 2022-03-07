@@ -1,25 +1,20 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:kota_106/Models/AttendanceModel.dart';
 
 part 'HistoryAttendanceModel.g.dart';
 
 @JsonSerializable()
 class HistoryAttendanceModel {
   @JsonKey()
-  late String checkInTime;
+  late int totalData;
   @JsonKey()
-  late String checkOutTime;
+  late int totalPage;
   @JsonKey()
-  late String checkInLocation;
+  late int pageSize;
   @JsonKey()
-  late String checkOutLocation;
+  late int currentPage;
   @JsonKey()
-  late String checkInPhotoName;
-  @JsonKey()
-  late String checkInDate;
-  @JsonKey()
-  late String checkOutDate;
-  @JsonKey()
-  late String doneList;
+  late List<AttendanceModel> data;
 
   HistoryAttendanceModel();
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-
 import '../../../Controllers/AttendanceController/AttendanceController.dart';
 // import '../../../Models/ScheduleModel.dart';
 import 'CheckInForm.dart';
@@ -19,7 +18,8 @@ class RemotePresensiPage extends GetView<AttendanceController> {
     var scheduleStartTime = controller.time.value;
     // var scheduleEndTime = scheduleModel.endCheckinAt;
     var scheduleEndTime = controller.time.value;
-
+    controller.getAddress();
+    controller.currentDate();
     const List<Tab> tabs = <Tab>[
       Tab(text: 'Check-in'),
       Tab(text: 'Check-out'),
@@ -39,17 +39,21 @@ class RemotePresensiPage extends GetView<AttendanceController> {
               tabs: tabs,
               labelColor: Colors.black,
             ),
-            Container(
-              color: HexColor('C4C4C4'),
-              height: screenHeightSize / 2,
-              child: TabBarView(children: [
-                currentTime == scheduleStartTime
-                    ? CheckInForm()
-                    : controller.showAlert(),
-                currentTime == scheduleEndTime
-                    ? CheckOutForm()
-                    : controller.showAlert()
-              ]),
+            SingleChildScrollView(
+              child: Container(
+                color: HexColor('F5F5F5F5'),
+                height: screenHeightSize / 2,
+                child: TabBarView(children: [
+                  currentTime == scheduleStartTime &&
+                          controller.statusCheckinOnline.value == false
+                      ? CheckInForm()
+                      : controller.showAlert(),
+                  currentTime == scheduleEndTime &&
+                          controller.statusCheckinOnline.value == true
+                      ? CheckOutForm()
+                      : controller.showAlert()
+                ]),
+              ),
             )
           ],
         ),

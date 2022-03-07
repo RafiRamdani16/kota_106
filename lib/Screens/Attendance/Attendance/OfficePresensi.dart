@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import '../../../Controllers/AttendanceController/AttendanceController.dart';
 // import '../../../Models/ScheduleModel.dart';
@@ -34,11 +35,12 @@ class OfficePresensiPage extends GetView<AttendanceController> {
               labelColor: Colors.black,
             ),
             Container(
+              color: HexColor('F5F5F5F5'),
               height: screenHeightSize / 2,
               child: TabBarView(children: [
                 // controller.scanQRPage(qrKey),
                 Obx(() {
-                  return controller.statusScan.value
+                  return controller.statusScan.value 
                       ? OfficeCheckInForm()
                       : controller.scanQRPage(qrKey, context);
                 }),

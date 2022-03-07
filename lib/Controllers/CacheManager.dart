@@ -18,38 +18,37 @@ mixin CacheManager {
   }
 
   int? getUserId() {
-    return box.read(CacheManagerKey.userId.toString());
+    return box.read(CacheManagerKey.USERID.toString());
   }
 
   String? getName() {
-    return box.read(CacheManagerKey.name.toString());
+    return box.read(CacheManagerKey.NAME.toString());
   }
   int? getScheduleId() {
-    return box.read(CacheManagerKey.scheduleId.toString());
+    return box.read(CacheManagerKey.SCHEDULEID.toString());
   }
   String? getPosition() {
-    return box.read(CacheManagerKey.position.toString());
+    return box.read(CacheManagerKey.POSITION.toString());
   }
 
   Future<void> removeToken() async {
     await box.remove(CacheManagerKey.TOKEN.toString());
-    Get.offAndToNamed('/loginPage');
   }
 
   Future<bool> saveLoginData(
       String name, String position, int userId, int scheduleId) async {
-    await box.write(CacheManagerKey.name.toString(), name);
-    await box.write(CacheManagerKey.position.toString(), position);
-    await box.write(CacheManagerKey.userId.toString(), userId);
-    await box.write(CacheManagerKey.scheduleId.toString(), scheduleId);
+    await box.write(CacheManagerKey.NAME.toString(), name);
+    await box.write(CacheManagerKey.POSITION.toString(), position);
+    await box.write(CacheManagerKey.USERID.toString(), userId);
+    await box.write(CacheManagerKey.SCHEDULEID.toString(), scheduleId);
     return true;
   }
 
   Future<void> removeLoginData() async {
-    await box.remove(CacheManagerKey.name.toString());
-    await box.remove(CacheManagerKey.position.toString());
-    await box.remove(CacheManagerKey.userId.toString());
-    await box.remove(CacheManagerKey.scheduleId.toString());
+    await box.remove(CacheManagerKey.NAME.toString());
+    await box.remove(CacheManagerKey.POSITION.toString());
+    await box.remove(CacheManagerKey.USERID.toString());
+    await box.remove(CacheManagerKey.SCHEDULEID.toString());
   }
 }
-enum CacheManagerKey { TOKEN, REFRESHTOKEN, userId, scheduleId, position, name }
+enum CacheManagerKey { TOKEN, REFRESHTOKEN, USERID, SCHEDULEID, POSITION, NAME }

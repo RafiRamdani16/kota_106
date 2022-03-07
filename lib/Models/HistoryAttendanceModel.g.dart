@@ -9,24 +9,20 @@ part of 'HistoryAttendanceModel.dart';
 HistoryAttendanceModel _$HistoryAttendanceModelFromJson(
         Map<String, dynamic> json) =>
     HistoryAttendanceModel()
-      ..checkInTime = json['checkInTime'] as String
-      ..checkOutTime = json['checkOutTime'] as String
-      ..checkInLocation = json['checkInLocation'] as String
-      ..checkOutLocation = json['checkOutLocation'] as String
-      ..checkInPhotoName = json['checkInPhotoName'] as String
-      ..checkInDate = json['checkInDate'] as String
-      ..checkOutDate = json['checkOutDate'] as String
-      ..doneList = json['doneList'] as String;
+      ..totalData = json['totalData'] as int
+      ..totalPage = json['totalPage'] as int
+      ..pageSize = json['pageSize'] as int
+      ..currentPage = json['currentPage'] as int
+      ..data = (json['data'] as List<dynamic>)
+          .map((e) => AttendanceModel.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$HistoryAttendanceModelToJson(
         HistoryAttendanceModel instance) =>
     <String, dynamic>{
-      'checkInTime': instance.checkInTime,
-      'checkOutTime': instance.checkOutTime,
-      'checkInLocation': instance.checkInLocation,
-      'checkOutLocation': instance.checkOutLocation,
-      'checkInPhotoName': instance.checkInPhotoName,
-      'checkInDate': instance.checkInDate,
-      'checkOutDate': instance.checkOutDate,
-      'doneList': instance.doneList,
+      'totalData': instance.totalData,
+      'totalPage': instance.totalPage,
+      'pageSize': instance.pageSize,
+      'currentPage': instance.currentPage,
+      'data': instance.data,
     };

@@ -6,21 +6,20 @@ import 'HistoryLeave/HistoryLeavePage.dart';
 import 'HistoryOvertime/HistoryOvertimePage.dart';
 import 'HistoryPermit/HistoryPermitPage.dart';
 import 'HistoryPresensi/HistoryPresensiPage.dart';
-import 'HistoryReimburse/HistoryReimbursePage.dart';
+
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    var _selectedIndex = 0.obs;
+    var _selectedIndex = 1.obs;
     var screenHeightSize = MediaQuery.of(context).size.height;
+    var screenWidthSize = MediaQuery.of(context).size.width;
     List<Widget> tabs = <Widget>[
       Container(width: 75, child: Tab(text: 'Attendance')),
       Container(width: 70, child: Tab(text: 'Overtime')),
       Container(width: 70, child: Tab(text: 'Leave')),
       Container(width: 70, child: Tab(text: 'Permit')),
-      Container(width: 70, child: Tab(text: 'Reimburse')),
     ];
     return Scaffold(
       appBar: AppBar(
@@ -30,11 +29,10 @@ class HistoryScreen extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       body: DefaultTabController(
-        length: 5,
+        length: 4,
         initialIndex: 0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Wrap(
+          spacing: 10,
           children: <Widget>[
             Padding(padding: EdgeInsets.only(bottom: 10)),
             TabBar(
@@ -48,12 +46,12 @@ class HistoryScreen extends StatelessWidget {
             Container(
               color: HexColor('F5F5F5'),
               height: screenHeightSize /2 + 173,
+              width: screenWidthSize,
               child: TabBarView(children: [
                 HistoryPresensiPage(),
                 HistoryOvertimePage(),
                 HistoryLeavePage(),
                 HistoryPermitPage(),
-                HistoryReimbursePage()
               ]),
             )
           ],

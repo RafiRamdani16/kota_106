@@ -45,9 +45,9 @@ class LoginController extends GetxController with CacheManager {
     try {
       await _apiClient.login(email, password).then((response) async {
         var status = response.status;
-        print(status);
+        print("status1: $status");
         if (status == 200) {
-          LoginModel tokenModel = LoginModel.fromJson(response.data);
+          LoginModel tokenModel = response.data;
           _authenticationManager.login(
               tokenModel.accessToken,
               tokenModel.refreshToken,
@@ -56,13 +56,29 @@ class LoginController extends GetxController with CacheManager {
               tokenModel.id,
               tokenModel.scheduleId);
 
-          name.value = tokenModel.name;
-          position.value = tokenModel.position;
           // userId.value = tokenModel.id;
           // scheduleId.value = tokenModel.scheduleId;
           Get.offAndToNamed('/');
         } else {
-          print('Status: ${response.status}');
+          Get.defaultDialog(
+            radius: 10.0,
+            contentPadding: const EdgeInsets.all(20.0),
+            title: 'ALERT',
+            titleStyle: TextStyle(color: Colors.red),
+            middleText: 'Terjadi Kesalahan, Silahkan Ulangi Kembali',
+            textConfirm: 'Confirm',
+            confirm: OutlinedButton.icon(
+              onPressed: () => Get.back(),
+              icon: const Icon(
+                Icons.check,
+                color: Colors.blue,
+              ),
+              label: const Text(
+                'Confirm',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+          );
         }
       });
     } catch (e) {

@@ -9,6 +9,7 @@ class AuthenticationManager extends GetxController with CacheManager {
     isLogged.value = false;
     removeLoginData();
     removeToken();
+    Get.offNamed('/loginPage');
   }
 
   void login(String? token, String? refreshToken, String name, String position,
@@ -21,7 +22,9 @@ class AuthenticationManager extends GetxController with CacheManager {
 
   void checkLoginStatus() {
     final token = getToken();
-    if (token != null) {
+    final name = getName();
+    final position = getPosition();
+    if (token != null && name != null && position != null) {
       isLogged.value = true;
     }
   }
