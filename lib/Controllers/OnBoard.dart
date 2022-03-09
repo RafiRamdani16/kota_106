@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota_106/Screens/login/LoginScreen.dart';
 
-import '../Screens/Attendance/AttendancePage.dart';
+import '../Screens/Attendance/AttendanceScreen.dart';
 import 'Authentication.dart';
 
 class OnBoard extends StatelessWidget {

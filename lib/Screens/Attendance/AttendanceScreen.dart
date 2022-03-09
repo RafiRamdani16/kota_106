@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:kota_106/Controllers/AttendanceController/HistoryAttendanceController.dart';
 import 'package:kota_106/Controllers/LoginController.dart';
+import 'package:kota_106/Screens/History/HistoryPresensi/DetailHistoryPresensiPage.dart';
+
+import 'Attendance/OfficePresensi.dart';
+import 'Attendance/RemotePresensi.dart';
 
 
-import 'Presensi/OfficePresensi.dart';
-import 'Presensi/RemotePresensi.dart';
 
 class AttendanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // LoginModel user = Get.put(LoginModel());
     LoginController controller = Get.put(LoginController());
+    HistoryAttendanceController historyAttendanceController =
+        Get.put(HistoryAttendanceController());
     var _selectedIndex = 0.obs;
     var screenHeightSize = MediaQuery.of(context).size.height;
     var screenWidthSize = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Padding(
-        padding:
-            EdgeInsets.only(top: screenHeightSize / 10, left: 10, right: 10),
-        child: SingleChildScrollView(
-          child: Center(
-            widthFactor: screenWidthSize,
-            heightFactor: screenHeightSize,
+        padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+        child: Center(
+          child: SingleChildScrollView(
             child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
+              direction: Axis.vertical,
               spacing: 10,
               runSpacing: 10,
               children: [
@@ -82,11 +84,13 @@ class AttendanceScreen extends StatelessWidget {
                     ),
                   );
                 }),
-                Row(
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 20,
                   children: [
                     Container(
                       alignment: Alignment.centerLeft,
-                      width: screenWidthSize / 2 - 10,
+                      width: 110,
                       height: 100,
                       child: Card(
                         elevation: 15,
@@ -99,51 +103,54 @@ class AttendanceScreen extends StatelessWidget {
                                       'assets/images/BackgroundCard.jpg'),
                                   fit: BoxFit.fill)),
                           child: ListTile(
-                            title: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.home_outlined),
-                                    Text(
-                                      'Remote Working',
-                                      style: TextStyle(
-                                          fontSize: 14, fontFamily: 'ROBOTO'),
-                                    )
-                                  ],
-                                ),
-                                Container(
-                                  width: screenWidthSize / 4,
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(15.0)),
-                                          elevation: 10,
-                                          primary: HexColor("363636")),
-                                      onPressed: () async {
-                                        await showModalBottomSheet(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return RemotePresensiPage();
-                                            });
-                                      },
-                                      child: Text(
-                                        "Open",
-                                        style: TextStyle(
-                                            fontFamily: "Roboto",
-                                            fontSize: 16,
-                                            color: Colors.white),
-                                      )),
-                                ),
-                              ],
+                            title: Expanded(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Remote Working',
+                                    style: TextStyle(
+                                        fontSize: 9, fontFamily: 'Roboto'),
+                                  ),
+                                  Padding(padding: EdgeInsets.only(bottom: 5.0)),
+                                  Icon(
+                                    Icons.home_outlined,
+                                    size: 30,
+                                  ),
+                                  Padding(padding: EdgeInsets.only(bottom: 5.0)),
+                                  Container(
+                                    width: 80,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15.0)),
+                                            elevation: 10,
+                                            primary: HexColor("363636")),
+                                        onPressed: () async {
+                                          await showModalBottomSheet(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return RemotePresensiPage();
+                                              });
+                                        },
+                                        child: Text(
+                                          "Open",
+                                          style: TextStyle(
+                                              fontFamily: "Roboto",
+                                              fontSize: 10,
+                                              color: Colors.white),
+                                        )),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
                     Container(
-                      alignment: Alignment.centerRight,
-                      width: screenWidthSize / 2 - 10,
+                      alignment: Alignment.centerLeft,
+                      width: 110,
                       height: 100,
                       child: Card(
                         elevation: 15,
@@ -158,18 +165,19 @@ class AttendanceScreen extends StatelessWidget {
                           child: ListTile(
                             title: Column(
                               children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.domain_outlined),
-                                    Text(
-                                      'Office Working',
-                                      style: TextStyle(
-                                          fontSize: 14, fontFamily: 'ROBOTO'),
-                                    )
-                                  ],
+                                Text(
+                                  'Office Working',
+                                  style: TextStyle(
+                                      fontSize: 10, fontFamily: 'Roboto'),
                                 ),
+                                Padding(padding: EdgeInsets.only(bottom: 5.0)),
+                                Icon(
+                                  Icons.domain_outlined,
+                                  size: 30,
+                                ),
+                                Padding(padding: EdgeInsets.only(bottom: 5.0)),
                                 Container(
-                                  width: screenWidthSize / 4,
+                                  width: 80,
                                   child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
@@ -189,7 +197,7 @@ class AttendanceScreen extends StatelessWidget {
                                         "Open",
                                         style: TextStyle(
                                             fontFamily: "Roboto",
-                                            fontSize: 16,
+                                            fontSize: 10,
                                             color: Colors.white),
                                       )),
                                 ),
@@ -198,7 +206,66 @@ class AttendanceScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                    )
+                    ),
+                    Container(
+                      alignment: Alignment.center,
+                      width: 110,
+                      height: 100,
+                      child: Card(
+                        elevation: 15,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                      'assets/images/BackgroundCard.jpg'),
+                                  fit: BoxFit.fill)),
+                          child: ListTile(
+                            title: Column(
+                              children: [
+                                Text(
+                                  'Activity Record',
+                                  style: TextStyle(
+                                      fontSize: 10, fontFamily: 'ROBOTO'),
+                                ),
+                                Padding(padding: EdgeInsets.only(bottom: 5.0)),
+                                Icon(
+                                  Icons.videocam_outlined,
+                                  size: 30,
+                                ),
+                                Padding(padding: EdgeInsets.only(bottom: 5.0)),
+                                Container(
+                                  width: 80,
+                                  child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15.0)),
+                                          elevation: 10,
+                                          primary: HexColor("363636")),
+                                      onPressed: () {
+                                        // controller.scanQR(context);
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return DetailHistoryPresensiPage();
+                                            });
+                                      },
+                                      child: Text(
+                                        "Open",
+                                        style: TextStyle(
+                                            fontFamily: "Roboto",
+                                            fontSize: 10,
+                                            color: Colors.white),
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 Card(
@@ -240,7 +307,7 @@ class AttendanceScreen extends StatelessWidget {
                                       "Start Overtime",
                                       style: TextStyle(
                                           fontFamily: "Roboto",
-                                          fontSize: 14,
+                                          fontSize: 10,
                                           color: Colors.white),
                                     )),
                               )
@@ -287,10 +354,10 @@ class AttendanceScreen extends StatelessWidget {
                                         primary: HexColor("363636")),
                                     onPressed: () {},
                                     child: Text(
-                                      "Start Leave",
+                                      "Apply for Leave",
                                       style: TextStyle(
                                           fontFamily: "Roboto",
-                                          fontSize: 16,
+                                          fontSize: 10,
                                           color: Colors.white),
                                     )),
                               )
@@ -336,10 +403,10 @@ class AttendanceScreen extends StatelessWidget {
                                         primary: HexColor("363636")),
                                     onPressed: () {},
                                     child: Text(
-                                      "Start Permit",
+                                      "Apply for Permit",
                                       style: TextStyle(
                                           fontFamily: "Roboto",
-                                          fontSize: 16,
+                                          fontSize: 10,
                                           color: Colors.white),
                                     )),
                               )
@@ -350,55 +417,6 @@ class AttendanceScreen extends StatelessWidget {
                     ]),
                   ),
                 ),
-                Card(
-                  elevation: 15,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Container(
-                    width: 340,
-                    height: 105,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image:
-                                AssetImage('assets/images/BackgroundCard.jpg'),
-                            fit: BoxFit.fill)),
-                    child: Column(children: [
-                      Padding(padding: EdgeInsets.only(left: 10)),
-                      ListTile(
-                        title: const Text('Reimburse'),
-                        subtitle: Center(
-                          child: Column(
-                            children: [
-                              Text(
-                                'fill in the form and your reimburse request will be approved by HR/Admin.',
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 11),
-                              ),
-                              Container(
-                                alignment: Alignment.bottomRight,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15.0)),
-                                        elevation: 10,
-                                        primary: HexColor("363636")),
-                                    onPressed: () {},
-                                    child: Text(
-                                      "Start Reimburse",
-                                      style: TextStyle(
-                                          fontFamily: "Roboto",
-                                          fontSize: 16,
-                                          color: Colors.white),
-                                    )),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ]),
-                  ),
-                )
               ],
             ),
           ),
@@ -433,6 +451,7 @@ class AttendanceScreen extends StatelessWidget {
             _selectedIndex.value = index;
             Get.toNamed('/');
           } else if (index == 1) {
+            historyAttendanceController.firstLoadHistory();
             _selectedIndex.value = index;
             Get.toNamed('/historyPage');
           } else if (index == 2) {
