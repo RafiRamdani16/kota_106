@@ -49,7 +49,7 @@ class LoginController extends GetxController with CacheManager {
         if (status == 200) {
           LoginModel tokenModel = response.data;
           _authenticationManager.login(
-              tokenModel.accessToken,
+              'Bearer ${tokenModel.accessToken}',
               tokenModel.refreshToken,
               tokenModel.name,
               tokenModel.position,

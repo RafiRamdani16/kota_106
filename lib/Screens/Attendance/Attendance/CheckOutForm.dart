@@ -14,9 +14,6 @@ class CheckOutForm extends GetView<AttendanceController> {
     controller.currentDate();
     var screenHeightSize = MediaQuery.of(context).size.height;
     var screenWidthSize = MediaQuery.of(context).size.width;
-    controller.clocation.text = controller.currentAddress.value;
-    controller.cDateTime.text = controller.date.value;
-    controller.cTime.text = controller.time.value;
     return Center(
 
       child: AspectRatio(

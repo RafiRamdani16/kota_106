@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import '../../../Controllers/AttendanceController/AttendanceController.dart';
-// import '../../../Models/ScheduleModel.dart';
 import 'OfficeCheckInForm.dart';
 import 'OfficeCheckOutForm.dart';
 
@@ -19,7 +18,7 @@ class OfficePresensiPage extends GetView<AttendanceController> {
       Tab(text: 'Check-in'),
       Tab(text: 'Check-out'),
     ];
-
+    controller.currentDate();
     return DefaultTabController(
       length: 2,
       initialIndex: 0,

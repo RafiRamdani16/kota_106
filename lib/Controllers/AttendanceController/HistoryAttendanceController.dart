@@ -1,66 +1,65 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 import 'package:kota_106/Controllers/APIService/ApiService.dart';
 import 'package:kota_106/Controllers/CacheManager.dart';
+import 'package:kota_106/DummyData/DummyData.dart';
 import 'package:kota_106/Models/AttendanceModel.dart';
 import 'package:kota_106/Models/HistoryAttendanceModel.dart';
 
 class HistoryAttendanceController extends GetxController with CacheManager {
-  late RxInt page;
-  late RxInt limit;
-  late RxBool hasNextPage;
-  late RxBool isFirstLoading;
-  late RxBool isLoadMoreRunning;
-  late ScrollController scrollController;
+  TextEditingController locationCheckin2 = TextEditingController();
+  TextEditingController locationCheckout = TextEditingController();
+  TextEditingController doneList = TextEditingController();
+
+  late RxString checkInTime = "".obs;
+  late RxString checkInDate = "".obs;
+  late RxString checkOutTime = "".obs;
+  late RxString checkOutDate = "".obs;
+  late RxInt day = 0.obs;
+  late RxString month = "".obs;
+  late RxInt workingTime = 0.obs;
+  late RxInt page = 1.obs;
+  late RxInt limit = 10.obs;
+  late RxBool hasNextPage = true.obs;
+  late RxBool isFirstLoading = false.obs;
+  late RxBool isLoadMoreRunning = false.obs;
+  late ScrollController scrollController = new ScrollController()
+    ..addListener(loadMoreHistory);
+
+  late RxInt checkInHour = 0.obs;
+  late RxInt checkOutHour = 0.obs;
   // late RxList post;
-  late String token;
-  late List rawData;
-  late List data;
-  late int id;
-  late int scheduleId;
-  late List<AttendanceModel> history;
+  late String token = "";
+  late List rawData = [];
+  late List data = [];
+  late int id = -1;
+  late int scheduleId = -1;
+  late List<AttendanceModel> history = <AttendanceModel>[];
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
-  @override
-  void onInit() {
-    // token = '';
-    history = <AttendanceModel>[];
-    rawData = [];
-    page = 1.obs;
-    limit = 2.obs;
-    hasNextPage = true.obs;
-    isFirstLoading = false.obs;
-    isLoadMoreRunning = false.obs;
-    // firstLoadHistory();
-    scrollController = new ScrollController()..addListener(loadMoreHistory);
 
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
-    scrollController.removeListener(loadMoreHistory);
-    super.onClose();
-  }
 
   void firstLoadHistory() async {
-    token = getToken()!;
-    id = getUserId()!;
-    scheduleId = getScheduleId()!;
-    isFirstLoading.value = true;
+    DummyData dummy = Get.put(DummyData());
     try {
-      await _apiClient
-          .getHistoryAttendance('UserId==$id', page.value, limit.value, token)
-          .then((response) {
-        print(response.status);
-        print(response.data.data.toList().toString());
-        HistoryAttendanceModel public = response.data;
-        print("public$public");
-        print(rawData.map((e) => response.data.data).toList());
-        history = response.data.data.toList();
-
-        print(history.length);
-      });
+      history = dummy.dummy2;
+      isFirstLoading.value = true;
+      // await _apiClient
+      //     .getHistoryAttendance('UserId==${getUserId()!}', "-CreatedAt",
+      //         page.value, limit.value, getToken()!)
+      //     .then((response) {
+      //   isFirstLoading.value = true;
+      //   print(response.status);
+      //   print(response.data.data.toList().toString());
+      //   HistoryAttendanceModel public = response.data;
+      //   print("public$public");
+      //   print(rawData.map((e) => response.data.data).toList());
+      //   history = response.data.data.toList();
+      //   update();
+      //   print(history.length);
+      // });
     } catch (e) {
       print(e);
       isFirstLoading.value = false;
@@ -68,19 +67,18 @@ class HistoryAttendanceController extends GetxController with CacheManager {
   }
 
   void loadMoreHistory() async {
-    token = getToken()!;
-    id = getUserId()!;
     scheduleId = getScheduleId()!;
     if (hasNextPage.value == true &&
         isFirstLoading.value == false &&
         isLoadMoreRunning.value == false &&
-        scrollController.position.extentAfter < 300) {
+        scrollController.position.extentAfter < 10) {
       isLoadMoreRunning.value = true;
       page.value += 1;
 
       try {
         await _apiClient
-            .getHistoryAttendance('UserId==$id', page.value, limit.value, token)
+            .getHistoryAttendance('UserId==${getUserId()!}', "-CreatedAt",
+                page.value, limit.value, getToken()!)
             .then((response) {
           data = rawData.map((e) => response.data).toList();
           if (data.length > 0) {
@@ -101,5 +99,32 @@ class HistoryAttendanceController extends GetxController with CacheManager {
     // } catch (e) {
 
     // }
+  }
+
+  void currentCheckinDate(String rawDate) async {
+    List<String> formatedDate = rawDate.split(' ');
+    checkInDate.value = formatedDate[0];
+    DateTime parse = DateTime.parse(formatedDate[0]);
+    DateTime parseInt = DateTime.parse(rawDate);
+
+    checkInTime.value = formatedDate[1];
+    checkInHour.value = parseInt.hour;
+    // String data =
+    //     ('${DateFormat("MMMM yyyy-MM-dd hh:mm", "id_ID").format(parse)}');
+    day.value = parse.day;
+    month.value = DateFormat('MMMM').format(DateTime(0, parse.month));
+  }
+
+  void currentCheckOutDate(String rawDate) async {
+    List<String> formatedDate = rawDate.split(' ');
+    checkOutDate.value = formatedDate[0];
+    checkOutTime.value = formatedDate[1];
+    DateTime parseInt = DateTime.parse(rawDate);
+    checkOutHour.value = parseInt.hour;
+    getWorkingTime();
+  }
+
+  void getWorkingTime() {
+    workingTime.value = checkOutHour.value - checkInHour.value;
   }
 }

@@ -18,71 +18,31 @@ class AttendanceController extends GetxController with CacheManager {
   QRViewController? controller;
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
   Barcode? result;
+  RxBool getData = false.obs;
   var statusScan = false.obs;
-  late RxBool statusCheckinOnline;
-  late RxBool statusCheckoutOnline;
-  late RxBool statusCheckinOffline;
-  late RxBool statusCheckoutOffline;
-  late Location location;
+  late RxBool statusCheckinOnline = false.obs;
+  late RxBool statusCheckoutOnline = false.obs;
+  late RxBool statusCheckinOffline = false.obs;
+  late RxBool statusCheckoutOffline = false.obs;
+  late Location location = new Location();
   late LocationData _locationData;
-  late TextEditingController clocation;
-  late TextEditingController cDateTime;
-  late TextEditingController cTime;
-  late TextEditingController note;
-  late RxString currentAddress;
-  late RxBool _permission;
-  late RxString date;
-  late RxString time;
-  late RxString nameMonth;
-  late Rx<File> tmpFile;
-  late Rx<XFile> imageFile;
+  late TextEditingController clocation = TextEditingController();
+  late TextEditingController cDateTime = TextEditingController();
+  late TextEditingController cTime = TextEditingController();
+  late TextEditingController note = TextEditingController();
+  late RxString currentAddress = "".obs;
+  late RxBool _permission = false.obs;
+  late RxString date = "".obs;
+  late RxString time = "".obs;
+  late RxString nameMonth = "".obs;
+  late Rx<File> tmpFile = File('').obs;
+  late Rx<XFile> imageFile = XFile('').obs;
   late Rx<bool> event;
-  late RxString photoName;
-  late String token;
-  late int id;
-  late int scheduleId;
-  late String? testing;
-  late final formkey;
-
-  @override
-  void onInit() async {
-    statusCheckinOnline = false.obs;
-    statusCheckoutOnline = false.obs;
-    statusCheckinOffline = false.obs;
-    statusCheckoutOffline = false.obs;
-    location = new Location();
-    _permission = false.obs;
-    currentAddress = "".obs;
-    event = false.obs;
-    date = "".obs;
-    time = "".obs;
-    nameMonth = "".obs;
-    photoName = "".obs;
-    tmpFile = File('').obs;
-    imageFile = XFile('').obs;
-    statusCheckoutOnline = false.obs;
-    formkey = Get.put(GlobalKey<FormState>());
-    token = 'Bearer ${getToken()}';
-
-    // token = 'Bearer';
-    // id = 2;
-    // scheduleId = 1;
-
-    await getPermission();
-
-    clocation = TextEditingController();
-    cDateTime = TextEditingController();
-    cTime = TextEditingController();
-    note = TextEditingController();
-
-    super.onInit();
-  }
-
-  @override
-  void onClose() {
-    controller?.dispose();
-    super.onClose();
-  }
+  late RxString photoName = "".obs;
+  late String token = "";
+  late int id = -1;
+  late int scheduleId = -1;
+  late final formkey = Get.put(GlobalKey<FormState>());
 
   Future<bool> getPermission() async {
     bool _serviceEnabled;
@@ -106,8 +66,9 @@ class AttendanceController extends GetxController with CacheManager {
     return true;
   }
 
-  Future<void> getAddress() async {
+  void getAddress() async {
     if (_permission.value) {
+      getData.value = true;
       _locationData = await location.getLocation();
       List<Placemark> p = await GeocodingPlatform.instance
           .placemarkFromCoordinates(
@@ -115,6 +76,7 @@ class AttendanceController extends GetxController with CacheManager {
       Placemark place = p[0];
       currentAddress.value =
           "${place.thoroughfare}-${place.locality}- ${place.postalCode}-${place.subAdministrativeArea}";
+      clocation.text = currentAddress.value;
     }
     update();
   }
@@ -144,6 +106,7 @@ class AttendanceController extends GetxController with CacheManager {
   }
 
   Future<void> currentDate() async {
+    getData.value = true;
     String rawDate = "";
     WidgetsFlutterBinding.ensureInitialized();
     await initializeDateFormatting('id_ID', null).then((_) => rawDate =
@@ -152,6 +115,8 @@ class AttendanceController extends GetxController with CacheManager {
     nameMonth.value = formatedDate[0];
     date.value = formatedDate[1];
     time.value = formatedDate[2];
+    cDateTime.text = date.value;
+    cTime.text = time.value;
     update();
   }
 
