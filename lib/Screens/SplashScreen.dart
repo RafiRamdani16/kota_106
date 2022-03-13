@@ -18,7 +18,6 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return FutureBuilder(
       future: initializeSettings(),
       builder: (context, snapshot) {

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:kota_106/Controllers/AttendanceController/HistoryAttendanceController.dart';
 
 import 'HistoryLeave/HistoryLeavePage.dart';
 import 'HistoryOvertime/HistoryOvertimePage.dart';
 import 'HistoryPermit/HistoryPermitPage.dart';
 import 'HistoryPresensi/HistoryPresensiPage.dart';
-
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -15,6 +15,9 @@ class HistoryScreen extends StatelessWidget {
     var _selectedIndex = 1.obs;
     var screenHeightSize = MediaQuery.of(context).size.height;
     var screenWidthSize = MediaQuery.of(context).size.width;
+    HistoryAttendanceController controller =
+        Get.put(HistoryAttendanceController());
+    controller.firstLoadHistory();
     List<Widget> tabs = <Widget>[
       Container(width: 75, child: Tab(text: 'Attendance')),
       Container(width: 70, child: Tab(text: 'Overtime')),
@@ -45,7 +48,7 @@ class HistoryScreen extends StatelessWidget {
             ),
             Container(
               color: HexColor('F5F5F5'),
-              height: screenHeightSize /2 + 173,
+              height: screenHeightSize / 2 + 173,
               width: screenWidthSize,
               child: TabBarView(children: [
                 HistoryPresensiPage(),
@@ -92,7 +95,7 @@ class HistoryScreen extends StatelessWidget {
             _selectedIndex.value = index;
           } else if (index == 3) {
             _selectedIndex.value = index;
-            Get.toNamed('/profilePage');
+            Get.toNamed('/profileScreen');
           }
         },
         selectedItemColor: Colors.amber,

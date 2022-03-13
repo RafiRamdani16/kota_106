@@ -10,7 +10,7 @@ part of 'ApiService.dart';
 
 class _ApiClient implements ApiClient {
   _ApiClient(this._dio, {this.baseUrl}) {
-    baseUrl ??= 'http://fd6f-180-245-91-148.ngrok.io/api/';
+    baseUrl ??= 'http://c090-125-163-95-61.ngrok.io/api/';
   }
 
   final Dio _dio;
@@ -151,10 +151,11 @@ class _ApiClient implements ApiClient {
 
   @override
   Future<ApiResponse<HistoryAttendanceModel>> getHistoryAttendance(
-      filters, page, limit, token) async {
+      filters, sorts, page, limit, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'Filters': filters,
+      r'Sorts': sorts,
       r'Page': page,
       r'PageSize': limit
     };

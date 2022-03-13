@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart' hide Headers;
-import 'package:kota_106/Models/AttendanceModel.dart';
 import 'package:kota_106/Models/HistoryAttendanceModel.dart';
 import 'package:kota_106/Models/LoginModel.dart';
 
@@ -10,7 +9,7 @@ import 'ApiResponse.dart';
 
 part 'ApiService.g.dart';
 
-@RestApi(baseUrl: "http://fd6f-180-245-91-148.ngrok.io/api/")
+@RestApi(baseUrl: "http://c090-125-163-95-61.ngrok.io/api/")
 abstract class ApiClient {
   factory ApiClient(Dio dio) = _ApiClient;
   @Headers(<String, dynamic>{
@@ -60,6 +59,7 @@ abstract class ApiClient {
   @GET('attendance')
   Future<ApiResponse<HistoryAttendanceModel>> getHistoryAttendance(
     @Query("Filters") String filters,
+    @Query("Sorts") String sorts,
     @Query("Page") int page,
     @Query("PageSize") int limit,
     @Header("Authorization") String token

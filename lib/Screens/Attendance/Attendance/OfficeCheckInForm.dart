@@ -10,8 +10,6 @@ class OfficeCheckInForm extends GetView<AttendanceController> {
     var screenHeightSize = MediaQuery.of(context).size.height;
     var screenWidthSize = MediaQuery.of(context).size.width;
     controller.clocation.text = "CV Garuda Infinity Kreasindo";
-    controller.cDateTime.text = controller.date.value;
-    controller.cTime.text = controller.time.value;
     return Center(
       child: AspectRatio(
         aspectRatio: 100/100,
