@@ -4,16 +4,22 @@ part 'ActivityRecordModel.g.dart';
 @JsonSerializable()
 class ActivityRecordModel {
   @JsonKey()
-  late String date;
+  late String id;
   @JsonKey()
-  late String time;
+  late String whatTimeIs;
+  @JsonKey()
+  late String date;
   @JsonKey()
   late String location;
   @JsonKey()
   late String description;
   @JsonKey()
   late String photoName;
-
+  @JsonKey()
+  late int scheduleId;
+  @JsonKey()
+  late int userId;
+  
   ActivityRecordModel();
 
   factory ActivityRecordModel.fromJson(Map<String, dynamic> json) =>

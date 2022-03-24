@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-import '../../../Controllers/AttendanceController/AttendanceController.dart';
+
+import '../../../Controllers/AttendanceController.dart';
 // import '../../../Models/ScheduleModel.dart';
 import 'CheckInForm.dart';
 import 'CheckOutForm.dart';
@@ -10,7 +11,7 @@ import 'CheckOutForm.dart';
 class RemotePresensiPage extends GetView<AttendanceController> {
   @override
   Widget build(BuildContext context) {
-    var screenHeightSize = MediaQuery.of(context).size.height;
+  
     // ScheduleModel scheduleModel = Get.put(ScheduleModel());
 
     var currentTime = controller.time.value;
@@ -42,7 +43,7 @@ class RemotePresensiPage extends GetView<AttendanceController> {
             SingleChildScrollView(
               child: Container(
                 color: HexColor('F5F5F5F5'),
-                height: screenHeightSize / 2,
+                height: Get.height,
                 child: TabBarView(children: [
                   currentTime == scheduleStartTime &&
                           controller.statusCheckinOnline.value == false

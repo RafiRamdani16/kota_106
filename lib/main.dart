@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:kota_106/Screens/ActivityRecord/ActivityRecordScreen.dart';
-import 'package:kota_106/Screens/ActivityRecord/AddActivityRecordScreen.dart';
+import 'package:kota_106/Screens/ActivityRecord/ActivityRecordWidget/AddActivityRecordScreen.dart';
 
 import 'package:kota_106/Screens/login/LoginScreen.dart';
 
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/editProfileScreen',
+      initialRoute: '/',
       initialBinding: HomeBindings(),
       getPages: [
         GetPage(name: '/splashScreen', page: () => SplashScreen()),

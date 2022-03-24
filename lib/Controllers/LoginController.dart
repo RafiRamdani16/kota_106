@@ -11,35 +11,20 @@ class LoginController extends GetxController with CacheManager {
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
   AuthenticationManager _authenticationManager =
       Get.put(AuthenticationManager());
-  late final formkey;
-  late TextEditingController email;
-  late TextEditingController password;
+   final formkey = GlobalKey<FormState>();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
   late RxBool isObsecure;
 
-  late RxString name;
-  late RxString position;
-  late RxInt userId;
-  late RxInt scheduleId;
+  
+
   @override
   void onInit() {
     isObsecure = true.obs;
-    name = 'Rafi'.obs;
-    position = 'Proggrammer'.obs;
-    userId = 0.obs;
-    scheduleId = 0.obs;
-    email = TextEditingController();
-    password = TextEditingController();
-    formkey = GlobalKey<FormState>();
+    
     super.onInit();
   }
 
-  @override
-  void onClose() {
-    email.dispose();
-    password.dispose();
-
-    super.onClose();
-  }
 
   void login(String email, String password) async {
     try {
@@ -55,7 +40,8 @@ class LoginController extends GetxController with CacheManager {
               tokenModel.position,
               tokenModel.id,
               tokenModel.scheduleId);
-
+          // name.value = tokenModel.name;
+          // position.value = tokenModel.position;
           // userId.value = tokenModel.id;
           // scheduleId.value = tokenModel.scheduleId;
           Get.offAndToNamed('/');

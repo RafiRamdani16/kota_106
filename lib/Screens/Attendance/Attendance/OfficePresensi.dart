@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-import '../../../Controllers/AttendanceController/AttendanceController.dart';
+import '../../../Controllers/AttendanceController.dart';
 import 'OfficeCheckInForm.dart';
 import 'OfficeCheckOutForm.dart';
 

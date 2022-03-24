@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:intl/intl.dart';
+
 import 'package:kota_106/Controllers/ProfileController.dart';
 
 import '../../Controllers/Authentication.dart';
@@ -13,6 +13,8 @@ class ProfileScreen extends GetView<ProfileController> {
     AuthenticationManager authenticationManager =
         Get.put(AuthenticationManager());
     var _selectedIndex = 3.obs;
+    controller.getProfile();
+
     return AspectRatio(
       aspectRatio: 100 / 100,
       child: Scaffold(
@@ -27,6 +29,7 @@ class ProfileScreen extends GetView<ProfileController> {
               child: IconButton(
                   onPressed: () {
                     authenticationManager.logout();
+                    
                   },
                   icon: Icon(
                     Icons.exit_to_app,
@@ -35,7 +38,8 @@ class ProfileScreen extends GetView<ProfileController> {
             )
           ],
         ),
-        body: SingleChildScrollView(
+        body: controller.isLoading.value ==
+            false? SingleChildScrollView(
           child: Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
@@ -43,28 +47,27 @@ class ProfileScreen extends GetView<ProfileController> {
                     image: AssetImage("assets/images/BackgroundProfile.jpg"),
                     fit: BoxFit.fill)),
             child: Padding(
-              padding: EdgeInsets.only(top: 50),
+              padding: EdgeInsets.only(top: 45),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CircleAvatar(
-                    backgroundImage:
-                        NetworkImage("https://picsum.photos/200"),
+                    backgroundImage: NetworkImage("https://picsum.photos/200"),
                     radius: 70,
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   Text(
-                    'Azhar Bani Rashif',
+                    controller.name.text,
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   Text(
-                    'Frontend Developer',
+                    controller.position.text,
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(
@@ -283,20 +286,18 @@ class ProfileScreen extends GetView<ProfileController> {
                   ),
                   Text(
                     'Address',
-                    style:
-                        TextStyle(fontFamily: 'Roboto', fontSize: fontSize),
+                    style: TextStyle(fontFamily: 'Roboto', fontSize: fontSize),
                   ),
                   Container(
                     height: 40,
                     width: 324,
                     child: TextFormField(
-                      enabled: false,
-                      decoration: InputDecoration(
-                          fillColor: Colors.white, filled: true),
-                      style: TextStyle(fontSize: 12),
-                      maxLines: 4,
-                      controller: controller.address
-                    ),
+                        enabled: false,
+                        decoration: InputDecoration(
+                            fillColor: Colors.white, filled: true),
+                        style: TextStyle(fontSize: 12),
+                        maxLines: 4,
+                        controller: controller.address),
                   ),
                   SizedBox(
                     height: 20,
@@ -325,7 +326,7 @@ class ProfileScreen extends GetView<ProfileController> {
               ),
             ),
           ),
-        ),
+        ):CircularProgressIndicator(),
         bottomNavigationBar: BottomNavigationBar(
           iconSize: 30,
           items: [

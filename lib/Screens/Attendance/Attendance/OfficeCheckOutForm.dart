@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../Controllers/AttendanceController/AttendanceController.dart';
+import '../../../Controllers/AttendanceController.dart';
 
 class OfficeCheckOutForm extends GetView<AttendanceController> {
   const OfficeCheckOutForm({Key? key}) : super(key: key);

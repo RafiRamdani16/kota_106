@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart' hide Headers;
+
+import 'package:kota_106/Models/HistoryActivityRecordModel.dart';
 import 'package:kota_106/Models/HistoryAttendanceModel.dart';
 import 'package:kota_106/Models/LoginModel.dart';
-
+import 'package:kota_106/Models/UserModel.dart';
 
 import 'package:retrofit/http.dart';
 
@@ -9,7 +11,7 @@ import 'ApiResponse.dart';
 
 part 'ApiService.g.dart';
 
-@RestApi(baseUrl: "http://c090-125-163-95-61.ngrok.io/api/")
+@RestApi(baseUrl: "http://9208-125-163-90-214.ngrok.io/api/")
 abstract class ApiClient {
   factory ApiClient(Dio dio) = _ApiClient;
   @Headers(<String, dynamic>{
@@ -38,7 +40,7 @@ abstract class ApiClient {
       @Field("description") String description,
       @Header("Authorization") String token);
 
-   @POST('attendance/checkin_offline')
+  @POST('attendance/checkin_offline')
   Future<ApiResponse<String>> checkinOffline(
       @Field("userId") int id,
       @Field("scheduleId") int scheduleId,
@@ -46,7 +48,7 @@ abstract class ApiClient {
       @Field("checkinTime") String checkinTime,
       @Field("description") String description,
       @Header("Authorization") String token);
-      
+
   @POST('attendance/checkout_offline')
   Future<ApiResponse<String>> checkoutOffline(
       @Field("userId") int id,
@@ -58,10 +60,33 @@ abstract class ApiClient {
 
   @GET('attendance')
   Future<ApiResponse<HistoryAttendanceModel>> getHistoryAttendance(
-    @Query("Filters") String filters,
-    @Query("Sorts") String sorts,
-    @Query("Page") int page,
-    @Query("PageSize") int limit,
-    @Header("Authorization") String token
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
+
+  @POST('activity_record')
+  Future<ApiResponse<String>> activityRecord(
+    @Field("userId") int id,
+    @Field("location") String location,
+    @Field("date") String date,
+    @Field("description") String description,
+    @Field("photoName") String photoName,
+    @Header("Authorization") String token,
+  );
+
+  @GET('activity_record')
+  Future<ApiResponse<HistoryActivityRecordModel>> getHistoryActivityRecord(
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
+
+  @GET('user')
+  Future<ApiResponse<UserModel>> getProfile(
+    @Query('id') int id,
+    @Header("Authorization") String token,
   );
 }

@@ -11,7 +11,6 @@ class AddActivityRecordScreen extends GetView<ActivityRecordController> {
     return AspectRatio(
       aspectRatio: 100 / 100,
       child: Scaffold(
-       
         appBar: AppBar(
           elevation: 0,
           backgroundColor: HexColor('FCBC45'),
@@ -35,8 +34,7 @@ class AddActivityRecordScreen extends GetView<ActivityRecordController> {
           width: screenWidthSize,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image:
-                      AssetImage("assets/images/BackgroundProfile.jpg"),
+                  image: AssetImage("assets/images/BackgroundProfile.jpg"),
                   fit: BoxFit.cover)),
           child: Padding(
             padding: const EdgeInsets.only(top: 50),
@@ -47,7 +45,7 @@ class AddActivityRecordScreen extends GetView<ActivityRecordController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Card(
-                       shape: RoundedRectangleBorder(
+                      shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
                       elevation: 15,
                       child: Padding(
@@ -61,7 +59,8 @@ class AddActivityRecordScreen extends GetView<ActivityRecordController> {
                                 Row(
                                   children: [
                                     Text('Date'),
-                                    Padding(padding: EdgeInsets.only(left: 160)),
+                                    Padding(
+                                        padding: EdgeInsets.only(left: 160)),
                                     Text('Time')
                                   ],
                                 ),
@@ -138,7 +137,8 @@ class AddActivityRecordScreen extends GetView<ActivityRecordController> {
                                         style: ElevatedButton.styleFrom(
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
-                                                    BorderRadius.circular(15.0)),
+                                                    BorderRadius.circular(
+                                                        15.0)),
                                             primary: HexColor('FFC368')),
                                         onPressed: () {
                                           controller.openCamera();
@@ -146,7 +146,8 @@ class AddActivityRecordScreen extends GetView<ActivityRecordController> {
                                         child: Text(
                                           'Add Photo',
                                           style: TextStyle(
-                                              fontSize: 12, color: Colors.black),
+                                              fontSize: 12,
+                                              color: Colors.black),
                                         )),
                                   ],
                                 ),
@@ -166,7 +167,7 @@ class AddActivityRecordScreen extends GetView<ActivityRecordController> {
                                 elevation: 10,
                                 primary: HexColor("363636")),
                             onPressed: () {
-                              Get.toNamed('/addActivityRecord');
+                              controller.addActivityRecord();
                             },
                             child: Text(
                               "New Activity",

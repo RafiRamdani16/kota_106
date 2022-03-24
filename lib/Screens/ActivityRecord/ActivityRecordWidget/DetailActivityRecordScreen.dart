@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Controllers/ActivityRecordController.dart';
@@ -14,7 +14,7 @@ class DetailActivityRecordScreen extends GetView<ActivityRecordController> {
     var screenWidthSize = MediaQuery.of(context).size.width;
 
     controller.locationNow.text = activityRecordModel.location;
-    controller.timeNow.text = activityRecordModel.time;
+    controller.timeNow.text = activityRecordModel.date;
     controller.dateNow.text = activityRecordModel.date;
     controller.description.text = activityRecordModel.description;
 

@@ -8,18 +8,24 @@ part of 'ActivityRecordModel.dart';
 
 ActivityRecordModel _$ActivityRecordModelFromJson(Map<String, dynamic> json) =>
     ActivityRecordModel()
+      ..id = json['id'] as String
+      ..whatTimeIs = json['whatTimeIs'] as String
       ..date = json['date'] as String
-      ..time = json['time'] as String
       ..location = json['location'] as String
       ..description = json['description'] as String
-      ..photoName = json['photoName'] as String;
+      ..photoName = json['photoName'] as String
+      ..scheduleId = json['scheduleId'] as int
+      ..userId = json['userId'] as int;
 
 Map<String, dynamic> _$ActivityRecordModelToJson(
         ActivityRecordModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
+      'whatTimeIs': instance.whatTimeIs,
       'date': instance.date,
-      'time': instance.time,
       'location': instance.location,
       'description': instance.description,
       'photoName': instance.photoName,
+      'scheduleId': instance.scheduleId,
+      'userId': instance.userId,
     };

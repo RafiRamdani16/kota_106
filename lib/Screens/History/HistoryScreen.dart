@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:kota_106/Controllers/AttendanceController/HistoryAttendanceController.dart';
+import 'package:kota_106/Controllers/HistoryController.dart';
 
 import 'HistoryLeave/HistoryLeavePage.dart';
 import 'HistoryOvertime/HistoryOvertimePage.dart';
@@ -13,11 +13,9 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _selectedIndex = 1.obs;
-    var screenHeightSize = MediaQuery.of(context).size.height;
-    var screenWidthSize = MediaQuery.of(context).size.width;
-    HistoryAttendanceController controller =
-        Get.put(HistoryAttendanceController());
-    controller.firstLoadHistory();
+    HistoryController controller =
+        Get.put(HistoryController());
+    controller.getHistoryAttendance();
     List<Widget> tabs = <Widget>[
       Container(width: 75, child: Tab(text: 'Attendance')),
       Container(width: 70, child: Tab(text: 'Overtime')),
@@ -25,6 +23,7 @@ class HistoryScreen extends StatelessWidget {
       Container(width: 70, child: Tab(text: 'Permit')),
     ];
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('History',
@@ -48,8 +47,8 @@ class HistoryScreen extends StatelessWidget {
             ),
             Container(
               color: HexColor('F5F5F5'),
-              height: screenHeightSize / 2 + 173,
-              width: screenWidthSize,
+              height: Get.height - 170,
+              width: Get.width,
               child: TabBarView(children: [
                 HistoryPresensiPage(),
                 HistoryOvertimePage(),

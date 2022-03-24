@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:image_picker/image_picker.dart';
 
-import '../../../Controllers/AttendanceController/AttendanceController.dart';
+
+import '../../../Controllers/AttendanceController.dart';
 
 class CheckInForm extends GetView<AttendanceController> {
   @override
@@ -14,7 +14,7 @@ class CheckInForm extends GetView<AttendanceController> {
     controller.currentDate();
     var screenHeightSize = MediaQuery.of(context).size.height;
     var screenWidthSize = MediaQuery.of(context).size.width;
-
+    final curScaleFactor = MediaQuery.of(context).textScaleFactor;
     return Center(
       child: AspectRatio(
           aspectRatio: 100 / 100,
@@ -150,5 +150,6 @@ class CheckInForm extends GetView<AttendanceController> {
             ),
           )),
     );
+  
   }
 }

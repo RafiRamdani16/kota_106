@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-import '../../../Controllers/AttendanceController/AttendanceController.dart';
+import '../../../Controllers/AttendanceController.dart';
 
 class CheckOutForm extends GetView<AttendanceController> {
   const CheckOutForm({Key? key}) : super(key: key);
@@ -122,5 +122,6 @@ class CheckOutForm extends GetView<AttendanceController> {
         ),
       ),
     );
+  
   }
 }

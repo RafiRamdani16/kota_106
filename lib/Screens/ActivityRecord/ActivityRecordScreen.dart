@@ -14,7 +14,10 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
     List<Widget> tabs = <Widget>[
       Container(color: Colors.white, child: Tab(text: 'History')),
     ];
-    controller.firstLoadHistory();
+    
+    controller.currentDate();
+    controller.getLocationActivityRecord();
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: HexColor('FCBC45'),
@@ -68,7 +71,7 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                               ),
                             ),
                             Container(
-                              height: screenHeightSize -260,
+                              height: screenHeightSize - 260,
                               width: screenWidthSize,
                               child: TabBarView(
                                   children: [HistoryActivityRecord()]),

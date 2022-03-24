@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -11,8 +12,8 @@ import 'package:location/location.dart';
 import 'package:geocoding/geocoding.dart' hide Location;
 
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import '../APIService/ApiService.dart';
-import '../CacheManager.dart';
+import 'APIService/ApiService.dart';
+import 'CacheManager.dart';
 
 class AttendanceController extends GetxController with CacheManager {
   QRViewController? controller;
@@ -20,29 +21,37 @@ class AttendanceController extends GetxController with CacheManager {
   Barcode? result;
   RxBool getData = false.obs;
   var statusScan = false.obs;
-  late RxBool statusCheckinOnline = false.obs;
-  late RxBool statusCheckoutOnline = false.obs;
-  late RxBool statusCheckinOffline = false.obs;
-  late RxBool statusCheckoutOffline = false.obs;
-  late Location location = new Location();
+  RxBool statusCheckinOnline = false.obs;
+  RxBool statusCheckoutOnline = false.obs;
+  RxBool statusCheckinOffline = false.obs;
+  RxBool statusCheckoutOffline = false.obs;
+  Location location = new Location();
   late LocationData _locationData;
-  late TextEditingController clocation = TextEditingController();
-  late TextEditingController cDateTime = TextEditingController();
-  late TextEditingController cTime = TextEditingController();
-  late TextEditingController note = TextEditingController();
-  late RxString currentAddress = "".obs;
-  late RxBool _permission = false.obs;
-  late RxString date = "".obs;
-  late RxString time = "".obs;
-  late RxString nameMonth = "".obs;
-  late Rx<File> tmpFile = File('').obs;
-  late Rx<XFile> imageFile = XFile('').obs;
-  late Rx<bool> event;
-  late RxString photoName = "".obs;
-  late String token = "";
-  late int id = -1;
-  late int scheduleId = -1;
-  late final formkey = Get.put(GlobalKey<FormState>());
+  
+  TextEditingController clocation = TextEditingController();
+  TextEditingController cDateTime = TextEditingController();
+  TextEditingController cTime = TextEditingController();
+  TextEditingController note = TextEditingController();
+
+  RxString currentAddress = "".obs;
+  RxBool _permission = false.obs;
+  RxString date = "".obs;
+  RxString time = "".obs;
+  RxString nameMonth = "".obs;
+  Rx<File> tmpFile = File('').obs;
+  Rx<XFile> imageFile = XFile('').obs;
+  //  Rx<bool> event;
+  RxString photoName = "".obs;
+  String token = "";
+  int id = -1;
+  int scheduleId = -1;
+  final formkey = Get.put(GlobalKey<FormState>());
+
+  @override
+  onInit() {
+    getPermission();
+    super.onInit();
+  }
 
   Future<bool> getPermission() async {
     bool _serviceEnabled;
@@ -95,6 +104,9 @@ class AttendanceController extends GetxController with CacheManager {
   Widget setImageView() {
     if (imageFile.value.path != '') {
       tmpFile.value = File(imageFile.value.path);
+      photoName.value =
+          base64Encode(File(imageFile.value.path).readAsBytesSync()).trim();
+      print(photoName.value);
       return Image.file(tmpFile.value, width: 100, height: 100);
     } else {
       return Image.asset(
@@ -110,7 +122,7 @@ class AttendanceController extends GetxController with CacheManager {
     String rawDate = "";
     WidgetsFlutterBinding.ensureInitialized();
     await initializeDateFormatting('id_ID', null).then((_) => rawDate =
-        '${DateFormat("MMMM yyyy-MM-dd hh:mm", "id_ID").format(DateTime.now())}');
+        '${DateFormat("MMMM yyyy-MM-dd HH:mm", "id_ID").format(DateTime.now())}');
     List<String> formatedDate = rawDate.split(' ');
     nameMonth.value = formatedDate[0];
     date.value = formatedDate[1];
@@ -169,9 +181,16 @@ class AttendanceController extends GetxController with CacheManager {
       String location, String checkInTime, String description) async {
     id = getUserId()!;
     scheduleId = getScheduleId()!;
+    token = getToken()!;
     await _apiClient
-        .checkinOnline(id, scheduleId, location, photoName.value, checkInTime,
-            description, token)
+        .checkinOnline(
+            id,
+            scheduleId,
+            location,
+            'data:image/jpeg;base64,${photoName.value}',
+            checkInTime,
+            description,
+            token)
         .then((response) {
       print(response.status);
       if (response.status == 200) {
@@ -188,6 +207,7 @@ class AttendanceController extends GetxController with CacheManager {
       String location, String checkOutTime, String description) async {
     id = getUserId()!;
     scheduleId = getScheduleId()!;
+    token = getToken()!;
     await _apiClient
         .checkoutOnline(
             id, scheduleId, location, checkOutTime, description, token)
@@ -206,6 +226,7 @@ class AttendanceController extends GetxController with CacheManager {
       String location, String checkinTime, String description) async {
     id = getUserId()!;
     scheduleId = getScheduleId()!;
+    token = getToken()!;
     await _apiClient
         .checkinOffline(
             id, scheduleId, location, checkinTime, description, token)
@@ -224,6 +245,7 @@ class AttendanceController extends GetxController with CacheManager {
       String location, String checkoutTime, String description) async {
     id = getUserId()!;
     scheduleId = getScheduleId()!;
+    token = getToken()!;
     await _apiClient
         .checkoutOffline(
             id, scheduleId, location, checkoutTime, description, token)

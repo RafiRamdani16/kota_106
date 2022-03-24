@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kota_106/Controllers/AttendanceController/HistoryAttendanceController.dart';
+import 'package:kota_106/Controllers/HistoryController.dart';
 import 'package:kota_106/Models/AttendanceModel.dart';
 
 
@@ -9,8 +9,8 @@ class DetailHistoryPresensiPage extends StatelessWidget {
   DetailHistoryPresensiPage(this.attendanceModel);
   @override
   Widget build(BuildContext context) {
-    HistoryAttendanceController controller =
-        Get.put(HistoryAttendanceController());
+    HistoryController controller =
+        Get.put(HistoryController());
     var screenHeightSize = MediaQuery.of(context).size.height;
     var screenWidthSize = MediaQuery.of(context).size.width;
     // final dataAttendance = this.attendanceModel;
