@@ -27,7 +27,7 @@ class AttendanceController extends GetxController with CacheManager {
   RxBool statusCheckoutOffline = false.obs;
   Location location = new Location();
   late LocationData _locationData;
-  
+
   TextEditingController clocation = TextEditingController();
   TextEditingController cDateTime = TextEditingController();
   TextEditingController cTime = TextEditingController();
@@ -109,6 +109,7 @@ class AttendanceController extends GetxController with CacheManager {
       print(photoName.value);
       return Image.file(tmpFile.value, width: 100, height: 100);
     } else {
+      // photoName.value = 'assets/images/Icon/AccountBox.png';
       return Image.asset(
         'assets/images/Icon/AccountBox.png',
         width: 100,
@@ -177,7 +178,13 @@ class AttendanceController extends GetxController with CacheManager {
     );
   }
 
-  void checkInOnline(
+  void getSchedule() async {
+    await _apiClient.getSchedule(getUserId()!, getToken()!).then((response) {
+      if (response.status == 200) {}
+    });
+  }
+
+  void pencatatanKehadiranAwalDiLuarKantor(
       String location, String checkInTime, String description) async {
     id = getUserId()!;
     scheduleId = getScheduleId()!;
@@ -191,19 +198,24 @@ class AttendanceController extends GetxController with CacheManager {
             checkInTime,
             description,
             token)
-        .then((response) {
+        .then((response) async {
       print(response.status);
       if (response.status == 200) {
         statusCheckinOnline.value = true;
         statusCheckinOffline.value = true;
         dialog('SUCCESS', 'CHECK-IN BERHASIL');
+      } else if (response.status == 401) {
+        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+          saveToken(response.data);
+          pencatatanKehadiranAwalDiLuarKantor(location, checkInTime, description);
+        });
       } else {
         dialog('ALERT', 'CHECK-IN GAGAL');
       }
     });
   }
 
-  void checkOutOnline(
+  void pencatatanKehadiranAkhirDiLuarKantor(
       String location, String checkOutTime, String description) async {
     id = getUserId()!;
     scheduleId = getScheduleId()!;
@@ -211,37 +223,47 @@ class AttendanceController extends GetxController with CacheManager {
     await _apiClient
         .checkoutOnline(
             id, scheduleId, location, checkOutTime, description, token)
-        .then((response) {
+        .then((response) async {
       if (response.status == 200) {
         statusCheckoutOnline.value = true;
         statusCheckoutOffline.value = true;
         dialog('SUCCESS', 'CHECK-OUT BERHASIL');
+      } else if (response.status == 401) {
+        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+          saveToken(response.data);
+          pencatatanKehadiranAkhirDiLuarKantor(location, checkOutTime, description);
+        });
       } else {
         dialog('ALERT', 'CHECK-OUT GAGAL');
       }
     });
   }
 
-  void checkInOffline(
+  void pencatatanKehadiranAwalDikantor(
       String location, String checkinTime, String description) async {
     id = getUserId()!;
     scheduleId = getScheduleId()!;
     token = getToken()!;
     await _apiClient
-        .checkinOffline(
+        .pencatatanKehadiranAwalDikantor(
             id, scheduleId, location, checkinTime, description, token)
-        .then((response) {
+        .then((response) async {
       if (response.status == 200) {
         statusCheckinOffline.value = true;
         statusCheckinOnline.value = true;
         dialog('SUCCESS', 'CHECK-IN BERHASIL');
+      } else if (response.status == 401) {
+        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+          saveToken(response.data);
+          pencatatanKehadiranAwalDikantor(location, checkinTime, description);
+        });
       } else {
         dialog('ALERT', 'CHECK-IN GAGAL');
       }
     });
   }
 
-  void checkOutOffline(
+  void pencatatanKehadiranAkhirDikantor(
       String location, String checkoutTime, String description) async {
     id = getUserId()!;
     scheduleId = getScheduleId()!;
@@ -249,11 +271,16 @@ class AttendanceController extends GetxController with CacheManager {
     await _apiClient
         .checkoutOffline(
             id, scheduleId, location, checkoutTime, description, token)
-        .then((response) {
+        .then((response) async {
       if (response.status == 200) {
         statusCheckoutOffline.value = true;
         statusCheckoutOnline.value = true;
         dialog('SUCCESS', 'CHECK-OUT BERHASIL');
+      } else if (response.status == 401) {
+        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+          saveToken(response.data);
+          pencatatanKehadiranAkhirDikantor(location, checkoutTime, description);
+        });
       } else {
         dialog('ALERT', 'CHECK-OUT GAGAL');
       }

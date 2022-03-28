@@ -80,15 +80,7 @@ class DetailHistoryPresensiPage extends StatelessWidget {
                             spacing: 20,
                             children: [
                               Text('Check-in Photo:'),
-                              Container(
-                                height: 100,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image:
-                                            controller.setImageView('namaUser'),
-                                        fit: BoxFit.cover)),
-                              )
+                              controller.setImageView('namaUser'),
                             ],
                           ),
                           Wrap(

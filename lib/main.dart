@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: '/splashScreen',
       initialBinding: HomeBindings(),
       getPages: [
         GetPage(name: '/splashScreen', page: () => SplashScreen()),

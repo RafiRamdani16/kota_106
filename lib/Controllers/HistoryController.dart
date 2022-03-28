@@ -9,14 +9,17 @@ import 'package:kota_106/DummyData/DummyData.dart';
 import 'package:kota_106/Models/ActivityRecordModel.dart';
 import 'package:kota_106/Models/AttendanceModel.dart';
 
-
 class HistoryController extends GetxController with CacheManager {
   TextEditingController locationCheckin2 = TextEditingController();
   TextEditingController locationCheckout = TextEditingController();
   TextEditingController doneList = TextEditingController();
+  TextEditingController locationNow = TextEditingController();
+  TextEditingController dateNow = TextEditingController();
+  TextEditingController timeNow = TextEditingController();
+  TextEditingController description = TextEditingController();
 
   RxBool isThereItem = false.obs;
-
+  RxBool isThereItemActivity = false.obs;
   RxString checkInTime = "".obs;
   RxString checkInDate = "".obs;
   RxString checkOutTime = "".obs;
@@ -26,9 +29,6 @@ class HistoryController extends GetxController with CacheManager {
   RxInt workingTime = 0.obs;
   RxInt page = 1.obs;
   RxInt limit = 10.obs;
-  RxBool hasNextPage = true.obs;
-  RxBool isFirstLoading = false.obs;
-  RxBool isLoadMoreRunning = false.obs;
 
   RxInt checkInHour = 0.obs;
   RxInt checkOutHour = 0.obs;
@@ -43,70 +43,98 @@ class HistoryController extends GetxController with CacheManager {
   void getHistoryAttendance() async {
     DummyData dummy = Get.put(DummyData());
     try {
-      attendanceHistory = dummy.dummy2;
-      isThereItem.value = true;
+      // attendanceHistory = dummy.dummy2;
+
       await _apiClient
           .getHistoryAttendance('UserId==${getUserId()!}', "-CreatedAt",
               page.value, limit.value, getToken()!)
-          .then((response) {
-        isFirstLoading.value = true;
+          .then((response) async {
         print(response.status);
-        print(response.data.data.toList().toString());
-        attendanceHistory = response.data.data.toList();
-        update();
-        print(attendanceHistory.length);
+        if (response.status == 200) {
+          attendanceHistory = response.data.data.toList();
+          isThereItem.value = true;
+          update();
+          print(attendanceHistory.length);
+        } else if (response.status == 401) {
+          await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+            saveToken(response.data);
+            getHistoryAttendance();
+          });
+        }
       });
     } catch (e) {
       print(e);
-      isFirstLoading.value = false;
     }
   }
 
-  NetworkImage setImageView(String photoName) {
-    return NetworkImage('assets/images/Icon/AccountBox.png');
-    // try {
-    //   return NetworkImage('http:balalall/$photoName');
-    // } catch (e) {
-
-    // }
+  Widget setImageView(String photoName) {
+    return Image.asset(
+      'assets/images/Icon/AccountBox.png',
+      width: 100,
+      height: 100,
+    );
   }
 
   void currentCheckinDate(String rawDate) async {
+    DateTime formatedTime = DateTime.parse(rawDate);
     List<String> formatedDate = rawDate.split(' ');
     checkInDate.value = formatedDate[0];
     DateTime parse = DateTime.parse(formatedDate[0]);
     DateTime parseInt = DateTime.parse(rawDate);
 
-    checkInTime.value = formatedDate[1];
+    checkInTime.value = DateFormat('HH:mm').format(formatedTime);
     checkInHour.value = parseInt.hour;
-   
+
     day.value = parse.day;
     month.value = DateFormat('MMMM').format(DateTime(0, parse.month));
   }
 
   void currentCheckOutDate(String rawDate) async {
+    DateTime formatedTime = DateTime.parse(rawDate);
     List<String> formatedDate = rawDate.split(' ');
-    checkOutDate.value = formatedDate[0];
-    checkOutTime.value = formatedDate[1];
+    checkOutDate.value = DateFormat('yyyy-MM-dd').format(formatedTime);
+    checkOutTime.value = DateFormat('HH:mm').format(formatedTime);
     DateTime parseInt = DateTime.parse(rawDate);
     checkOutHour.value = parseInt.hour;
     getWorkingTime();
+  }
+
+  void formatedTime(String dateTime) async {
+    DateTime formatedTime = DateTime.parse(dateTime);
+    dateNow.text = DateFormat('yyyy-MM-dd').format(formatedTime);
+    timeNow.text = DateFormat('HH:mm').format(formatedTime);
   }
 
   void getWorkingTime() {
     workingTime.value = checkOutHour.value - checkInHour.value;
   }
 
-  void getHistoryActivityRecord() async {
+  Future<void> getHistoryActivityRecord() async {
+    // DummyData dummyData = Get.put(DummyData());
+    // activityRecordHistory = dummyData.activityDummy;
     try {
       await _apiClient
           .getHistoryActivityRecord('UserId==${getUserId()!}', "-CreatedAt",
               page.value, limit.value, getToken()!)
-          .then((response) {
+          .then((response) async {
+        print(response.status);
         if (response.status == 200) {
+          print(response.status);
           activityRecordHistory = response.data.data.toList();
+          isThereItemActivity.value = true;
+
+          update();
+          await Future.delayed(Duration(seconds: 3));
+          print(activityRecordHistory.length);
+        } else if (response.status == 401) {
+          await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+            saveToken(response.data);
+            getHistoryActivityRecord();
+          });
         }
       });
-    } catch (e) {}
+    } catch (e) {
+      print(e);
+    }
   }
 }

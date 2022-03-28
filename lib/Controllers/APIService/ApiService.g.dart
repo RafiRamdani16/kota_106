@@ -10,7 +10,8 @@ part of 'ApiService.dart';
 
 class _ApiClient implements ApiClient {
   _ApiClient(this._dio, {this.baseUrl}) {
-    baseUrl ??= 'http://9208-125-163-90-214.ngrok.io/api/';
+    baseUrl ??=
+        'https://0502-2001-448a-3023-30f1-fc92-3822-10f9-782c.ngrok.io/api/';
   }
 
   final Dio _dio;
@@ -96,7 +97,7 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<ApiResponse<String>> checkinOffline(
+  Future<ApiResponse<String>> pencatatanKehadiranAwalDikantor(
       id, scheduleId, location, checkinTime, description, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -232,19 +233,59 @@ class _ApiClient implements ApiClient {
   @override
   Future<ApiResponse<UserModel>> getProfile(id, token) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'id': id};
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResponse<UserModel>>(
             Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, 'user',
+                .compose(_dio.options, 'user/${id}',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = ApiResponse<UserModel>.fromJson(
       _result.data!,
       (json) => UserModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResponse<ScheduleModel>> getSchedule(id, token) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResponse<ScheduleModel>>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, 'schedule/${id}',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResponse<ScheduleModel>.fromJson(
+      _result.data!,
+      (json) => ScheduleModel.fromJson(json as Map<String, dynamic>),
+    );
+    return value;
+  }
+
+  @override
+  Future<ApiResponse<String>> getRefreshToken(id, token) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'refreshToken': id};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResponse<String>>(
+            Options(method: 'POST', headers: _headers, extra: _extra)
+                .compose(_dio.options, 'refresh',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResponse<String>.fromJson(
+      _result.data!,
+      (json) => json as String,
     );
     return value;
   }

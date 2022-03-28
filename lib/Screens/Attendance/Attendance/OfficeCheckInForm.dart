@@ -89,7 +89,7 @@ class OfficeCheckInForm extends GetView<AttendanceController> {
                           String checkInTime =
                               '${controller.cDateTime.text} ${controller.cTime.text}';
           
-                          controller.checkInOffline(controller.clocation.text,
+                          controller.pencatatanKehadiranAwalDikantor(controller.clocation.text,
                               checkInTime, controller.note.text);
                         },
                         child: Text('Check-in Now')))

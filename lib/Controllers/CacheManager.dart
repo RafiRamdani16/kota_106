@@ -1,4 +1,3 @@
-
 import 'package:get_storage/get_storage.dart';
 
 mixin CacheManager {
@@ -24,9 +23,11 @@ mixin CacheManager {
   String? getName() {
     return box.read(CacheManagerKey.NAME.toString());
   }
+
   int? getScheduleId() {
     return box.read(CacheManagerKey.SCHEDULEID.toString());
   }
+
   String? getPosition() {
     return box.read(CacheManagerKey.POSITION.toString());
   }
@@ -50,5 +51,24 @@ mixin CacheManager {
     await box.remove(CacheManagerKey.USERID.toString());
     await box.remove(CacheManagerKey.SCHEDULEID.toString());
   }
+
+  Future<bool> saveStatusCheckIn(bool statusCheckin) async {
+    await box.write(CacheManagerKey.STATUSCHECKIN.toString(), statusCheckin);
+    return true;
+  }
+
+  Future<bool> saveStatusCheckOut(bool statusCheckout) async {
+    await box.write(CacheManagerKey.STATUSCHECKOUT.toString(), statusCheckout);
+    return true;
+  }
 }
-enum CacheManagerKey { TOKEN, REFRESHTOKEN, USERID, SCHEDULEID, POSITION, NAME }
+enum CacheManagerKey {
+  TOKEN,
+  REFRESHTOKEN,
+  USERID,
+  SCHEDULEID,
+  POSITION,
+  NAME,
+  STATUSCHECKIN,
+  STATUSCHECKOUT
+}

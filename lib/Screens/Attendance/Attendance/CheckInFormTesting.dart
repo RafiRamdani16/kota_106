@@ -130,7 +130,7 @@ class CheckinFormTesting {
                       String checkInTime =
                           '${controller.cDateTime.text} ${controller.cTime.text}';
 
-                      controller.checkInOnline(controller.clocation.text,
+                      controller.pencatatanKehadiranAwalDiLuarKantor(controller.clocation.text,
                           checkInTime, controller.note.text);
                     },
                     child: Text('Check-in Now')))
@@ -235,7 +235,7 @@ class CheckinFormTesting {
                       String checkOutTime =
                           '${controller.cDateTime.text} ${controller.cTime.text}';
 
-                      controller.checkOutOnline(controller.clocation.text,
+                      controller.pencatatanKehadiranAkhirDiLuarKantor(controller.clocation.text,
                           checkOutTime, controller.note.text);
                     },
                     child: Text('Check-out Now')))

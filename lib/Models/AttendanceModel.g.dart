@@ -9,7 +9,7 @@ part of 'AttendanceModel.dart';
 AttendanceModel _$AttendanceModelFromJson(Map<String, dynamic> json) =>
     AttendanceModel()
       ..id = json['id'] as int
-      ..isLate = json['isLate'] as String
+      ..isLate = json['isLate'] as bool
       ..checkinAt = json['checkinAt'] as String
       ..locationCheckin = json['locationCheckin'] as String
       ..descriptionCheckin = json['descriptionCheckin'] as String

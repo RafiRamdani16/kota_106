@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Controllers/ActivityRecordController.dart';
+import 'package:kota_106/Controllers/HistoryController.dart';
 import 'package:kota_106/Screens/ActivityRecord/ActivityRecordWidget/HistoryActivityRecord.dart';
 
 class ActivityRecordScreen extends GetView<ActivityRecordController> {
@@ -14,10 +15,8 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
     List<Widget> tabs = <Widget>[
       Container(color: Colors.white, child: Tab(text: 'History')),
     ];
-    
     controller.currentDate();
     controller.getLocationActivityRecord();
-    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: HexColor('FCBC45'),

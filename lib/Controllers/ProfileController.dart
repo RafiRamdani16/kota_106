@@ -26,34 +26,58 @@ class ProfileController extends GetxController with CacheManager {
 
   RxBool isLoading = true.obs;
 
-  UserModel userModel = Get.put(UserModel());
+  // UserModel userModel = Get.put(UserModel());
 
-  void getProfile() async {
+  Future<void> getProfile() async {
     try {
-      await _apiClient.getProfile(getUserId()!, getToken()!).then((response) {
+      await _apiClient
+          .getProfile(2, getToken()!)
+          .then((response) async {
+        print(response.status);
         if (response.status == 200) {
-          userModel = response.data;
-          employeeId.text = '${userModel.id}';
-          joinDate.text = userModel.joinDate;
-          email.text = userModel.email;
-          noKTP.text = userModel.noKtp;
-          npwp.text = userModel.npwp;
-          religion.text = userModel.religion;
-          address.text = userModel.address;
-          status.text = userModel.status;
-          endDate.text = userModel.endDate;
-          phoneNumber.text = userModel.phoneNumber;
-          city.text = userModel.city;
-          dateOfBirth.text = '${userModel.dateOfBirth}';
-          name.text = userModel.name;
-          position.text = userModel.position;
+          
+          // UserModel userModel = response.data;
+          // print(userModel.name);
+          // employeeId.text = '${userModel.userId}';
+          // joinDate.text = userModel.joinDate;
+          // email.text = userModel.email;
+          // noKTP.text = userModel.noKtp;
+          // npwp.text = userModel.npwp;
+          // religion.text = userModel.religion;
+          // address.text = userModel.address;
+          // status.text = userModel.status;
+          // endDate.text = userModel.endDate;
+          // phoneNumber.text = userModel.phoneNumber;
+          // city.text = userModel.city;
+          // dateOfBirth.text = '${userModel.dateOfBirth}';
+          // name.text = userModel.name;
+          // position.text = userModel.position;
+          // isLoading.value = false;
+          // employeeId.text = '${response.data.userId}';
+          joinDate.text = response.data.joinDate;
+          email.text = response.data.email;
+          noKTP.text = response.data.noKtp;
+          npwp.text = response.data.npwp;
+          religion.text = response.data.religion;
+          address.text = response.data.address;
+          status.text = response.data.status;
+          endDate.text = response.data.endDate;
+          phoneNumber.text = response.data.phoneNumber;
+          city.text = response.data.city;
+          dateOfBirth.text = '${response.data.dateOfBirth}';
+          name.text = response.data.name;
+          position.text = response.data.position;
+          isLoading.value = false;
+          await Future.delayed(Duration(seconds: 3));
+          update();
         }
       });
-      isLoading.value = false;
     } catch (e) {
+      
       isLoading.value = true;
+      print(e);
     }
-    await Future.delayed(Duration(seconds: 3));
+    // await Future.delayed(Duration(seconds: 3));
   }
 
   void updateProfile() {}

@@ -123,8 +123,6 @@ class HistoryPresensiPage extends GetView<HistoryController> {
                                                     ),
                                                   ),
                                                   Wrap(
-                                                    // crossAxisAlignment: CrossAxisAlignment.start,
-                                                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     crossAxisAlignment:
                                                         WrapCrossAlignment
                                                             .start,

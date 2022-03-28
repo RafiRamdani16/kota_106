@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Controllers/ActivityRecordController.dart';
+import 'package:kota_106/Controllers/HistoryController.dart';
 import 'package:kota_106/Models/ActivityRecordModel.dart';
 
-class DetailActivityRecordScreen extends GetView<ActivityRecordController> {
+class DetailActivityRecordScreen extends GetView<HistoryController> {
   final ActivityRecordModel activityRecordModel;
   DetailActivityRecordScreen(this.activityRecordModel);
   @override
   Widget build(BuildContext context) {
+    HistoryController historyController = Get.put(HistoryController());
     var screenHeightSize = MediaQuery.of(context).size.height;
     var screenWidthSize = MediaQuery.of(context).size.width;
 
+    controller.formatedTime(activityRecordModel.date);
     controller.locationNow.text = activityRecordModel.location;
-    controller.timeNow.text = activityRecordModel.date;
-    controller.dateNow.text = activityRecordModel.date;
     controller.description.text = activityRecordModel.description;
 
     return AspectRatio(
@@ -90,7 +91,7 @@ class DetailActivityRecordScreen extends GetView<ActivityRecordController> {
                                     ),
                                   ),
                                   SizedBox(
-                                    width: 80.0,
+                                    width: 50.0,
                                   ),
                                   Container(
                                     width: 100.0,

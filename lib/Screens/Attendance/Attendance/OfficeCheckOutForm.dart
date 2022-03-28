@@ -93,7 +93,7 @@ class OfficeCheckOutForm extends GetView<AttendanceController> {
                           String checkOutTime =
                               '${controller.cDateTime.text} ${controller.cTime.text}';
           
-                          controller.checkOutOffline(controller.clocation.text,
+                          controller.pencatatanKehadiranAkhirDikantor(controller.clocation.text,
                               checkOutTime, controller.note.text);
                         },
                         child: Text('Check-out Now')))

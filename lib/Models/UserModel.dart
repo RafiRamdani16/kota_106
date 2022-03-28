@@ -4,11 +4,9 @@ part "UserModel.g.dart";
 @JsonSerializable()
 class UserModel {
   @JsonKey()
-  late String token;
+  late int userId;
   @JsonKey()
-  late String refreshToken;
-  @JsonKey()
-  late int id;
+  late int scheduleId;
   @JsonKey()
   late String name;
   @JsonKey()
@@ -16,7 +14,7 @@ class UserModel {
   @JsonKey()
   late String position;
   @JsonKey()
-  late String curentlySalary;
+  late int currentSalary;
   @JsonKey()
   late String status;
   @JsonKey()
@@ -36,17 +34,19 @@ class UserModel {
   @JsonKey()
   late String npwp;
   @JsonKey()
-  late DateTime dateOfBirth;
+  late String dateOfBirth;
   @JsonKey()
   late String role;
   @JsonKey()
-  late String image;
+  late String password;
   @JsonKey()
-  late int idSchedule;
+  late String photoName;
+  @JsonKey()
+  late int superiorId;
 
   UserModel();
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
+  factory UserModel.fromJson(Map<String,dynamic> json) =>
       _$UserModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);

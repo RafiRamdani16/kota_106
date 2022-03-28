@@ -9,7 +9,7 @@ class AuthenticationManager extends GetxController with CacheManager {
     isLogged.value = false;
     removeLoginData();
     removeToken();
-    Get.offNamed('/loginPage');
+    Get.offNamed('/splashScreen');
   }
 
   void login(String? token, String? refreshToken, String name, String position,

@@ -7,7 +7,7 @@ class AttendanceModel {
   @JsonKey()
   late int id;
   @JsonKey()
-  late String isLate;
+  late bool isLate;
   @JsonKey()
   late String checkinAt;
   @JsonKey()

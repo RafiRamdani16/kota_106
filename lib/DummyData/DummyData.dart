@@ -1,12 +1,14 @@
 
 import 'package:kota_106/Models/AttendanceModel.dart';
 
+import '../Models/ActivityRecordModel.dart';
+
 class DummyData {
   List<AttendanceModel> dummy2 = List<AttendanceModel>.generate(
     9,
     (index) => AttendanceModel()
       ..id = index
-      ..isLate = "false"
+      ..isLate = false
       ..checkinAt = "2022-04-03 07:00"
       ..checkoutAt = "2022-04-03 17:00"
       ..locationCheckin = "Jalan Cisaranten Kulon, Arcamanik, Kota Bandung"
@@ -18,13 +20,13 @@ class DummyData {
       ..userId = 1,
   );
   
-  // List<ActivityRecordModel> activityDummy = List<ActivityRecordModel>.generate(
-  //     100,
-  //     (index) => ActivityRecordModel()
-  //       ..date = "$index"
-  //       ..description = "Mengerjakan Authentication"
-  //       ..location = "Jalan Cisaranten Kulon, Arcamanik, Kota Bandung"
-  //       ..photoName = "Rafi.jpg"
-  //       ..time = "09:10"
-  //       );
+  List<ActivityRecordModel> activityDummy = List<ActivityRecordModel>.generate(
+      100,
+      (index) => ActivityRecordModel()
+        ..date = "$index"
+        ..description = "Mengerjakan Authentication"
+        ..location = "Jalan Cisaranten Kulon, Arcamanik, Kota Bandung"
+        ..photoName = "Rafi.jpg"
+        ..whatTimeIs = 1
+        );
 }

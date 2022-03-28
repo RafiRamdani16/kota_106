@@ -55,7 +55,7 @@ class AttendanceScreen extends StatelessWidget {
                             backgroundImage:
                                 AssetImage('assets/images/akun.png'),
                           ),
-                          title: Text("terjadi kesalahan" ),
+                          title: Text(attendanceController.getName()! ),
                           subtitle: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +73,7 @@ class AttendanceScreen extends StatelessWidget {
                               Row(children: [
                                 Icon(Icons.work_outline),
                                 Text(
-                                   "terjadi kesalahan" ,
+                                   attendanceController.getPosition()! ,
                                   style: TextStyle(
                                       color: Colors.black.withOpacity(0.6)),
                                 ),
