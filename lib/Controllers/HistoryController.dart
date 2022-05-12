@@ -10,6 +10,7 @@ import 'package:kota_106/Models/ActivityRecordModel.dart';
 import 'package:kota_106/Models/AttendanceModel.dart';
 
 class HistoryController extends GetxController with CacheManager {
+  
   TextEditingController locationCheckin2 = TextEditingController();
   TextEditingController locationCheckout = TextEditingController();
   TextEditingController doneList = TextEditingController();
@@ -24,6 +25,8 @@ class HistoryController extends GetxController with CacheManager {
   RxString checkInDate = "".obs;
   RxString checkOutTime = "".obs;
   RxString checkOutDate = "".obs;
+  RxString activityRecordTime = "".obs;
+  RxString activityRecordDate = "".obs;
   RxInt day = 0.obs;
   RxString month = "".obs;
   RxInt workingTime = 0.obs;
@@ -40,69 +43,67 @@ class HistoryController extends GetxController with CacheManager {
   List<ActivityRecordModel> activityRecordHistory = <ActivityRecordModel>[];
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
 
-  void getHistoryAttendance() async {
-    DummyData dummy = Get.put(DummyData());
-    try {
-      // attendanceHistory = dummy.dummy2;
+  Future<void> getHistoryAttendance() async {
+    // DummyData dummy = Get.put(DummyData());
+    // attendanceHistory = dummy.dummy2;
+    // isThereItemActivity.value = true;
+    
+    await _apiClient
+        .getHistoryAttendance('UserId==${getUserId()!}', "-CreatedAt",
+            page.value, limit.value, getToken()!)
+        .then((response) async {
+      print(response.status);
+      if (response.status == 200) {
 
-      await _apiClient
-          .getHistoryAttendance('UserId==${getUserId()!}', "-CreatedAt",
-              page.value, limit.value, getToken()!)
-          .then((response) async {
-        print(response.status);
-        if (response.status == 200) {
-          attendanceHistory = response.data.data.toList();
-          isThereItem.value = true;
-          update();
-          print(attendanceHistory.length);
-        } else if (response.status == 401) {
-          await _apiClient.getRefreshToken(id, getToken()!).then((response) {
-            saveToken(response.data);
-            getHistoryAttendance();
-          });
-        }
-      });
-    } catch (e) {
-      print(e);
-    }
+        attendanceHistory = response.data.data.toList();
+        isThereItem.value = true;
+      } else if (response.status == 401) {
+        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+          saveToken(response.data);
+          getHistoryAttendance();
+        });
+      }
+    });
   }
 
-  Widget setImageView(String photoName) {
-    return Image.asset(
-      'assets/images/Icon/AccountBox.png',
-      width: 100,
-      height: 100,
+  Widget setImageView(String photoName, double width, double height) {
+    return Image.network(
+      'https://bbbe-2001-448a-304c-3893-1d52-5ff3-6470-a748.ngrok.io/$photoName',
+      width: width,
+      height: height,
     );
   }
 
-  void currentCheckinDate(String rawDate) async {
+  void changeFormatDateForActivityHistory(String rawDate) async {
+    DateTime formatedDateTime = DateTime.parse(rawDate);
+    activityRecordDate.value =
+        DateFormat('dd MMMM yyyy').format(formatedDateTime);
+    activityRecordTime.value = DateFormat('HH:mm').format(formatedDateTime);
+    day.value = formatedDateTime.day;
+    month.value =
+        DateFormat('MMMM').format(DateTime(0, formatedDateTime.month));
+  }
+
+  void changeFormatCheckinDateForAttendanceHistory(String rawDate) async {
     DateTime formatedTime = DateTime.parse(rawDate);
-    List<String> formatedDate = rawDate.split(' ');
-    checkInDate.value = formatedDate[0];
-    DateTime parse = DateTime.parse(formatedDate[0]);
-    DateTime parseInt = DateTime.parse(rawDate);
+
+    checkInDate.value = DateFormat('yyyy-MM-dd').format(formatedTime);
 
     checkInTime.value = DateFormat('HH:mm').format(formatedTime);
-    checkInHour.value = parseInt.hour;
+    checkInHour.value = formatedTime.hour;
 
-    day.value = parse.day;
-    month.value = DateFormat('MMMM').format(DateTime(0, parse.month));
+    day.value = formatedTime.day;
+    month.value = DateFormat('MMMM').format(DateTime(0, formatedTime.month));
   }
 
-  void currentCheckOutDate(String rawDate) async {
+  void changeFormatCheckoutDateForAttendanceHistory(String rawDate) async {
     DateTime formatedTime = DateTime.parse(rawDate);
-    List<String> formatedDate = rawDate.split(' ');
+
     checkOutDate.value = DateFormat('yyyy-MM-dd').format(formatedTime);
     checkOutTime.value = DateFormat('HH:mm').format(formatedTime);
-    DateTime parseInt = DateTime.parse(rawDate);
-    checkOutHour.value = parseInt.hour;
-    getWorkingTime();
-  }
 
-  void formatedTime(String dateTime) async {
-    DateTime formatedTime = DateTime.parse(dateTime);
-    dateNow.text = DateFormat('yyyy-MM-dd').format(formatedTime);
-    timeNow.text = DateFormat('HH:mm').format(formatedTime);
+    checkOutHour.value = formatedTime.hour;
+    getWorkingTime();
   }
 
   void getWorkingTime() {
@@ -110,31 +111,24 @@ class HistoryController extends GetxController with CacheManager {
   }
 
   Future<void> getHistoryActivityRecord() async {
-    // DummyData dummyData = Get.put(DummyData());
-    // activityRecordHistory = dummyData.activityDummy;
-    try {
-      await _apiClient
-          .getHistoryActivityRecord('UserId==${getUserId()!}', "-CreatedAt",
-              page.value, limit.value, getToken()!)
-          .then((response) async {
-        print(response.status);
-        if (response.status == 200) {
-          print(response.status);
-          activityRecordHistory = response.data.data.toList();
-          isThereItemActivity.value = true;
-
-          update();
-          await Future.delayed(Duration(seconds: 3));
-          print(activityRecordHistory.length);
-        } else if (response.status == 401) {
-          await _apiClient.getRefreshToken(id, getToken()!).then((response) {
-            saveToken(response.data);
-            getHistoryActivityRecord();
-          });
-        }
-      });
-    } catch (e) {
-      print(e);
-    }
+    DummyData dummyData = Get.put(DummyData());
+    activityRecordHistory = dummyData.activityDummy;
+    isThereItemActivity.value = true;
+    await _apiClient
+        .getHistoryActivityRecord('UserId==${getUserId()!}', "-CreatedAt",
+            page.value, limit.value, getToken()!)
+        .then((response) async {
+      if (response.status == 200) {
+        activityRecordHistory = response.data.data.toList();
+        isThereItemActivity.value = true;
+        update();
+        await Future.delayed(Duration(seconds: 3));
+      } else if (response.status == 401) {
+        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+          saveToken(response.data);
+          getHistoryActivityRecord();
+        });
+      }
+    });
   }
 }

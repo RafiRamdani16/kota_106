@@ -8,12 +8,11 @@ import '../../Controllers/LoginController.dart';
 class LoginScreen extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
-    var screenHeightSize = MediaQuery.of(context).size.height;
-    var screenWidthSize = MediaQuery.of(context).size.width;
+    
     return Scaffold(
       body: Container(
-        height: screenHeightSize,
-        width: screenWidthSize,
+        height: Get.height,
+        width: Get.width,
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("assets/images/Login_Page.jpg"),
@@ -24,7 +23,7 @@ class LoginScreen extends GetView<LoginController> {
               children: [
                 Padding(padding: EdgeInsets.only(top: 140)),
                 CircleAvatar(
-                  backgroundImage: AssetImage("assets/images/Logo_garuda.jpg"),
+                  backgroundImage: AssetImage("assets/images/Logo_Garuda.jpg"),
                   radius: 50,
                 ),
                 // Image.asset("assets/images/Logo_garuda.jpg"),
@@ -50,7 +49,7 @@ class LoginScreen extends GetView<LoginController> {
                               color: Colors.black),
                         ),
                       ),
-                      Padding(padding: EdgeInsets.only(top: 15)),
+                      SizedBox(height: 15,),
                       Container(
                         width: 350,
                         child: TextFormField(
@@ -73,7 +72,7 @@ class LoginScreen extends GetView<LoginController> {
                           },
                         ),
                       ),
-                      Padding(padding: EdgeInsets.only(top: 25)),
+                      SizedBox(height: 25,),
                       Container(
                         alignment: Alignment.centerLeft,
                         width: 350,
@@ -85,7 +84,7 @@ class LoginScreen extends GetView<LoginController> {
                               color: Colors.black),
                         ),
                       ),
-                      Padding(padding: EdgeInsets.only(top: 15)),
+                      SizedBox(height: 15,),
                       Obx(() {
                         return Container(
                           width: 350,
@@ -121,7 +120,9 @@ class LoginScreen extends GetView<LoginController> {
                           ),
                         );
                       }),
-                      Padding(padding: EdgeInsets.only(top: 30)),
+                      SizedBox(
+                        height: 30,
+                      ),
                       Container(
                         width: 350,
                         height: 40,

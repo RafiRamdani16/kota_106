@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:kota_106/Models/ScheduleModel.dart';
 import 'package:location/location.dart';
 
 import 'package:geocoding/geocoding.dart' hide Location;
@@ -20,16 +21,16 @@ class AttendanceController extends GetxController with CacheManager {
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
   Barcode? result;
   RxBool getData = false.obs;
-  var statusScan = false.obs;
-  RxBool statusCheckinOnline = false.obs;
-  RxBool statusCheckoutOnline = false.obs;
-  RxBool statusCheckinOffline = false.obs;
-  RxBool statusCheckoutOffline = false.obs;
+  var statusCheckinScan = false.obs;
+  var statusCheckoutScan = false.obs;
+
+  var checkinScheduleDateTime = "".obs;
+
   Location location = new Location();
   late LocationData _locationData;
-
+  var statusQRCode = false.obs;
   TextEditingController clocation = TextEditingController();
-  TextEditingController cDateTime = TextEditingController();
+  TextEditingController cDate = TextEditingController();
   TextEditingController cTime = TextEditingController();
   TextEditingController note = TextEditingController();
 
@@ -37,7 +38,7 @@ class AttendanceController extends GetxController with CacheManager {
   RxBool _permission = false.obs;
   RxString date = "".obs;
   RxString time = "".obs;
-  RxString nameMonth = "".obs;
+  // RxString nameMonth = "".obs;
   Rx<File> tmpFile = File('').obs;
   Rx<XFile> imageFile = XFile('').obs;
   //  Rx<bool> event;
@@ -49,11 +50,69 @@ class AttendanceController extends GetxController with CacheManager {
 
   @override
   onInit() {
-    getPermission();
+    getLocationPermission();
     super.onInit();
   }
 
-  Future<bool> getPermission() async {
+  void getSchedule() async {
+    await _apiClient.getSchedule(getUserId()!, getToken()!).then((response) {
+      if (response.status == 200) {
+        ScheduleModel scheduleModel = Get.put(ScheduleModel());
+        scheduleModel = response.data;
+        checkinScheduleDateTime.value = scheduleModel.startCheckinAt;
+      }
+    });
+  }
+
+  bool checkSchedule() {
+    checkinScheduleDateTime.value = "${DateTime.now()}";
+    DateTime schedule = DateTime.parse(checkinScheduleDateTime.value);
+    var now = DateTime.now();
+    if (now.isAfter(schedule.subtract(Duration(minutes: 30)))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool checkInStatus() {
+    var now = DateFormat("yyyy-MM-dd", "id_ID").format(DateTime.now());
+    var checkInTime = getCheckinTime();
+    var formatedCheckinTime = "";
+    if (checkInTime == null) {
+      formatedCheckinTime = DateFormat("yyyy-MM-dd", "id_ID")
+          .format(DateTime.now().subtract(Duration(days: 1)));
+    } else {
+      formatedCheckinTime =
+          DateFormat("yyyy-MM-dd", "id_ID").format(DateTime.parse(checkInTime));
+    }
+
+    if (now == formatedCheckinTime) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  bool checkOutStatus() {
+    var now = DateFormat("yyyy-MM-dd", "id_ID").format(DateTime.now());
+    var checkOutTime = getCheckoutTime();
+    var formatedCheckoutTime = "";
+    if (checkOutTime == null) {
+      formatedCheckoutTime = DateFormat("yyyy-MM-dd", "id_ID")
+          .format(DateTime.now().subtract(Duration(days: 1)));
+    } else {
+      formatedCheckoutTime = DateFormat("yyyy-MM-dd", "id_ID")
+          .format(DateTime.parse(checkOutTime));
+    }
+    if (now == formatedCheckoutTime) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  Future<bool> getLocationPermission() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
@@ -75,7 +134,7 @@ class AttendanceController extends GetxController with CacheManager {
     return true;
   }
 
-  void getAddress() async {
+  void getCurrentLocation() async {
     if (_permission.value) {
       getData.value = true;
       _locationData = await location.getLocation();
@@ -106,7 +165,6 @@ class AttendanceController extends GetxController with CacheManager {
       tmpFile.value = File(imageFile.value.path);
       photoName.value =
           base64Encode(File(imageFile.value.path).readAsBytesSync()).trim();
-      print(photoName.value);
       return Image.file(tmpFile.value, width: 100, height: 100);
     } else {
       // photoName.value = 'assets/images/Icon/AccountBox.png';
@@ -120,15 +178,11 @@ class AttendanceController extends GetxController with CacheManager {
 
   Future<void> currentDate() async {
     getData.value = true;
-    String rawDate = "";
-    WidgetsFlutterBinding.ensureInitialized();
-    await initializeDateFormatting('id_ID', null).then((_) => rawDate =
-        '${DateFormat("MMMM yyyy-MM-dd HH:mm", "id_ID").format(DateTime.now())}');
-    List<String> formatedDate = rawDate.split(' ');
-    nameMonth.value = formatedDate[0];
-    date.value = formatedDate[1];
-    time.value = formatedDate[2];
-    cDateTime.text = date.value;
+
+    date.value = DateFormat("yyyy-MM-dd", "id_ID").format(DateTime.now());
+    time.value = DateFormat("HH:mm", "id_ID").format(DateTime.now());
+
+    cDate.text = date.value;
     cTime.text = time.value;
     update();
   }
@@ -143,17 +197,51 @@ class AttendanceController extends GetxController with CacheManager {
     );
   }
 
-  Widget scanQRPage(GlobalKey qrKey, BuildContext context) {
+  Widget scanQRPage(GlobalKey qrKey, String typeScan) {
     return QRView(
         key: qrKey,
+        overlay: QrScannerOverlayShape(
+          borderColor: Colors.white,
+          borderRadius: 15,
+          borderLength: 30,
+          borderWidth: 10,
+          cutOutSize: 300,
+        ),
         onQRViewCreated: (controller) {
-          controller.scannedDataStream.listen((scanData) async {
-            statusScan.value = true;
-            time.value = scanData.code!;
+          controller.scannedDataStream.listen((scanData) {
             controller.pauseCamera();
-            Get.offNamed('/officeCheckIn');
+            if (typeScan == 'check-in') {
+              checkQRCode(scanData.code!);
+              // ignore: unrelated_type_equality_checks
+              if (statusQRCode.value == false) {
+                statusCheckinScan.value = false;
+                Get.back();
+              } else {
+                statusCheckinScan.value = true;
+              }
+            } else {
+              checkQRCode(scanData.code!);
+              // ignore: unrelated_type_equality_checks
+              if (statusQRCode.value == false) {
+                statusCheckoutScan.value = false;
+                Get.back();
+              } else {
+                statusCheckoutScan.value = true;
+              }
+            }
           });
         });
+  }
+
+  void checkQRCode(String dataQRCode) async {
+    token = getToken()!;
+    await _apiClient.checkQRCodeO(dataQRCode, token).then((response) {
+      if (response.status == 200) {
+        statusQRCode.value = true;
+      } else {
+        statusQRCode.value = false;
+      }
+    });
   }
 
   void dialog(String message, String content) {
@@ -178,13 +266,7 @@ class AttendanceController extends GetxController with CacheManager {
     );
   }
 
-  void getSchedule() async {
-    await _apiClient.getSchedule(getUserId()!, getToken()!).then((response) {
-      if (response.status == 200) {}
-    });
-  }
-
-  void pencatatanKehadiranAwalDiLuarKantor(
+  void checkInOnline(
       String location, String checkInTime, String description) async {
     id = getUserId()!;
     scheduleId = getScheduleId()!;
@@ -201,13 +283,14 @@ class AttendanceController extends GetxController with CacheManager {
         .then((response) async {
       print(response.status);
       if (response.status == 200) {
-        statusCheckinOnline.value = true;
-        statusCheckinOffline.value = true;
+        removeCheckinTime();
+        saveCheckInTime(checkInTime);
         dialog('SUCCESS', 'CHECK-IN BERHASIL');
       } else if (response.status == 401) {
         await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+          removeToken();
           saveToken(response.data);
-          pencatatanKehadiranAwalDiLuarKantor(location, checkInTime, description);
+          checkInOnline(location, checkInTime, description);
         });
       } else {
         dialog('ALERT', 'CHECK-IN GAGAL');
@@ -215,23 +298,20 @@ class AttendanceController extends GetxController with CacheManager {
     });
   }
 
-  void pencatatanKehadiranAkhirDiLuarKantor(
+  void checkOutOnline(
       String location, String checkOutTime, String description) async {
-    id = getUserId()!;
-    scheduleId = getScheduleId()!;
-    token = getToken()!;
     await _apiClient
-        .checkoutOnline(
-            id, scheduleId, location, checkOutTime, description, token)
+        .checkoutOnline(getUserId()!, getScheduleId()!, location, checkOutTime,
+            description, getToken()!)
         .then((response) async {
       if (response.status == 200) {
-        statusCheckoutOnline.value = true;
-        statusCheckoutOffline.value = true;
+        removeCheckoutTime();
+        saveCheckOutTime(checkOutTime);
         dialog('SUCCESS', 'CHECK-OUT BERHASIL');
       } else if (response.status == 401) {
         await _apiClient.getRefreshToken(id, getToken()!).then((response) {
           saveToken(response.data);
-          pencatatanKehadiranAkhirDiLuarKantor(location, checkOutTime, description);
+          checkOutOnline(location, checkOutTime, description);
         });
       } else {
         dialog('ALERT', 'CHECK-OUT GAGAL');
@@ -239,23 +319,20 @@ class AttendanceController extends GetxController with CacheManager {
     });
   }
 
-  void pencatatanKehadiranAwalDikantor(
+  void checkInOffline(
       String location, String checkinTime, String description) async {
-    id = getUserId()!;
-    scheduleId = getScheduleId()!;
-    token = getToken()!;
     await _apiClient
-        .pencatatanKehadiranAwalDikantor(
-            id, scheduleId, location, checkinTime, description, token)
+        .checkinOffline(getUserId()!, getScheduleId()!, location, checkinTime,
+            description, getToken()!)
         .then((response) async {
       if (response.status == 200) {
-        statusCheckinOffline.value = true;
-        statusCheckinOnline.value = true;
+        removeCheckinTime();
+        saveCheckInTime(checkinTime);
         dialog('SUCCESS', 'CHECK-IN BERHASIL');
       } else if (response.status == 401) {
         await _apiClient.getRefreshToken(id, getToken()!).then((response) {
           saveToken(response.data);
-          pencatatanKehadiranAwalDikantor(location, checkinTime, description);
+          checkInOffline(location, checkinTime, description);
         });
       } else {
         dialog('ALERT', 'CHECK-IN GAGAL');
@@ -263,23 +340,24 @@ class AttendanceController extends GetxController with CacheManager {
     });
   }
 
-  void pencatatanKehadiranAkhirDikantor(
+  void checkOutOffline(
       String location, String checkoutTime, String description) async {
     id = getUserId()!;
     scheduleId = getScheduleId()!;
     token = getToken()!;
     await _apiClient
-        .checkoutOffline(
-            id, scheduleId, location, checkoutTime, description, token)
+        .checkoutOffline(getUserId()!, getScheduleId()!, location, checkoutTime,
+            description, getToken()!)
         .then((response) async {
       if (response.status == 200) {
-        statusCheckoutOffline.value = true;
-        statusCheckoutOnline.value = true;
+        removeCheckoutTime();
+        saveCheckOutTime(checkoutTime);
         dialog('SUCCESS', 'CHECK-OUT BERHASIL');
       } else if (response.status == 401) {
         await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+          clearStorage();
           saveToken(response.data);
-          pencatatanKehadiranAkhirDikantor(location, checkoutTime, description);
+          checkOutOffline(location, checkoutTime, description);
         });
       } else {
         dialog('ALERT', 'CHECK-OUT GAGAL');

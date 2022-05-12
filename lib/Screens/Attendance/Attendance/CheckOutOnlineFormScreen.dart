@@ -21,7 +21,7 @@ class CheckOutForm extends GetView<AttendanceController> {
         child: Container(
           color: HexColor('F5F5F5'),
           height: screenHeightSize,
-          padding: EdgeInsets.only(left: 20),
+          padding: EdgeInsets.only(left: 20,right: 20),
           child: Column(children: [
             Row(children: [
               Image.asset(
@@ -37,17 +37,18 @@ class CheckOutForm extends GetView<AttendanceController> {
               controller: controller.clocation,
               enabled: false,
             ),
+            SizedBox(height: 10,),
             Row(
               children: [
                 Image.asset('assets/images/Icon/Calendar.png'),
                 SizedBox(
-                  width: 10.0,
+                  width: 5.0,
                 ),
                 Text('Check-in Date'),
-                Padding(padding: EdgeInsets.only(left: 60)),
+                Padding(padding: EdgeInsets.only(left: 50)),
                 Image.asset('assets/images/Icon/Clock.png'),
                 SizedBox(
-                  width: 10.0,
+                  width: 5.0,
                 ),
                 Text('Check-in Time')
               ],
@@ -57,7 +58,7 @@ class CheckOutForm extends GetView<AttendanceController> {
                 Container(
                   width: screenWidthSize / 2 - 20,
                   child: TextFormField(
-                    maxLength: controller.cDateTime.text.trim().length,
+                    maxLength: controller.cDate.text.trim().length,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         fillColor: Colors.white,
@@ -65,7 +66,7 @@ class CheckOutForm extends GetView<AttendanceController> {
                     textAlign: TextAlign.left,
                     style: TextStyle(fontSize: 12),
                     maxLines: 1,
-                    controller: controller.cDateTime,
+                    controller: controller.cDate,
                     enabled: false,
                   ),
                 ),
@@ -92,7 +93,7 @@ class CheckOutForm extends GetView<AttendanceController> {
             Row(
               children: [
                 Image.asset('assets/images/Icon/Note.png'),
-                Text('You Want To...'),
+                Text('Done List...'),
               ],
             ),
             TextFormField(
@@ -107,9 +108,9 @@ class CheckOutForm extends GetView<AttendanceController> {
                 child: ElevatedButton(
                     onPressed: () {
                       String checkOutTime =
-                          '${controller.cDateTime.text} ${controller.cTime.text}';
+                          '${controller.cDate.text} ${controller.cTime.text}';
         
-                      controller.pencatatanKehadiranAkhirDiLuarKantor(controller.clocation.text,
+                      controller.checkOutOnline(controller.clocation.text,
                           checkOutTime, controller.note.text);
                     },
                     child: Text('Check-out Now')))

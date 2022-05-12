@@ -12,13 +12,13 @@ class OfficeCheckInForm extends GetView<AttendanceController> {
     controller.clocation.text = "CV Garuda Infinity Kreasindo";
     return Center(
       child: AspectRatio(
-        aspectRatio: 100/100,
+        aspectRatio: 100 / 100,
         child: Form(
           key: controller.formkey,
           child: SingleChildScrollView(
             child: Container(
-              height: screenHeightSize,
-              padding: EdgeInsets.only(left: 20),
+              height: screenHeightSize / 2,
+              padding: EdgeInsets.only(left: 20, right: 20),
               child: Column(children: [
                 Row(children: [
                   Image.asset(
@@ -38,27 +38,33 @@ class OfficeCheckInForm extends GetView<AttendanceController> {
                   children: [
                     Image.asset('assets/images/Icon/Calendar.png'),
                     Text('Check-in Date'),
-                    Padding(padding: EdgeInsets.only(left: 80)),
+                    Padding(padding: EdgeInsets.only(left: 60)),
                     Image.asset('assets/images/Icon/Clock.png'),
                     Text('Check-in Time')
                   ],
                 ),
                 Row(
                   children: [
+                    SizedBox(
+                      width: 45.0,
+                    ),
                     Container(
-                      width: screenWidthSize / 2,
+                      width: 100,
                       child: TextFormField(
                         textAlign: TextAlign.left,
                         decoration:
                             InputDecoration(disabledBorder: InputBorder.none),
                         style: TextStyle(fontSize: 12),
                         maxLines: 1,
-                        controller: controller.cDateTime,
+                        controller: controller.cDate,
                         enabled: false,
                       ),
                     ),
+                    SizedBox(
+                      width: 80,
+                    ),
                     Container(
-                      width: screenWidthSize / 2 - 20,
+                      width: 80,
                       child: TextFormField(
                         textAlign: TextAlign.center,
                         decoration:
@@ -74,7 +80,7 @@ class OfficeCheckInForm extends GetView<AttendanceController> {
                 Row(
                   children: [
                     Image.asset('assets/images/Icon/Note.png'),
-                    Text('Done List...'),
+                    Text('You Want To...'),
                   ],
                 ),
                 TextFormField(
@@ -87,10 +93,12 @@ class OfficeCheckInForm extends GetView<AttendanceController> {
                     child: ElevatedButton(
                         onPressed: () {
                           String checkInTime =
-                              '${controller.cDateTime.text} ${controller.cTime.text}';
-          
-                          controller.pencatatanKehadiranAwalDikantor(controller.clocation.text,
-                              checkInTime, controller.note.text);
+                              '${controller.cDate.text} ${controller.cTime.text}';
+
+                          controller.checkInOffline(
+                              controller.clocation.text,
+                              checkInTime,
+                              controller.note.text);
                         },
                         child: Text('Check-in Now')))
               ]),

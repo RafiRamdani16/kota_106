@@ -14,9 +14,10 @@ part 'ApiService.g.dart';
 
 @RestApi(
     baseUrl:
-        "https://0502-2001-448a-3023-30f1-fc92-3822-10f9-782c.ngrok.io/api/")
+        "https://bbbe-2001-448a-304c-3893-1d52-5ff3-6470-a748.ngrok.io/api/")
 abstract class ApiClient {
   factory ApiClient(Dio dio) = _ApiClient;
+
   @Headers(<String, dynamic>{
     "Content-Type": "application/json",
   })
@@ -44,7 +45,7 @@ abstract class ApiClient {
       @Header("Authorization") String token);
 
   @POST('attendance/checkin_offline')
-  Future<ApiResponse<String>> pencatatanKehadiranAwalDikantor(
+  Future<ApiResponse<String>> checkinOffline(
       @Field("userId") int id,
       @Field("scheduleId") int scheduleId,
       @Field("location") String location,
@@ -93,6 +94,31 @@ abstract class ApiClient {
     @Header("Authorization") String token,
   );
 
+  @PUT('user')
+  Future<ApiResponse<UserModel>> updateProfile(
+    @Path("Userid") int id,
+    @Field("ScheduleId") int scheduleId,
+    @Field("Name") String name,
+    @Field("Religion") String religion,
+    @Field("Position") String position,
+    @Field("CurrentSalary") int currentSalary,
+    @Field("Status") String status,
+    @Field("JoinDate") String joinDate,
+    @Field("EndDate") String endDate,
+    @Field("PhoneNumber") String phoneNumber,
+    @Field("Email") String email,
+    @Field("Address") String address,
+    @Field("City") String city,
+    @Field("NoKtp") String noKtp,
+    @Field("NPWP") String npwp,
+    @Field("DateOfBirth") String dateOfBirth,
+    @Field("Role") String role,
+    @Field("Password") String password,
+    @Field("PhotoName") String photoName,
+    @Field("SuperiorId") int superiorId,
+    @Header("Authorization") String token,
+  );
+
   @GET('schedule/{id}')
   Future<ApiResponse<ScheduleModel>> getSchedule(
     @Path("id") int id,
@@ -102,6 +128,12 @@ abstract class ApiClient {
   @POST('refresh')
   Future<ApiResponse<String>> getRefreshToken(
     @Query('refreshToken') int id,
+    @Header("Authorization") String token,
+  );
+
+  @POST('attendance/check_QRCode_attendance')
+  Future<ApiResponse<String>> checkQRCodeO(
+    @Query('keyword') String keyword,
     @Header("Authorization") String token,
   );
 }

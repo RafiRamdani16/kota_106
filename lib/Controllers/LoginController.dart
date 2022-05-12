@@ -11,20 +11,16 @@ class LoginController extends GetxController with CacheManager {
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
   AuthenticationManager _authenticationManager =
       Get.put(AuthenticationManager());
-   final formkey = GlobalKey<FormState>();
+  final formkey = GlobalKey<FormState>();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   late RxBool isObsecure;
 
-  
-
   @override
   void onInit() {
     isObsecure = true.obs;
-    
     super.onInit();
   }
-
 
   void login(String email, String password) async {
     try {
@@ -75,17 +71,6 @@ class LoginController extends GetxController with CacheManager {
         titleStyle: TextStyle(color: Colors.red),
         middleText: 'Terjadi Kesalahan, Silahkan Ulangi Kembali',
         textConfirm: 'Confirm',
-        confirm: OutlinedButton.icon(
-          onPressed: () => Get.back(),
-          icon: const Icon(
-            Icons.check,
-            color: Colors.blue,
-          ),
-          label: const Text(
-            'Confirm',
-            style: TextStyle(color: Colors.blue),
-          ),
-        ),
       );
     }
   }

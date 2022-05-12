@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:kota_106/Controllers/ActivityRecordController.dart';
+import 'package:intl/intl.dart';
+import 'package:kota_106/Controllers/PermitController.dart';
 
-class ActivityRecordScreen extends GetView<ActivityRecordController> {
+class PermitScreen extends GetView<PermitController> {
   @override
   Widget build(BuildContext context) {
-    controller.currentDate();
-    controller.getLocationActivityRecord();
     return AspectRatio(
       aspectRatio: 100 / 100,
       child: Scaffold(
@@ -16,7 +16,7 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
           backgroundColor: HexColor('FCBC45'),
           automaticallyImplyLeading: false,
           title: const Text(
-            'Activity Record',
+            'Permit Form',
             style: TextStyle(color: Colors.black),
           ),
           leading: IconButton(
@@ -56,83 +56,113 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text("Date"),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Obx((() {
+                                  return Container(
+                                      width: 120,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            elevation: 0,
+                                            primary: Colors.white),
+                                        onPressed: () {
+                                          controller.permitDatePicker(context);
+                                        },
+                                        child: Text(
+                                          DateFormat('yyyy-MM-dd').format(
+                                              controller
+                                                  .permitSelectedDate.value),
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ));
+                                })),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+
                                 Row(
                                   children: [
-                                    Text('Date'),
+                                    Text('Start Time'),
                                     Padding(
                                         padding: EdgeInsets.only(left: 160)),
-                                    Text('Time')
+                                    Text('End Time')
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    Container(
-                                      width: 100,
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            fillColor: Colors.white,
-                                            filled: true),
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(fontSize: 12),
-                                        maxLines: 1,
-                                        controller: controller.dateNow,
-                                        enabled: false,
-                                      ),
-                                    ),
+                                    Obx(() {
+                                      return Container(
+                                          width: 100,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                elevation: 0,
+                                                primary: Colors.white),
+                                            onPressed: () {
+                                              controller.permitTimePicker(
+                                                  context);
+                                            },
+                                            child: Text(
+                                              "${controller.permitStartTime.value.hour}:${controller.permitStartTime.value.minute}",
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ));
+                                    }),
                                     SizedBox(
                                       width: 80.0,
                                     ),
-                                    Container(
-                                      width: 100.0,
-                                      child: TextFormField(
-                                        decoration: InputDecoration(
-                                            border: InputBorder.none,
-                                            filled: true,
-                                            fillColor: Colors.white),
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                        ),
-                                        maxLines: 1,
-                                        controller: controller.timeNow,
-                                        enabled: false,
-                                      ),
-                                    ),
+                                    Obx(() {
+                                      return Container(
+                                          width: 100.0,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                elevation: 0,
+                                                primary: Colors.white),
+                                            onPressed: () {
+                                              controller
+                                                  .permitTimePicker(context);
+                                            },
+                                            child: Text(
+                                              "${controller.permitEndTime.value.hour}:${controller.permitEndTime.value.minute}",
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ));
+                                    }),
                                   ],
                                 ),
                                 SizedBox(
                                   height: 20,
                                 ),
-                                Text('Location'),
+                                Text('Description'),
                                 Padding(padding: EdgeInsets.only(top: 10)),
                                 TextFormField(
                                   decoration: InputDecoration(
                                       fillColor: Colors.white, filled: true),
                                   maxLines: 2,
-                                  controller: controller.locationNow,
+                                  controller: controller.permitDescription,
                                   enabled: false,
                                 ),
                                 SizedBox(
                                   height: 20,
                                 ),
-                                Text('Description...'),
-                                TextFormField(
-                                  decoration: InputDecoration(
-                                      fillColor: Colors.white, filled: true),
-                                  style: TextStyle(fontSize: 12),
-                                  maxLines: 4,
-                                  controller: controller.description,
-                                ),
-                                SizedBox(
-                                  height: 20.0,
-                                ),
-                                Text('Photo'),
+                                // Text('Description...'),
+                                // TextFormField(
+                                //   decoration: InputDecoration(
+                                //       fillColor: Colors.white, filled: true),
+                                //   style: TextStyle(fontSize: 12),
+                                //   maxLines: 4,
+                                //   controller: controller.description,
+                                // ),
+
                                 Row(
                                   children: [
-                                    Obx((() {
-                                      return controller.setImageView();
-                                    })),
+                                    Text("Attachment"),
+                                    SizedBox(
+                                      width: 20.0,
+                                    ),
                                     ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                             shape: RoundedRectangleBorder(
@@ -140,11 +170,9 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                                                     BorderRadius.circular(
                                                         15.0)),
                                             primary: HexColor('FFC368')),
-                                        onPressed: () {
-                                          controller.openCamera();
-                                        },
+                                        onPressed: () {},
                                         child: Text(
-                                          'Add Photo',
+                                          'UPLOAD',
                                           style: TextStyle(
                                               fontSize: 12,
                                               color: Colors.black),
@@ -166,11 +194,9 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                                     borderRadius: BorderRadius.circular(20.0)),
                                 elevation: 10,
                                 primary: HexColor("363636")),
-                            onPressed: () {
-                              controller.addActivityRecord();
-                            },
+                            onPressed: () {},
                             child: Text(
-                              "New Activity",
+                              "Apply Permit",
                               style: TextStyle(
                                   fontFamily: "Roboto",
                                   fontSize: 16,

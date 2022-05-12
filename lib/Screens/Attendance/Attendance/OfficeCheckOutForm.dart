@@ -13,13 +13,13 @@ class OfficeCheckOutForm extends GetView<AttendanceController> {
     controller.clocation.text = "CV Garuda Infinity Kreasindo";
     return Center(
       child: AspectRatio(
-        aspectRatio: 100/100,
+        aspectRatio: 100 / 100,
         child: Form(
           key: controller.formkey,
           child: SingleChildScrollView(
             child: Container(
-              height: screenHeightSize,
-              padding: EdgeInsets.only(left: 20),
+              height: screenHeightSize / 2,
+              padding: EdgeInsets.only(left: 20, right: 20),
               child: Column(children: [
                 Row(children: [
                   Image.asset(
@@ -31,7 +31,6 @@ class OfficeCheckOutForm extends GetView<AttendanceController> {
                 ]),
                 Padding(padding: EdgeInsets.only(top: 10)),
                 TextFormField(
-                  maxLength: controller.clocation.text.length,
                   maxLines: 1,
                   controller: controller.clocation,
                   enabled: false,
@@ -40,35 +39,39 @@ class OfficeCheckOutForm extends GetView<AttendanceController> {
                   children: [
                     Image.asset('assets/images/Icon/Calendar.png'),
                     Text('Check-in Date'),
-                    Padding(padding: EdgeInsets.only(left: 80)),
+                    Padding(padding: EdgeInsets.only(left: 60)),
                     Image.asset('assets/images/Icon/Clock.png'),
                     Text('Check-in Time')
                   ],
                 ),
                 Row(
                   children: [
+                    SizedBox(
+                      width: 45.0,
+                    ),
                     Container(
-                      width: screenWidthSize / 2,
+                      width: 100,
                       child: TextFormField(
                         textAlign: TextAlign.left,
                         decoration:
                             InputDecoration(disabledBorder: InputBorder.none),
                         style: TextStyle(fontSize: 12),
                         maxLines: 1,
-                        maxLength: controller.cDateTime.text.length,
-                        controller: controller.cDateTime,
+                        controller: controller.cDate,
                         enabled: false,
                       ),
                     ),
+                    SizedBox(
+                      width: 80,
+                    ),
                     Container(
-                      width: screenWidthSize / 2 - 20,
+                      width: 80,
                       child: TextFormField(
                         textAlign: TextAlign.center,
                         decoration:
                             InputDecoration(disabledBorder: InputBorder.none),
                         style: TextStyle(fontSize: 12),
                         maxLines: 1,
-                        maxLength: controller.cTime.text.length,
                         controller: controller.cTime,
                         enabled: false,
                       ),
@@ -78,7 +81,7 @@ class OfficeCheckOutForm extends GetView<AttendanceController> {
                 Row(
                   children: [
                     Image.asset('assets/images/Icon/Note.png'),
-                    Text('You Want To...'),
+                    Text('Done List...'),
                   ],
                 ),
                 TextFormField(
@@ -91,10 +94,12 @@ class OfficeCheckOutForm extends GetView<AttendanceController> {
                     child: ElevatedButton(
                         onPressed: () {
                           String checkOutTime =
-                              '${controller.cDateTime.text} ${controller.cTime.text}';
-          
-                          controller.pencatatanKehadiranAkhirDikantor(controller.clocation.text,
-                              checkOutTime, controller.note.text);
+                              '${controller.cDate.text} ${controller.cTime.text}';
+
+                          controller.checkOutOffline(
+                              controller.clocation.text,
+                              checkOutTime,
+                              controller.note.text);
                         },
                         child: Text('Check-out Now')))
               ]),

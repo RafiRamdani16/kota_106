@@ -12,8 +12,6 @@ class OfficePresensiPage extends GetView<AttendanceController> {
     // ScheduleModel scheduleModel = Get.put(ScheduleModel());
     GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
     // var statusScan = controller.statusScan.value;
-
-    var screenHeightSize = MediaQuery.of(context).size.height;
     const List<Tab> tabs = <Tab>[
       Tab(text: 'Check-in'),
       Tab(text: 'Check-out'),
@@ -35,18 +33,18 @@ class OfficePresensiPage extends GetView<AttendanceController> {
             ),
             Container(
               color: HexColor('F5F5F5F5'),
-              height: screenHeightSize / 2,
+              height: Get.height,
               child: TabBarView(children: [
                 // controller.scanQRPage(qrKey),
                 Obx(() {
-                  return controller.statusScan.value 
+                  return controller.statusCheckinScan.value 
                       ? OfficeCheckInForm()
-                      : controller.scanQRPage(qrKey, context);
+                      : controller.scanQRPage(qrKey,'check-in');
                 }),
                  Obx(() {
-                  return controller.statusScan.value
+                  return controller.statusCheckoutScan.value
                       ? OfficeCheckOutForm()
-                      : controller.scanQRPage(qrKey, context);
+                      : controller.scanQRPage(qrKey,'check-out');
                 }),
               ]),
             )

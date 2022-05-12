@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:kota_106/Controllers/HistoryController.dart';
+import 'package:kota_106/Screens/History/History%20Activity%20Record/HistoryActivityRecord.dart';
 
 import 'HistoryLeave/HistoryLeavePage.dart';
 import 'HistoryOvertime/HistoryOvertimePage.dart';
@@ -13,14 +13,12 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var _selectedIndex = 1.obs;
-    HistoryController controller =
-        Get.put(HistoryController());
-    controller.getHistoryAttendance();
     List<Widget> tabs = <Widget>[
       Container(width: 75, child: Tab(text: 'Attendance')),
       Container(width: 70, child: Tab(text: 'Overtime')),
       Container(width: 70, child: Tab(text: 'Leave')),
       Container(width: 70, child: Tab(text: 'Permit')),
+      Container(width: 100, child: Tab(text: 'Activity Record')),
     ];
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -31,7 +29,7 @@ class HistoryScreen extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       body: DefaultTabController(
-        length: 4,
+        length: 5,
         initialIndex: 0,
         child: Wrap(
           spacing: 10,
@@ -54,6 +52,7 @@ class HistoryScreen extends StatelessWidget {
                 HistoryOvertimePage(),
                 HistoryLeavePage(),
                 HistoryPermitPage(),
+                HistoryActivityRecord(),
               ]),
             )
           ],
@@ -61,6 +60,7 @@ class HistoryScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         iconSize: 30,
+        backgroundColor: Colors.black,
         items: [
           BottomNavigationBarItem(
               icon: Icon(Icons.fingerprint_outlined),
@@ -71,14 +71,7 @@ class HistoryScreen extends StatelessWidget {
               label: "history",
               backgroundColor: Colors.black),
           BottomNavigationBarItem(
-              icon: Icon(Icons.announcement),
-              label: "announcement",
-              backgroundColor: Colors.black),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person,
-                color: Colors.white,
-              ),
+              icon: Icon(Icons.person),
               label: "profile",
               backgroundColor: Colors.black)
         ],
@@ -92,12 +85,11 @@ class HistoryScreen extends StatelessWidget {
             Get.toNamed('/historyPage');
           } else if (index == 2) {
             _selectedIndex.value = index;
-          } else if (index == 3) {
-            _selectedIndex.value = index;
             Get.toNamed('/profileScreen');
           }
         },
         selectedItemColor: Colors.amber,
+        unselectedItemColor: Colors.white,
         showSelectedLabels: false,
         showUnselectedLabels: false,
       ),

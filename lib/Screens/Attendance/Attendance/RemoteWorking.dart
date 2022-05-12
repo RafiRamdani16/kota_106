@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-
 import '../../../Controllers/AttendanceController.dart';
 // import '../../../Models/ScheduleModel.dart';
-import 'CheckInForm.dart';
-import 'CheckOutForm.dart';
+import 'CheckInOnlineFormScreen.dart';
+import 'CheckOutOnlineFormScreen.dart';
 
-class RemotePresensiPage extends GetView<AttendanceController> {
+class RemoteScreen extends GetView<AttendanceController> {
   @override
   Widget build(BuildContext context) {
-  
     // ScheduleModel scheduleModel = Get.put(ScheduleModel());
 
     var currentTime = controller.time.value;
@@ -19,7 +17,7 @@ class RemotePresensiPage extends GetView<AttendanceController> {
     var scheduleStartTime = controller.time.value;
     // var scheduleEndTime = scheduleModel.endCheckinAt;
     var scheduleEndTime = controller.time.value;
-    controller.getAddress();
+    controller.getCurrentLocation();
     controller.currentDate();
     const List<Tab> tabs = <Tab>[
       Tab(text: 'Check-in'),
@@ -45,12 +43,10 @@ class RemotePresensiPage extends GetView<AttendanceController> {
                 color: HexColor('F5F5F5F5'),
                 height: Get.height,
                 child: TabBarView(children: [
-                  currentTime == scheduleStartTime &&
-                          controller.statusCheckinOnline.value == false
+                  controller.checkInStatus() && controller.checkSchedule()
                       ? CheckInForm()
                       : controller.showAlert(),
-                  currentTime == scheduleEndTime &&
-                          controller.statusCheckinOnline.value == true
+                  controller.checkOutStatus()
                       ? CheckOutForm()
                       : controller.showAlert()
                 ]),

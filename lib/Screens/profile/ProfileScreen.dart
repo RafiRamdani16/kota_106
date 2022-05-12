@@ -4,13 +4,45 @@ import 'package:hexcolor/hexcolor.dart';
 
 import 'package:kota_106/Controllers/ProfileController.dart';
 
-import '../../Controllers/Authentication.dart';
 
 class ProfileScreen extends GetView<ProfileController> {
-  Scaffold errorView(BuildContext context) {
-    var _selectedIndex = 3.obs;
-    AuthenticationManager authenticationManager =
-        Get.put(AuthenticationManager());
+  
+
+  Widget bottomNavigationBar(){
+    return BottomNavigationBar(
+        iconSize: 30,
+        backgroundColor: Colors.black,
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(Icons.fingerprint_outlined),
+              label: "home",
+              backgroundColor: Colors.black),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.access_time_outlined),
+              label: "histori",
+              backgroundColor: Colors.black),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "profile",
+              backgroundColor: Colors.black)
+        ],
+        currentIndex: 2,
+        onTap: (index) {
+          if (index == 0) {
+            Get.toNamed('/');
+          } else if (index == 1) {
+            Get.toNamed('/historyPage');
+          } else if (index == 2) {
+            Get.toNamed('/profilePage');
+          }
+        },
+        selectedItemColor: Colors.amber,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+      );
+  }
+
+  Scaffold errorView(BuildContext context) { 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -21,7 +53,7 @@ class ProfileScreen extends GetView<ProfileController> {
             padding: EdgeInsets.only(right: 40),
             child: IconButton(
                 onPressed: () {
-                  authenticationManager.logout();
+                  controller.logout();
                 },
                 icon: Icon(
                   Icons.exit_to_app,
@@ -45,47 +77,7 @@ class ProfileScreen extends GetView<ProfileController> {
               ),
             )),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        iconSize: 40,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.fingerprint_outlined),
-              label: "home",
-              backgroundColor: Colors.black),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.access_time_outlined),
-              label: "histori",
-              backgroundColor: Colors.black),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.announcement),
-              label: "announcement",
-              backgroundColor: Colors.black),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person,
-              ),
-              label: "profile",
-              backgroundColor: Colors.black)
-        ],
-        currentIndex: _selectedIndex.value,
-        onTap: (index) {
-          if (index == 0) {
-            _selectedIndex.value = index;
-            Get.toNamed('/');
-          } else if (index == 1) {
-            _selectedIndex.value = index;
-            Get.toNamed('/historyPage');
-          } else if (index == 2) {
-            _selectedIndex.value = index;
-          } else if (index == 3) {
-            _selectedIndex.value = index;
-            Get.toNamed('/profilePage');
-          }
-        },
-        selectedItemColor: Colors.amber,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-      ),
+      bottomNavigationBar: bottomNavigationBar() ,
     );
   }
 
@@ -107,9 +99,7 @@ class ProfileScreen extends GetView<ProfileController> {
   }
 
   Scaffold waitingView(BuildContext context) {
-    var _selectedIndex = 3.obs;
-    AuthenticationManager authenticationManager =
-        Get.put(AuthenticationManager());
+    
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -117,10 +107,10 @@ class ProfileScreen extends GetView<ProfileController> {
         elevation: 0,
         actions: <Widget>[
           Padding(
-            padding: EdgeInsets.only(right: 40),
+            padding: EdgeInsets.only(right: 35),
             child: IconButton(
                 onPressed: () {
-                  authenticationManager.logout();
+                  controller.logout();
                 },
                 icon: Icon(
                   Icons.exit_to_app,
@@ -132,62 +122,20 @@ class ProfileScreen extends GetView<ProfileController> {
       body: SingleChildScrollView(
         child: Container(
             height: Get.height,
-            width: MediaQuery.of(context).size.width,
+            width: Get.width,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage("assets/images/BackgroundProfile.jpg"),
                     fit: BoxFit.fill)),
-            child: CircularProgressIndicator()),
+            child: Center(child: CircularProgressIndicator())),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        iconSize: 40,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.fingerprint_outlined),
-              label: "home",
-              backgroundColor: Colors.black),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.access_time_outlined),
-              label: "histori",
-              backgroundColor: Colors.black),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.announcement),
-              label: "announcement",
-              backgroundColor: Colors.black),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person,
-              ),
-              label: "profile",
-              backgroundColor: Colors.black)
-        ],
-        currentIndex: _selectedIndex.value,
-        onTap: (index) {
-          if (index == 0) {
-            _selectedIndex.value = index;
-            Get.toNamed('/');
-          } else if (index == 1) {
-            _selectedIndex.value = index;
-            Get.toNamed('/historyPage');
-          } else if (index == 2) {
-            _selectedIndex.value = index;
-          } else if (index == 3) {
-            _selectedIndex.value = index;
-            Get.toNamed('/profilePage');
-          }
-        },
-        selectedItemColor: Colors.amber,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-      ),
+      bottomNavigationBar: bottomNavigationBar(),
     );
   }
 
   Scaffold displayProfile(BuildContext context) {
-    var _selectedIndex = 3.obs;
+    
     double fontSize = 10.0;
-    AuthenticationManager authenticationManager =
-        Get.put(AuthenticationManager());
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -198,7 +146,7 @@ class ProfileScreen extends GetView<ProfileController> {
             padding: EdgeInsets.only(right: 40),
             child: IconButton(
                 onPressed: () {
-                  authenticationManager.logout();
+                  controller.logout();
                 },
                 icon: Icon(
                   Icons.exit_to_app,
@@ -207,22 +155,22 @@ class ProfileScreen extends GetView<ProfileController> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: Get.height,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("assets/images/BackgroundProfile.jpg"),
-                  fit: BoxFit.fill)),
-          child: Padding(
-            padding: EdgeInsets.only(top: 45),
+      body: Container(
+        height: Get.height,
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/BackgroundProfile.jpg"),
+                fit: BoxFit.fill)),
+        child: Padding(
+          padding: EdgeInsets.only(top: 45),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CircleAvatar(
-                  backgroundImage: NetworkImage("https://picsum.photos/200"),
+                  backgroundImage: NetworkImage("https://bbbe-2001-448a-304c-3893-1d52-5ff3-6470-a748.ngrok.io/${controller.photoName}"),
                   radius: 70,
                 ),
                 // SizedBox(
@@ -232,9 +180,9 @@ class ProfileScreen extends GetView<ProfileController> {
                   controller.name.text,
                   textAlign: TextAlign.center,
                 ),
-                // SizedBox(
-                //   height: 20,
-                // ),
+                SizedBox(
+                  height: 20,
+                ),
                 Text(
                   controller.position.text,
                   textAlign: TextAlign.center,
@@ -292,7 +240,7 @@ class ProfileScreen extends GetView<ProfileController> {
                               fontFamily: 'Roboto', fontSize: fontSize),
                         ),
                         Container(
-                          height: 40,
+                          height: 50,
                           width: 147,
                           child: TextFormField(
                             enabled: false,
@@ -458,7 +406,7 @@ class ProfileScreen extends GetView<ProfileController> {
                   style: TextStyle(fontFamily: 'Roboto', fontSize: fontSize),
                 ),
                 Container(
-                  height: 40,
+                  height: 50,
                   width: 324,
                   child: TextFormField(
                       enabled: false,
@@ -496,47 +444,7 @@ class ProfileScreen extends GetView<ProfileController> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        iconSize: 40,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.fingerprint_outlined),
-              label: "home",
-              backgroundColor: Colors.black),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.access_time_outlined),
-              label: "histori",
-              backgroundColor: Colors.black),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.announcement),
-              label: "announcement",
-              backgroundColor: Colors.black),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.person,
-              ),
-              label: "profile",
-              backgroundColor: Colors.black)
-        ],
-        currentIndex: _selectedIndex.value,
-        onTap: (index) {
-          if (index == 0) {
-            _selectedIndex.value = index;
-            Get.toNamed('/');
-          } else if (index == 1) {
-            _selectedIndex.value = index;
-            Get.toNamed('/historyPage');
-          } else if (index == 2) {
-            _selectedIndex.value = index;
-          } else if (index == 3) {
-            _selectedIndex.value = index;
-            Get.toNamed('/profilePage');
-          }
-        },
-        selectedItemColor: Colors.amber,
-        showSelectedLabels: false,
-        showUnselectedLabels: false,
-      ),
+      bottomNavigationBar: bottomNavigationBar()
     );
   }
 }

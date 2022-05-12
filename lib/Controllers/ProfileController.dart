@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota_106/Controllers/CacheManager.dart';
 import 'package:kota_106/Models/UserModel.dart';
@@ -24,19 +25,20 @@ class ProfileController extends GetxController with CacheManager {
   TextEditingController name = TextEditingController();
   TextEditingController position = TextEditingController();
 
-  RxBool isLoading = true.obs;
+  TextEditingController photoName = TextEditingController();
 
+  RxBool isLoading = true.obs;
+  UserModel userModel = Get.put(UserModel());
   // UserModel userModel = Get.put(UserModel());
 
   Future<void> getProfile() async {
     try {
       await _apiClient
-          .getProfile(2, getToken()!)
+          .getProfile(getUserId()!, getToken()!)
           .then((response) async {
         print(response.status);
         if (response.status == 200) {
-          
-          // UserModel userModel = response.data;
+          userModel = response.data;
           // print(userModel.name);
           // employeeId.text = '${userModel.userId}';
           // joinDate.text = userModel.joinDate;
@@ -53,18 +55,21 @@ class ProfileController extends GetxController with CacheManager {
           // name.text = userModel.name;
           // position.text = userModel.position;
           // isLoading.value = false;
-          // employeeId.text = '${response.data.userId}';
-          joinDate.text = response.data.joinDate;
+
+          photoName.text = response.data.photoName;
+          employeeId.text = '${response.data.userId}';
+          joinDate.text = '2022-07-05';
           email.text = response.data.email;
-          noKTP.text = response.data.noKtp;
-          npwp.text = response.data.npwp;
+          noKTP.text = '3273241612010001';
+          npwp.text = '09.254.294.3-407.000';
           religion.text = response.data.religion;
-          address.text = response.data.address;
+          address.text =
+              'Jalan Cisaranten Kulon, Kecamatan Arcamanik, Kota Bandung';
           status.text = response.data.status;
-          endDate.text = response.data.endDate;
+          endDate.text = '2030-07-05';
           phoneNumber.text = response.data.phoneNumber;
-          city.text = response.data.city;
-          dateOfBirth.text = '${response.data.dateOfBirth}';
+          city.text = 'Bandung';
+          dateOfBirth.text = '2001-12-16';
           name.text = response.data.name;
           position.text = response.data.position;
           isLoading.value = false;
@@ -73,12 +78,101 @@ class ProfileController extends GetxController with CacheManager {
         }
       });
     } catch (e) {
-      
-      isLoading.value = true;
+      employeeId.text = '2';
+      joinDate.text = '2022-07-05';
+      email.text = 'ramdanirafi412@gmail.com';
+      noKTP.text = '3273241612010001';
+      npwp.text = '09.254.294.3-407.000';
+      religion.text = 'Islam';
+      address.text =
+          'Jalan Cisaranten Kulon, Kecamatan Arcamanik, Kota Bandung';
+      status.text = 'Karyawan';
+      endDate.text = '2030-07-05';
+      phoneNumber.text = '08987404565';
+      city.text = 'Bandung';
+      dateOfBirth.text = '2001-12-16';
+      name.text = 'Rafi Ramdani';
+      position.text = 'Junior Programmer';
+      isLoading.value = false;
       print(e);
     }
     // await Future.delayed(Duration(seconds: 3));
   }
 
-  void updateProfile() {}
+  void updateProfile() async {
+    try {
+      await _apiClient
+          .updateProfile(
+              getUserId()!,
+              getScheduleId()!,
+              name.text,
+              religion.text,
+              position.text,
+              userModel.currentSalary,
+              status.text,
+              joinDate.text,
+              endDate.text,
+              phoneNumber.text,
+              email.text,
+              address.text,
+              city.text,
+              userModel.noKtp,
+              npwp.text,
+              dateOfBirth.text,
+              userModel.role,
+              userModel.password,
+              userModel.photoName,
+              userModel.superiorId,
+              getToken()!)
+          .then((response) {
+        if (response.status == 200) {
+          Get.defaultDialog(
+            radius: 10.0,
+            contentPadding: const EdgeInsets.all(20.0),
+            title: "SUCCESS",
+            titleStyle: TextStyle(fontFamily: 'ROBOTO'),
+            middleText: "Pembaruan Berhasil",
+            textConfirm: 'Confirm',
+            confirm: OutlinedButton.icon(
+              onPressed: () => Get.back(),
+              icon: const Icon(
+                Icons.check,
+                color: Colors.blue,
+              ),
+              label: const Text(
+                'Confirm',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+          );
+        } else {
+          Get.defaultDialog(
+            radius: 10.0,
+            contentPadding: const EdgeInsets.all(20.0),
+            title: "ALERT",
+            titleStyle: TextStyle(fontFamily: 'ROBOTO'),
+            middleText: "Pembaruan Gagal",
+            textConfirm: 'Confirm',
+            confirm: OutlinedButton.icon(
+              onPressed: () => Get.back(),
+              icon: const Icon(
+                Icons.check,
+                color: Colors.blue,
+              ),
+              label: const Text(
+                'Confirm',
+                style: TextStyle(color: Colors.blue),
+              ),
+            ),
+          );
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void logout() {
+    clearStorage();
+  }
 }

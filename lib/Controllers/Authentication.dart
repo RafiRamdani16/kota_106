@@ -5,12 +5,6 @@ import 'CacheManager.dart';
 class AuthenticationManager extends GetxController with CacheManager {
   final isLogged = false.obs;
 
-  void logout() {
-    isLogged.value = false;
-    removeLoginData();
-    removeToken();
-    Get.offNamed('/splashScreen');
-  }
 
   void login(String? token, String? refreshToken, String name, String position,
       int userId, int scheduleId) async {

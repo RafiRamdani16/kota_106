@@ -1,24 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import 'package:kota_106/Controllers/HistoryController.dart';
-import 'package:kota_106/Screens/ActivityRecord/ActivityRecordWidget/DetailActivityRecordScreen.dart';
+
+import '../HistoryScreen.dart';
+import 'DetailActivityRecordScreen.dart';
 
 class HistoryActivityRecord extends GetView<HistoryController> {
   const HistoryActivityRecord({Key? key}) : super(key: key);
-
-  Scaffold errorView() {
-    return Scaffold(
-      body: Container(
-        width: Get.width,
-        height: Get.height,
-        child: Center(
-            child: Text(
-          "Tidak Ada Riwayat",
-          style: TextStyle(fontSize: 12),
-        )),
+  
+  Widget errorView() {
+    return AlertDialog(
+      title: const Text('ALERT'),
+      content: SingleChildScrollView(
+        child: ListBody(
+          children: const <Widget>[
+            Text('Terjadi Kesalahan Koneksi'),
+          ],
+        ),
       ),
+      actions: <Widget>[
+        TextButton(
+          child: const Text(
+            'Refresh',
+            style: TextStyle(color: Colors.red),
+          ),
+          onPressed: () {
+            Get.to(HistoryScreen());
+          },
+        ),
+      ],
     );
   }
 
@@ -28,7 +41,7 @@ class HistoryActivityRecord extends GetView<HistoryController> {
       future: controller.getHistoryActivityRecord(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         } else {
           if (snapshot.hasError)
             return errorView();
@@ -47,13 +60,27 @@ class HistoryActivityRecord extends GetView<HistoryController> {
       children: [
         AnimationLimiter(
             child: SizedBox(
-                width: Get.width - (Get.width / 6) ,
+                width: Get.width,
                 height: Get.height,
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: controller.activityRecordHistory.length,
                   itemBuilder: (BuildContext context, int index) {
+                    if (controller.activityRecordHistory.length < 1) {
+                      return Container(
+                          child: Center(
+                        child: Text(
+                          "Tidak Ada Riwayat",
+                          style: TextStyle(
+                              fontFamily: 'ROBOTO',
+                              fontSize: 20,
+                              color: Colors.red),
+                        ),
+                      ));
+                    }
+                    controller.changeFormatDateForActivityHistory(
+                        controller.activityRecordHistory[index].date);
                     return AnimationConfiguration.staggeredList(
                         position: index,
                         child: SlideAnimation(
@@ -70,25 +97,52 @@ class HistoryActivityRecord extends GetView<HistoryController> {
                                   borderRadius: BorderRadius.circular(10)),
                               clipBehavior: Clip.antiAlias,
                               child: Padding(
-                                padding: EdgeInsets.only( left: 10.0),
+                                padding: EdgeInsets.only(left: 10.0, top: 20),
                                 child: Wrap(
                                   direction: Axis.horizontal,
                                   crossAxisAlignment: WrapCrossAlignment.center,
                                   spacing: 10,
                                   runSpacing: 10,
                                   children: [
-                                    controller.setImageView('namaUser'),
-                                    // Obx((() {
-                                    //   return Container(
-                                    //     height: 20,
-                                    //     width: 20,
-                                    //     decoration: BoxDecoration(
-                                    //         image: DecorationImage(
-                                    //             image: controller
-                                    //                 .setImageView('namaUser'),
-                                    //             fit: BoxFit.cover)),
-                                    //   );
-                                    // })),
+                                    Card(
+                                      elevation: 15,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      clipBehavior: Clip.antiAlias,
+                                      child: Wrap(
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.center,
+                                        direction: Axis.vertical,
+                                        spacing: 10,
+                                        runSpacing: 10,
+                                        children: [
+                                          Container(
+                                            width: 60,
+                                            color: HexColor('463F3A'),
+                                            child: Text(
+                                              '${controller.month}',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                          Container(
+                                            height: 40,
+                                            width: 60,
+                                            child: Text(
+                                              '${controller.day}',
+                                              style: TextStyle(
+                                                  fontSize: 28,
+                                                  backgroundColor:
+                                                      Colors.white),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
                                     Wrap(
                                       crossAxisAlignment:
                                           WrapCrossAlignment.start,
@@ -97,13 +151,13 @@ class HistoryActivityRecord extends GetView<HistoryController> {
                                       direction: Axis.vertical,
                                       children: [
                                         Text(
-                                          "testing",
+                                          "Activity Record",
                                           style: TextStyle(
                                               fontFamily: 'ROBOTO',
                                               fontSize: 12),
                                         ),
                                         Text(
-                                          "testing",
+                                          controller.activityRecordTime.value,
                                           style: TextStyle(
                                               fontFamily: 'ROBOTO',
                                               fontSize: 12),
@@ -123,10 +177,15 @@ class HistoryActivityRecord extends GetView<HistoryController> {
                                                           Colors.amberAccent),
                                                   primary: Colors.white),
                                               onPressed: () {
-                                                Get.to(DetailActivityRecordScreen(
-                                                    controller
-                                                            .activityRecordHistory[
-                                                        index]));
+                                                showModalBottomSheet(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return DetailActivityRecordScreen(
+                                                          controller
+                                                                  .activityRecordHistory[
+                                                              index]);
+                                                    });
                                               },
                                               child: Row(
                                                 children: [

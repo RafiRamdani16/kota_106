@@ -1,4 +1,3 @@
-
 import 'package:kota_106/Models/AttendanceModel.dart';
 
 import '../Models/ActivityRecordModel.dart';
@@ -19,14 +18,22 @@ class DummyData {
       ..scheduleId = 2
       ..userId = 1,
   );
-  
+
+  int date(int index) {
+    if (index > 10) {
+      index = 1;
+    }
+    return index;
+  }
+
   List<ActivityRecordModel> activityDummy = List<ActivityRecordModel>.generate(
       100,
       (index) => ActivityRecordModel()
-        ..date = "$index"
+        ..date = "2022-04-0${index > 10 ? 1 : index} 09:00"
         ..description = "Mengerjakan Authentication"
         ..location = "Jalan Cisaranten Kulon, Arcamanik, Kota Bandung"
         ..photoName = "Rafi.jpg"
-        ..whatTimeIs = 1
-        );
+        ..whatTimeIs = 1);
+
+ 
 }

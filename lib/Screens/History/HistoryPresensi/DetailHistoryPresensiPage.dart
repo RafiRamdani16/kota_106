@@ -20,14 +20,14 @@ class DetailHistoryPresensiPage extends StatelessWidget {
     controller.locationCheckin2.text = attendanceModel.locationCheckin;
     controller.locationCheckout.text = attendanceModel.locationCheckout;
     controller.doneList.text = attendanceModel.descriptionCheckout;
-    controller.currentCheckinDate(attendanceModel.checkinAt);
-    controller.currentCheckOutDate(attendanceModel.checkoutAt);
+    controller.changeFormatCheckinDateForAttendanceHistory(attendanceModel.checkinAt);
+    controller.changeFormatCheckoutDateForAttendanceHistory(attendanceModel.checkoutAt);
     
     return Center(
       child: AspectRatio(
         aspectRatio: 100 / 100,
         child: Padding(
-          padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+          padding: EdgeInsets.only(left: 20, right: 20),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -50,7 +50,7 @@ class DetailHistoryPresensiPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Check-in Time:     ${controller.checkInTime} '),
-                      Text('Check-out Time:   ${controller.checkOutTime}'),
+                      Text('Check-out Time:    ${controller.checkOutTime}'),
                       Text('Work Time:          ${controller.workingTime}'),
                       Text('Check-in Location:'),
                       TextFormField(
@@ -80,7 +80,7 @@ class DetailHistoryPresensiPage extends StatelessWidget {
                             spacing: 20,
                             children: [
                               Text('Check-in Photo:'),
-                              controller.setImageView('namaUser'),
+                              controller.setImageView(attendanceModel.photoName,0,100),
                             ],
                           ),
                           Wrap(
