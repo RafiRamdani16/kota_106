@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-
 import 'package:kota_106/Controllers/HistoryController.dart';
-import 'package:kota_106/Screens/History/HistoryScreen.dart';
-import 'DetailHistoryPresensiPage.dart';
+import 'package:kota_106/Screens/History/HistoryOvertime/DetailOvertimeHistoryScreen.dart';
+import 'package:sizer/sizer.dart';
+import '../HistoryScreen.dart';
 
-class HistoryPresensiPage extends GetView<HistoryController> {
-  const HistoryPresensiPage({Key? key}) : super(key: key);
+class HistoryOvertimePage extends GetView<HistoryController> {
+  const HistoryOvertimePage({Key? key}) : super(key: key);
 
   Widget errorView() {
     return AlertDialog(
@@ -37,21 +37,21 @@ class HistoryPresensiPage extends GetView<HistoryController> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: controller.getHistoryAttendance(),
+      future: controller.getOvertimeHistory(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else {
-          if (snapshot.hasError) {
-            return errorView();
-          } else
+          if (snapshot.hasError)
+            return displayHistory();
+          else
             return displayHistory();
         }
       },
     );
   }
 
-  Widget displayHistory() {
+  Wrap displayHistory() {
     return Wrap(
       direction: Axis.vertical,
       runSpacing: 10,
@@ -60,29 +60,26 @@ class HistoryPresensiPage extends GetView<HistoryController> {
         AnimationLimiter(
             child: SizedBox(
                 width: Get.width,
-                height: Get.height - 200,
+                height: Get.height,
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  itemCount: controller.attendanceHistory.length,
+                  itemCount: controller.overtimeHistory.length,
                   itemBuilder: (BuildContext context, int index) {
-                    if (controller.attendanceHistory.length < 1) {
+                    if (controller.overtimeHistory.length < 1) {
                       return Container(
-                        child: Center(
-                          child: Text(
-                            "Tidak Ada Riwayat",
-                            style: TextStyle(
-                                fontFamily: 'ROBOTO',
-                                fontSize: 20,
-                                color: Colors.red),
-                          ),
+                          child: Center(
+                        child: Text(
+                          "Tidak Ada Riwayat",
+                          style: TextStyle(
+                              fontFamily: 'ROBOTO',
+                              fontSize: 20,
+                              color: Colors.red),
                         ),
-                      );
+                      ));
                     }
-                    controller.changeFormatCheckinDateForAttendanceHistory(
-                        controller.attendanceHistory[index].checkinAt);
-                    controller.changeFormatCheckoutDateForAttendanceHistory(
-                        controller.attendanceHistory[index].checkoutAt);
+                    controller.formatDate(controller
+                        .overtimeHistory[index].overtimeDateSubmitted);
                     return AnimationConfiguration.staggeredList(
                         position: index,
                         child: SlideAnimation(
@@ -99,10 +96,9 @@ class HistoryPresensiPage extends GetView<HistoryController> {
                                   borderRadius: BorderRadius.circular(10)),
                               clipBehavior: Clip.antiAlias,
                               child: Padding(
-                                padding: EdgeInsets.only(top: 10.0, left: 10.0),
+                                padding: EdgeInsets.only(left: 10.0, top: 20),
                                 child: Wrap(
                                   direction: Axis.horizontal,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
                                   spacing: 10,
                                   runSpacing: 10,
                                   children: [
@@ -110,17 +106,17 @@ class HistoryPresensiPage extends GetView<HistoryController> {
                                       elevation: 15,
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(10)),
+                                              BorderRadius.circular(17)),
                                       clipBehavior: Clip.antiAlias,
                                       child: Wrap(
                                         crossAxisAlignment:
                                             WrapCrossAlignment.center,
                                         direction: Axis.vertical,
-                                        spacing: 10,
                                         runSpacing: 10,
                                         children: [
                                           Container(
                                             width: 60,
+                                            height: 20,
                                             color: HexColor('463F3A'),
                                             child: Text(
                                               '${controller.month}',
@@ -148,29 +144,13 @@ class HistoryPresensiPage extends GetView<HistoryController> {
                                     Wrap(
                                       crossAxisAlignment:
                                           WrapCrossAlignment.start,
-                                      spacing: 5,
+                                      spacing: 20,
                                       runSpacing: 10,
                                       direction: Axis.vertical,
                                       children: [
                                         Text(
-                                          controller.attendanceHistory[index]
-                                                  .isLate
-                                              ? 'LATE'
-                                              : 'ON TIME',
-                                          style: TextStyle(
-                                              fontFamily: 'ROBOTO',
-                                              fontSize: 12,
-                                              color: controller
-                                                      .attendanceHistory[index]
-                                                      .isLate
-                                                  ? Colors.red
-                                                  : Colors.green),
-                                        ),
-                                        Text(
-                                          'Work time: ${controller.workingTime} jam',
-                                          style: TextStyle(
-                                              fontFamily: 'ROBOTO',
-                                              fontSize: 12),
+                                          "Overtime",
+                                          style: TextStyle(fontSize: 10.sp),
                                         ),
                                         Container(
                                           height: 25,
@@ -191,11 +171,10 @@ class HistoryPresensiPage extends GetView<HistoryController> {
                                                     context: context,
                                                     builder:
                                                         (BuildContext context) {
-                                                      return DetailHistoryPresensiPage(
-                                                        controller
-                                                                .attendanceHistory[
-                                                            index],
-                                                      );
+                                                      return DetailOvertimeHistory(
+                                                          controller
+                                                                  .overtimeHistory[
+                                                              index]);
                                                     });
                                               },
                                               child: Row(
@@ -216,6 +195,25 @@ class HistoryPresensiPage extends GetView<HistoryController> {
                                         ),
                                       ],
                                     ),
+                                    SizedBox(
+                                      width: 15.w,
+                                    ),
+                                    Container(
+                                      width: 20.w,
+                                      height: 2.h,
+                                      decoration: BoxDecoration(
+                                          color: controller.checkStatus(
+                                              controller.overtimeHistory[index]
+                                                  .overtimeStatus),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Text(
+                                        controller.overtimeHistory[index]
+                                            .overtimeStatus,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    )
                                   ],
                                 ),
                               ),

@@ -77,32 +77,33 @@ class ActivityRecordController extends GetxController with CacheManager {
   }
 
   Future<void> addActivityRecord() async {
-    try {
-      await _apiClient
-          .activityRecord(
-              getUserId()!,
-              locationNow.text,
-              "${dateNow.text} ${timeNow.text}",
-              description.text,
-              'data:image/jpeg;base64,${photoName.value}',
-              getToken()!)
-          .then((response) async {
-        if (response.status == 200) {
-          dialog('SUCCESS', 'CHECK-IN BERHASIL');
-        } else if (response.status == 401) {
-          await _apiClient
-              .getRefreshToken(getUserId()!, getToken()!)
-              .then((response) {
-            saveToken(response.data);
-            addActivityRecord();
-          });
-        }else{
-          dialog('ALERT', 'Activity Record untuk jadwal ini sudah ditambahkan sebelumnya');
-        }
-      });
-    } catch (e) {
-      dialog('ALERT', 'Terjadi Kesalahan');
-    }
+    // try {
+    //   await _apiClient
+    //       .activityRecord(
+    //           getUserId()!,
+    //           locationNow.text,
+    //           "${dateNow.text} ${timeNow.text}",
+    //           description.text,
+    //           'data:image/jpeg;base64,${photoName.value}',
+    //           getToken()!)
+    //       .then((response) async {
+    //     if (response.status == 200) {
+    //       dialog('SUCCESS', 'CHECK-IN BERHASIL');
+    //     } else if (response.status == 401) {
+    //       await _apiClient
+    //           .getRefreshToken(getUserId()!, getToken()!)
+    //           .then((response) {
+    //         saveToken(response.data);
+    //         addActivityRecord();
+    //       });
+    //     }else{
+    //       dialog('ALERT', 'Activity Record untuk jadwal ini sudah ditambahkan sebelumnya');
+    //     }
+    //   });
+    // } catch (e) {
+    //   dialog('ALERT', 'Terjadi Kesalahan');
+    // }
+    dialog('SUCCESS', 'CHECK-IN BERHASIL');
   }
 
   void dialog(String message, String content) {

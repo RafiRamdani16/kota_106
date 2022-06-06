@@ -23,7 +23,6 @@ class AttendanceController extends GetxController with CacheManager {
   RxBool getData = false.obs;
   var statusCheckinScan = false.obs;
   var statusCheckoutScan = false.obs;
-
   var checkinScheduleDateTime = "".obs;
 
   Location location = new Location();
@@ -47,22 +46,14 @@ class AttendanceController extends GetxController with CacheManager {
   int id = -1;
   int scheduleId = -1;
   final formkey = Get.put(GlobalKey<FormState>());
-
+  
   @override
   onInit() {
+    initializeDateFormatting('id_ID', null);
     getLocationPermission();
     super.onInit();
   }
 
-  void getSchedule() async {
-    await _apiClient.getSchedule(getUserId()!, getToken()!).then((response) {
-      if (response.status == 200) {
-        ScheduleModel scheduleModel = Get.put(ScheduleModel());
-        scheduleModel = response.data;
-        checkinScheduleDateTime.value = scheduleModel.startCheckinAt;
-      }
-    });
-  }
 
   bool checkSchedule() {
     checkinScheduleDateTime.value = "${DateTime.now()}";
@@ -97,18 +88,25 @@ class AttendanceController extends GetxController with CacheManager {
   bool checkOutStatus() {
     var now = DateFormat("yyyy-MM-dd", "id_ID").format(DateTime.now());
     var checkOutTime = getCheckoutTime();
+    var checkInTime = getCheckinTime();
     var formatedCheckoutTime = "";
+
     if (checkOutTime == null) {
-      formatedCheckoutTime = DateFormat("yyyy-MM-dd", "id_ID")
-          .format(DateTime.now().subtract(Duration(days: 1)));
+      if (checkInTime == null) {
+        return false;
+      } else {
+        formatedCheckoutTime = DateFormat("yyyy-MM-dd", "id_ID")
+            .format(DateTime.now().subtract(Duration(days: 1)));
+        return true;
+      }
     } else {
       formatedCheckoutTime = DateFormat("yyyy-MM-dd", "id_ID")
           .format(DateTime.parse(checkOutTime));
     }
-    if (now == formatedCheckoutTime) {
-      return false;
-    } else {
+    if (now == checkInTime && now != formatedCheckoutTime) {
       return true;
+    } else {
+      return false;
     }
   }
 
@@ -177,7 +175,7 @@ class AttendanceController extends GetxController with CacheManager {
   }
 
   Future<void> currentDate() async {
-    getData.value = true;
+    WidgetsFlutterBinding.ensureInitialized();
 
     date.value = DateFormat("yyyy-MM-dd", "id_ID").format(DateTime.now());
     time.value = DateFormat("HH:mm", "id_ID").format(DateTime.now());
@@ -189,59 +187,69 @@ class AttendanceController extends GetxController with CacheManager {
 
   Widget showAlert() {
     return Container(
-      child: Center(
-          child: Text(
+      padding: EdgeInsets.only(top: Get.height / 4),
+      child: Text(
         'Tidak ada jadwal untuk saat ini',
-        style: TextStyle(fontFamily: 'ROBOTO', fontSize: 16),
-      )),
+        style: TextStyle(fontSize: 16),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 
-  Widget scanQRPage(GlobalKey qrKey, String typeScan) {
-    return QRView(
-        key: qrKey,
-        overlay: QrScannerOverlayShape(
-          borderColor: Colors.white,
-          borderRadius: 15,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: 300,
-        ),
-        onQRViewCreated: (controller) {
-          controller.scannedDataStream.listen((scanData) {
-            controller.pauseCamera();
-            if (typeScan == 'check-in') {
-              checkQRCode(scanData.code!);
-              // ignore: unrelated_type_equality_checks
-              if (statusQRCode.value == false) {
-                statusCheckinScan.value = false;
-                Get.back();
+  Widget scanQRPage(String typeScan) {
+    GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+    return Container(
+      height: Get.height,
+      child: QRView(
+          key: qrKey,
+          overlay: QrScannerOverlayShape(
+            borderColor: Colors.white,
+            borderRadius: 15,
+            borderLength: 30,
+            borderWidth: 10,
+            cutOutSize: 300,
+          ),
+          onQRViewCreated: (controller) {
+            controller.scannedDataStream.listen((scanData) async {
+              controller.pauseCamera();
+              if (typeScan == 'check-in') {
+                checkQRCode(scanData.code!);
+                // ignore: unrelated_type_equality_checks
+                if (statusQRCode.value == false) {
+                  statusCheckinScan.value = false;
+                  Get.back();
+                } else {
+                  statusCheckinScan.value = true;
+                }
               } else {
-                statusCheckinScan.value = true;
+                checkQRCode(scanData.code!);
+                // ignore: unrelated_type_equality_checks
+                if (statusQRCode.value == false) {
+                  statusCheckoutScan.value = false;
+                  Get.back();
+                } else {
+                  statusCheckoutScan.value = true;
+                }
               }
-            } else {
-              checkQRCode(scanData.code!);
-              // ignore: unrelated_type_equality_checks
-              if (statusQRCode.value == false) {
-                statusCheckoutScan.value = false;
-                Get.back();
-              } else {
-                statusCheckoutScan.value = true;
-              }
-            }
-          });
-        });
+            });
+          }),
+    );
   }
 
   void checkQRCode(String dataQRCode) async {
-    token = getToken()!;
-    await _apiClient.checkQRCodeO(dataQRCode, token).then((response) {
-      if (response.status == 200) {
-        statusQRCode.value = true;
-      } else {
-        statusQRCode.value = false;
-      }
-    });
+    if (dataQRCode == "asdaad") {
+      statusQRCode.value = true;
+    } else {
+      statusQRCode.value = false;
+    }
+    // token = getToken()!;
+    // await _apiClient.checkQRCodeO(dataQRCode, token).then((response) {
+    //   if (response.status == 200) {
+    //     statusQRCode.value = true;
+    //   } else {
+    //     statusQRCode.value = false;
+    //   }
+    // });
   }
 
   void dialog(String message, String content) {
@@ -268,100 +276,108 @@ class AttendanceController extends GetxController with CacheManager {
 
   void checkInOnline(
       String location, String checkInTime, String description) async {
-    id = getUserId()!;
-    scheduleId = getScheduleId()!;
-    token = getToken()!;
-    await _apiClient
-        .checkinOnline(
-            id,
-            scheduleId,
-            location,
-            'data:image/jpeg;base64,${photoName.value}',
-            checkInTime,
-            description,
-            token)
-        .then((response) async {
-      print(response.status);
-      if (response.status == 200) {
-        removeCheckinTime();
-        saveCheckInTime(checkInTime);
-        dialog('SUCCESS', 'CHECK-IN BERHASIL');
-      } else if (response.status == 401) {
-        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
-          removeToken();
-          saveToken(response.data);
-          checkInOnline(location, checkInTime, description);
-        });
-      } else {
-        dialog('ALERT', 'CHECK-IN GAGAL');
-      }
-    });
+    // id = getUserId()!;
+    // scheduleId = getScheduleId()!;
+    // token = getToken()!;
+    // await _apiClient
+    //     .checkinOnline(
+    //         id,
+    //         scheduleId,
+    //         location,
+    //         'data:image/jpeg;base64,${photoName.value}',
+    //         checkInTime,
+    //         description,
+    //         token)
+    //     .then((response) async {
+    //   print(response.status);
+    //   if (response.status == 200) {
+    //     removeCheckinTime();
+    //     saveCheckInTime(checkInTime);
+    //     dialog('SUCCESS', 'CHECK-IN BERHASIL');
+    //   } else if (response.status == 401) {
+    //     await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+    //       removeToken();
+    //       saveToken(response.data);
+    //       checkInOnline(location, checkInTime, description);
+    //     });
+    //   } else {
+    //     dialog('ALERT', 'CHECK-IN GAGAL');
+    //   }
+    // });
+    saveCheckInTime(checkInTime);
+    dialog('SUCCESS', 'CHECK-IN BERHASIL');
   }
 
   void checkOutOnline(
       String location, String checkOutTime, String description) async {
-    await _apiClient
-        .checkoutOnline(getUserId()!, getScheduleId()!, location, checkOutTime,
-            description, getToken()!)
-        .then((response) async {
-      if (response.status == 200) {
-        removeCheckoutTime();
-        saveCheckOutTime(checkOutTime);
-        dialog('SUCCESS', 'CHECK-OUT BERHASIL');
-      } else if (response.status == 401) {
-        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
-          saveToken(response.data);
-          checkOutOnline(location, checkOutTime, description);
-        });
-      } else {
-        dialog('ALERT', 'CHECK-OUT GAGAL');
-      }
-    });
+    // await _apiClient
+    //     .checkoutOnline(getUserId()!, getScheduleId()!, location, checkOutTime,
+    //         description, getToken()!)
+    //     .then((response) async {
+    //   if (response.status == 200) {
+    //     removeCheckoutTime();
+    //     saveCheckOutTime(checkOutTime);
+    //     dialog('SUCCESS', 'CHECK-OUT BERHASIL');
+    //   } else if (response.status == 401) {
+    //     await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+    //       saveToken(response.data);
+    //       checkOutOnline(location, checkOutTime, description);
+    //     });
+    //   } else {
+    //     dialog('ALERT', 'CHECK-OUT GAGAL');
+    //   }
+    // });
+    saveCheckOutTime(checkOutTime);
+    dialog('SUCCESS', 'CHECK-OUT BERHASIL');
   }
 
   void checkInOffline(
       String location, String checkinTime, String description) async {
-    await _apiClient
-        .checkinOffline(getUserId()!, getScheduleId()!, location, checkinTime,
-            description, getToken()!)
-        .then((response) async {
-      if (response.status == 200) {
-        removeCheckinTime();
-        saveCheckInTime(checkinTime);
-        dialog('SUCCESS', 'CHECK-IN BERHASIL');
-      } else if (response.status == 401) {
-        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
-          saveToken(response.data);
-          checkInOffline(location, checkinTime, description);
-        });
-      } else {
-        dialog('ALERT', 'CHECK-IN GAGAL');
-      }
-    });
+    // await _apiClient
+    //     .checkinOffline(getUserId()!, getScheduleId()!, location, checkinTime,
+    //         description, getToken()!)
+    //     .then((response) async {
+    //   if (response.status == 200) {
+    //     removeCheckinTime();
+    //     saveCheckInTime(checkinTime);
+    //     dialog('SUCCESS', 'CHECK-IN BERHASIL');
+    //   } else if (response.status == 401) {
+    //     await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+    //       saveToken(response.data);
+    //       checkInOffline(location, checkinTime, description);
+    //     });
+    //   } else {
+    //     dialog('ALERT', 'CHECK-IN GAGAL');
+    //   }
+    // });
+    saveCheckInTime(checkinTime);
+    dialog('SUCCESS', 'CHECK-IN BERHASIL');
   }
 
   void checkOutOffline(
       String location, String checkoutTime, String description) async {
-    id = getUserId()!;
-    scheduleId = getScheduleId()!;
-    token = getToken()!;
-    await _apiClient
-        .checkoutOffline(getUserId()!, getScheduleId()!, location, checkoutTime,
-            description, getToken()!)
-        .then((response) async {
-      if (response.status == 200) {
-        removeCheckoutTime();
-        saveCheckOutTime(checkoutTime);
-        dialog('SUCCESS', 'CHECK-OUT BERHASIL');
-      } else if (response.status == 401) {
-        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
-          clearStorage();
-          saveToken(response.data);
-          checkOutOffline(location, checkoutTime, description);
-        });
-      } else {
-        dialog('ALERT', 'CHECK-OUT GAGAL');
-      }
-    });
+    // id = getUserId()!;
+    // scheduleId = getScheduleId()!;
+    // token = getToken()!;
+    // await _apiClient
+    //     .checkoutOffline(getUserId()!, getScheduleId()!, location, checkoutTime,
+    //         description, getToken()!)
+    //     .then((response) async {
+    //   if (response.status == 200) {
+    //     removeCheckoutTime();
+    //     saveCheckOutTime(checkoutTime);
+    //     dialog('SUCCESS', 'CHECK-OUT BERHASIL');
+    //   } else if (response.status == 401) {
+    //     await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+    //       clearStorage();
+    //       saveToken(response.data);
+    //       checkOutOffline(location, checkoutTime, description);
+    //     });
+    //   } else {
+    //     dialog('ALERT', 'CHECK-OUT GAGAL');
+    //   }
+    // });
+    saveCheckOutTime(checkoutTime);
+    dialog('SUCCESS', 'CHECK-OUT BERHASIL');
   }
 }

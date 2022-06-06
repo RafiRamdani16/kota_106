@@ -7,10 +7,13 @@ import 'package:kota_106/Controllers/APIService/ApiService.dart';
 import 'package:kota_106/Controllers/CacheManager.dart';
 import 'package:kota_106/DummyData/DummyData.dart';
 import 'package:kota_106/Models/ActivityRecordModel.dart';
+import 'package:kota_106/Models/AfterOvertimeModel.dart';
 import 'package:kota_106/Models/AttendanceModel.dart';
+import 'package:kota_106/Models/LeaveModel.dart';
+import 'package:kota_106/Models/OvertimeModel.dart';
+import 'package:kota_106/Models/PermitModel.dart';
 
 class HistoryController extends GetxController with CacheManager {
-  
   TextEditingController locationCheckin2 = TextEditingController();
   TextEditingController locationCheckout = TextEditingController();
   TextEditingController doneList = TextEditingController();
@@ -19,8 +22,9 @@ class HistoryController extends GetxController with CacheManager {
   TextEditingController timeNow = TextEditingController();
   TextEditingController description = TextEditingController();
 
-  RxBool isThereItem = false.obs;
+  RxBool isThereItemAttendance = false.obs;
   RxBool isThereItemActivity = false.obs;
+
   RxString checkInTime = "".obs;
   RxString checkInDate = "".obs;
   RxString checkOutTime = "".obs;
@@ -32,46 +36,175 @@ class HistoryController extends GetxController with CacheManager {
   RxInt workingTime = 0.obs;
   RxInt page = 1.obs;
   RxInt limit = 10.obs;
+  RxString permitStatus = "".obs;
 
   RxInt checkInHour = 0.obs;
   RxInt checkOutHour = 0.obs;
   List rawData = [];
   List data = [];
   int id = -1;
+  String token = "";
   int scheduleId = -1;
+
   List<AttendanceModel> attendanceHistory = <AttendanceModel>[];
   List<ActivityRecordModel> activityRecordHistory = <ActivityRecordModel>[];
+  List<PermitModel> permitHistory = <PermitModel>[];
+  List<OvertimeModel> overtimeHistory = <OvertimeModel>[];
+  List<LeaveModel> leaveHistory = <LeaveModel>[];
+
+  AfterOvertimeModel afterOvertimeModel = Get.put(AfterOvertimeModel());
+
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
 
   Future<void> getHistoryAttendance() async {
-    // DummyData dummy = Get.put(DummyData());
-    // attendanceHistory = dummy.dummy2;
-    // isThereItemActivity.value = true;
-    
-    await _apiClient
-        .getHistoryAttendance('UserId==${getUserId()!}', "-CreatedAt",
-            page.value, limit.value, getToken()!)
-        .then((response) async {
-      print(response.status);
-      if (response.status == 200) {
+    DummyData dummy = Get.put(DummyData());
+    attendanceHistory = dummy.dummy2;
+    isThereItemActivity.value = true;
+    // await _apiClient
+    //     .getHistoryAttendance('UserId==${getUserId()!}', "-CreatedAt",
+    //         page.value, limit.value, getToken()!)
+    //     .then((response) async {
+    //   print(response.status);
+    //   if (response.status == 200) {
+    //     attendanceHistory = response.data.data.toList();
+    //     isThereItemAttendance.value = true;
+    //   } else if (response.status == 401) {
+    //     await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+    //       saveToken(response.data);
+    //       getHistoryAttendance();
+    //     });
+    //   }
+    // });
+  }
 
-        attendanceHistory = response.data.data.toList();
-        isThereItem.value = true;
-      } else if (response.status == 401) {
-        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
-          saveToken(response.data);
-          getHistoryAttendance();
-        });
-      }
+  Future<void> getHistoryActivityRecord() async {
+    DummyData dummyData = Get.put(DummyData());
+    activityRecordHistory = dummyData.activityDummy;
+    isThereItemActivity.value = true;
+    // await _apiClient
+    //     .getHistoryActivityRecord('UserId==${getUserId()!}', "-CreatedAt",
+    //         page.value, limit.value, getToken()!)
+    //     .then((response) async {
+    //   if (response.status == 200) {
+    //     activityRecordHistory = response.data.data.toList();
+
+    //     isThereItemActivity.value = true;
+    //     update();
+    //     await Future.delayed(Duration(seconds: 3));
+    //   } else if (response.status == 401) {
+    //     await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+    //       saveToken(response.data);
+    //       getHistoryActivityRecord();
+    //     });
+    //   }
+    // });
+  }
+
+  Future<void> getPermitHistory() async {
+    DummyData dummyData = Get.put(DummyData());
+    permitHistory = dummyData.permitDummy;
+
+    permitHistory.add(PermitModel()
+      ..permitDateSubmitted = "2022-02-16"
+      ..permitTimeSubmitted = "09.00"
+      ..permitStartTime = "13:00"
+      ..permitDate = "2022-05-16"
+      ..permitDescription = "Izin Ke bank ke 16"
+      ..permitEndTime = "15:00"
+      ..permitAttachment = "Photo.jpg"
+      ..statusPermit = "Remaining");
+  }
+
+  Future<void> getOvertimeHistory() async {
+    DummyData dummyData = Get.put(DummyData());
+    overtimeHistory = dummyData.overtimeDummy;
+
+    overtimeHistory.add(OvertimeModel()
+      ..overtimeDate = "2022-12-13"
+      ..overtimeDateSubmitted = "2022-12-15"
+      ..overtimeTimeSubmitted = "15:00"
+      ..overtimeDescription = "Testing Aplikasi ke 15"
+      ..overtimeStartTime = "20:00"
+      ..overtimeEndTime = "21:00"
+      ..overtimeStatus = "Remaining");
+  }
+
+  Future<void> getLeaveHistory() async {
+    DummyData dummyData = Get.put(DummyData());
+    leaveHistory = dummyData.leaveDummy;
+    leaveHistory.add(LeaveModel()
+      ..leaveRemainingDays = "10 days"
+      ..leaveDateSubmitted = "2022-05-16"
+      ..leaveDescription = "Testing Aplikasi ke 16"
+      ..leaveStartDate = "2022-04-15"
+      ..leaveEndDate = "2022-04-20"
+      ..leaveStatus = "Remaining"
+      ..leaveTimeSubmitted = "09:00"
+      ..leaveType = "Annual Leave"
+      ..leaveAttachment = "photo.jpg");
+  }
+
+  Future<void> getAfterOvertimeHistory(int idOvertime) async {
+    id = getUserId()!;
+    token = getToken()!;
+    await _apiClient
+        .getAfterOvertimeHistory("UserId = $id", "-CreatedAt", 1, 20, token)
+        .then((response) {
+      afterOvertimeModel = response.data.data[idOvertime];
     });
   }
 
-  Widget setImageView(String photoName, double width, double height) {
-    return Image.network(
-      'https://bbbe-2001-448a-304c-3893-1d52-5ff3-6470-a748.ngrok.io/$photoName',
-      width: width,
-      height: height,
-    );
+  Color checkStatus(String permitStatus) {
+    if (permitStatus == "Remaining") {
+      return Colors.amber;
+    } else if (permitStatus == "Approved") {
+      return Colors.green;
+    } else {
+      return Colors.red;
+    }
+  }
+
+  Widget setImageView(
+      String photoName, double width, double height, String type) {
+    if (type == "Attendance") {
+      return Image.asset(
+        'assets/images/selfie2.jpg',
+        width: width,
+        height: height,
+      );
+    } else if (type == "Activity Record") {
+      return Image.asset(
+        'assets/images/selfie.jpg',
+        width: width,
+        height: height,
+      );
+    } else if (type == "Permit") {
+      return Image.asset(
+        'assets/images/TestingSuketSakit.jpg',
+        width: width,
+        height: height,
+      );
+    } else if (type == "Overtime") {
+      return Image.asset(
+        'assets/images/testingProfile.jpg',
+        width: width,
+        height: height,
+      );
+    } else {
+      return Image.asset(
+        'assets/images/TestingSuketSakit.jpg',
+        width: width,
+        height: height,
+      );
+    }
+  }
+
+  void formatDate(String rawDate) async {
+    DateTime formatedDateTime = DateTime.parse(rawDate);
+    day.value = formatedDateTime.day;
+
+    month.value =
+        DateFormat('MMMM').format(DateTime(0, formatedDateTime.month));
   }
 
   void changeFormatDateForActivityHistory(String rawDate) async {
@@ -88,10 +221,8 @@ class HistoryController extends GetxController with CacheManager {
     DateTime formatedTime = DateTime.parse(rawDate);
 
     checkInDate.value = DateFormat('yyyy-MM-dd').format(formatedTime);
-
     checkInTime.value = DateFormat('HH:mm').format(formatedTime);
     checkInHour.value = formatedTime.hour;
-
     day.value = formatedTime.day;
     month.value = DateFormat('MMMM').format(DateTime(0, formatedTime.month));
   }
@@ -108,27 +239,5 @@ class HistoryController extends GetxController with CacheManager {
 
   void getWorkingTime() {
     workingTime.value = checkOutHour.value - checkInHour.value;
-  }
-
-  Future<void> getHistoryActivityRecord() async {
-    DummyData dummyData = Get.put(DummyData());
-    activityRecordHistory = dummyData.activityDummy;
-    isThereItemActivity.value = true;
-    await _apiClient
-        .getHistoryActivityRecord('UserId==${getUserId()!}', "-CreatedAt",
-            page.value, limit.value, getToken()!)
-        .then((response) async {
-      if (response.status == 200) {
-        activityRecordHistory = response.data.data.toList();
-        isThereItemActivity.value = true;
-        update();
-        await Future.delayed(Duration(seconds: 3));
-      } else if (response.status == 401) {
-        await _apiClient.getRefreshToken(id, getToken()!).then((response) {
-          saveToken(response.data);
-          getHistoryActivityRecord();
-        });
-      }
-    });
   }
 }

@@ -5,20 +5,13 @@ import 'package:kota_106/Controllers/AttendanceController.dart';
 import 'package:kota_106/Controllers/HistoryController.dart';
 import 'package:sizer/sizer.dart';
 
-import 'Attendance/Attendance/OfficePresensi.dart';
-import 'Attendance/Attendance/RemoteWorking.dart';
+import 'Attendance/OfficePresensi.dart';
+import 'Attendance/RemoteWorking.dart';
 
 class AttendanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // LoginModel user = Get.put(LoginModel());
-    print("ukuran ${8.sp} ");
-    print("ukuran ${7.sp} ");
-    print("ukuran ${0.5.h} ");
-    HistoryController historyAttendanceController =
-        Get.put(HistoryController());
     AttendanceController attendanceController = Get.put(AttendanceController());
-    attendanceController.getLocationPermission();
     var _selectedIndex = 0.obs;
     return Scaffold(
       body: Center(
@@ -26,12 +19,11 @@ class AttendanceScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 5.h),
               Text(
                 "Attendance",
                 style: TextStyle(
-                    fontFamily: "Roboto",
-                    fontSize: 20.sp,
-                    color: Colors.black),
+                    fontFamily: "Roboto", fontSize: 20.sp, color: Colors.black),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -116,7 +108,11 @@ class AttendanceScreen extends StatelessWidget {
                                   ),
                                   Text(
                                     'Remote Working',
-                                    style: TextStyle(fontSize: 8.sp),
+                                    style: TextStyle(
+                                      fontSize: 8.sp,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Roboto",
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 0.5.h,
@@ -142,8 +138,7 @@ class AttendanceScreen extends StatelessWidget {
                                         onPressed: () async {
                                           await showModalBottomSheet(
                                               context: context,
-                                              builder:
-                                                  (BuildContext context) {
+                                              builder: (BuildContext context) {
                                                 return RemoteScreen();
                                               });
                                         },
@@ -151,6 +146,7 @@ class AttendanceScreen extends StatelessWidget {
                                           "Open",
                                           style: TextStyle(
                                               fontFamily: "Roboto",
+                                              fontWeight: FontWeight.bold,
                                               fontSize: 8.sp,
                                               color: Colors.white),
                                         )),
@@ -186,6 +182,8 @@ class AttendanceScreen extends StatelessWidget {
                                     'Office Working',
                                     style: TextStyle(
                                       fontSize: 8.sp,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Roboto",
                                     ),
                                   ),
                                   SizedBox(
@@ -213,14 +211,14 @@ class AttendanceScreen extends StatelessWidget {
                                           // controller.scanQR(context);
                                           showModalBottomSheet(
                                               context: context,
-                                              builder:
-                                                  (BuildContext context) {
+                                              builder: (BuildContext context) {
                                                 return OfficePresensiPage();
                                               });
                                         },
                                         child: Text(
                                           "Open",
                                           style: TextStyle(
+                                              fontWeight: FontWeight.bold,
                                               fontFamily: "Roboto",
                                               fontSize: 8.sp,
                                               color: Colors.white),
@@ -256,7 +254,10 @@ class AttendanceScreen extends StatelessWidget {
                                   Text(
                                     'Activity Record',
                                     style: TextStyle(
-                                        fontSize: 8.sp),
+                                      fontSize: 8.sp,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: "Roboto",
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 0.5.h,
@@ -286,6 +287,7 @@ class AttendanceScreen extends StatelessWidget {
                                           "Open",
                                           style: TextStyle(
                                               fontFamily: "Roboto",
+                                              fontWeight: FontWeight.bold,
                                               fontSize: 8.sp,
                                               color: Colors.white),
                                         )),
@@ -309,8 +311,7 @@ class AttendanceScreen extends StatelessWidget {
                       height: 15.h,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image:
-                                  AssetImage('assets/images/BottomCard.png'),
+                              image: AssetImage('assets/images/BottomCard.png'),
                               alignment: Alignment.bottomCenter,
                               fit: BoxFit.fitWidth)),
                       child: Column(children: [
@@ -320,7 +321,11 @@ class AttendanceScreen extends StatelessWidget {
                         ListTile(
                           title: Text(
                             'Overtime',
-                            style: TextStyle(fontSize: 10.sp),
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Roboto",
+                            ),
                           ),
                           subtitle: Column(
                             children: [
@@ -339,10 +344,13 @@ class AttendanceScreen extends StatelessWidget {
                                                 BorderRadius.circular(15.0)),
                                         elevation: 10,
                                         primary: HexColor("363636")),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Get.toNamed('/overtimeScreen');
+                                    },
                                     child: Text(
                                       "Start Overtime",
                                       style: TextStyle(
+                                          fontWeight: FontWeight.bold,
                                           fontFamily: "Roboto",
                                           fontSize: 10.sp,
                                           color: Colors.white),
@@ -365,8 +373,7 @@ class AttendanceScreen extends StatelessWidget {
                       height: 15.h,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image:
-                                  AssetImage('assets/images/BottomCard.png'),
+                              image: AssetImage('assets/images/BottomCard.png'),
                               alignment: Alignment.bottomCenter,
                               fit: BoxFit.fitWidth)),
                       child: Column(children: [
@@ -377,6 +384,8 @@ class AttendanceScreen extends StatelessWidget {
                           title: Text(
                             'Leave',
                             style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Roboto",
                               fontSize: 10.sp,
                             ),
                           ),
@@ -386,7 +395,6 @@ class AttendanceScreen extends StatelessWidget {
                                 Text(
                                   'fill in the form and your leave request will be approved by HR/Admin.',
                                   style: TextStyle(
-                                      color: Colors.black.withOpacity(0.6),
                                       fontSize: 9.sp),
                                 ),
                                 Container(
@@ -395,8 +403,7 @@ class AttendanceScreen extends StatelessWidget {
                                       style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      15.0)),
+                                                  BorderRadius.circular(15.0)),
                                           elevation: 10,
                                           primary: HexColor("363636")),
                                       onPressed: () {
@@ -405,6 +412,7 @@ class AttendanceScreen extends StatelessWidget {
                                       child: Text(
                                         "Apply for Leave",
                                         style: TextStyle(
+                                            fontWeight: FontWeight.bold,
                                             fontFamily: "Roboto",
                                             fontSize: 10.sp,
                                             color: Colors.white),
@@ -428,8 +436,7 @@ class AttendanceScreen extends StatelessWidget {
                       height: 15.h,
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                              image:
-                                  AssetImage('assets/images/BottomCard.png'),
+                              image: AssetImage('assets/images/BottomCard.png'),
                               alignment: Alignment.bottomCenter,
                               fit: BoxFit.fitWidth)),
                       child: Column(children: [
@@ -439,7 +446,11 @@ class AttendanceScreen extends StatelessWidget {
                         ListTile(
                           title: Text(
                             'Permit',
-                            style: TextStyle(fontSize: 10.sp),
+                            style: TextStyle(
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: "Roboto",
+                            ),
                           ),
                           subtitle: Center(
                             child: Column(
@@ -447,7 +458,6 @@ class AttendanceScreen extends StatelessWidget {
                                 Text(
                                   'fill in the form and your permit request will be approved by HR/Admin.',
                                   style: TextStyle(
-                                      color: Colors.black.withOpacity(0.6),
                                       fontSize: 9.sp),
                                 ),
                                 Container(
@@ -456,14 +466,16 @@ class AttendanceScreen extends StatelessWidget {
                                       style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      15.0)),
+                                                  BorderRadius.circular(15.0)),
                                           elevation: 10,
                                           primary: HexColor("363636")),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Get.toNamed('/permitScreen');
+                                      },
                                       child: Text(
                                         "Apply for Permit",
                                         style: TextStyle(
+                                            fontWeight: FontWeight.bold,
                                             fontFamily: "Roboto",
                                             fontSize: 10.sp,
                                             color: Colors.white),
@@ -474,6 +486,71 @@ class AttendanceScreen extends StatelessWidget {
                           ),
                         ),
                       ]),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 1.h,
+                  ),
+                  Visibility(
+                    visible: true,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Container(
+                        width: 89.w,
+                        height: 15.h,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image:
+                                    AssetImage('assets/images/BottomCard.png'),
+                                alignment: Alignment.bottomCenter,
+                                fit: BoxFit.fitWidth)),
+                        child: Column(children: [
+                          ListTile(
+                            title: Text(
+                              'Approval',
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "Roboto",
+                              ),
+                            ),
+                            subtitle: Center(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Approval Overtime, Leave and Approval Permit',
+                                    style: TextStyle(fontSize: 9.sp),
+                                  ),
+                                  SizedBox(height: 1.h),
+                                  Container(
+                                    alignment: Alignment.bottomRight,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        15.0)),
+                                            elevation: 10,
+                                            primary: HexColor("363636")),
+                                        onPressed: () {
+                                          Get.toNamed('/approvalScreen');
+                                        },
+                                        child: Text(
+                                          "Look Approval",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: "Roboto",
+                                              fontSize: 10.sp,
+                                              color: Colors.white),
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ]),
+                      ),
                     ),
                   ),
                 ],
@@ -501,9 +578,8 @@ class AttendanceScreen extends StatelessWidget {
             _selectedIndex.value = index;
             Get.toNamed('/');
           } else if (index == 1) {
-            historyAttendanceController.getHistoryAttendance();
             _selectedIndex.value = index;
-            Get.toNamed('/historyPage');
+            Get.toNamed('/historyScreen');
           } else if (index == 2) {
             _selectedIndex.value = index;
             Get.toNamed('/profileScreen');

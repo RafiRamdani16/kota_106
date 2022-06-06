@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Controllers/CacheManager.dart';
@@ -14,8 +13,8 @@ class PermitController extends GetxController with CacheManager {
   TextEditingController permitDescription = TextEditingController();
 
   Rx<DateTime> permitSelectedDate = DateTime.now().obs;
-  Rx<TimeOfDay> permitStartTime = TimeOfDay(hour: 7, minute: 0).obs;
-  Rx<TimeOfDay> permitEndTime = TimeOfDay(hour: 17, minute: 0).obs;
+  var permitStartTime = TimeOfDay(hour: 8, minute: 0).obs;
+  var permitEndTime = TimeOfDay(hour: 17, minute: 0).obs;
 
   void permitDatePicker(BuildContext context) async {
     DateTime? newDate = await showDatePicker(
@@ -25,39 +24,22 @@ class PermitController extends GetxController with CacheManager {
         lastDate: DateTime(DateTime.now().year + 1, DateTime.january, 0));
 
     if (newDate == null) {
-      Get.back();
     } else {
       permitSelectedDate.value = newDate;
     }
   }
 
-  // void permitStartTimePicker(BuildContext context) async {
-  //   TimeOfDay? newTime = await showTimePicker(
-  //     context: context,
-  //     initialTime: permitStartTime.value,
-  //   );
-
-  //   if (newTime == null) {
-  //     Get.back();
-  //   } else if (newTime) {
-  //     dialog("ALERT!!!", "Start Time Invalid!!!");
-  //   } else {
-  //     permitStartTime.value = newTime;
-  //   }
-  // }
-
-  // void permitEndTimePicker(BuildContext context) async {
-  //   TimeOfDay? newTime = await showTimePicker(
-  //       initialEntryMode: TimePickerEntryMode.input,
-  //       context: context,
-  //       initialTime: permitEndTime.value);
-
-  //   if (newTime == null) {
-  //     Get.back();
-  //   } else {
-  //     permitEndTime.value = newTime;
-  //   }
-  // }
+  void editPermitDatePicker(BuildContext context) async {
+    DateTime? newDate = await showDatePicker(
+        context: context,
+        initialDate: permitSelectedDate.value,
+        firstDate: DateTime(DateTime.now().year, DateTime.january),
+        lastDate: DateTime(DateTime.now().year + 1, DateTime.january, 0));
+    if (newDate == null) {
+    } else {
+      permitSelectedDate.value = newDate;
+    }
+  }
 
   void permitTimePicker(BuildContext context) async {
     TimeRange? newTime = await showTimeRangePicker(
@@ -65,7 +47,7 @@ class PermitController extends GetxController with CacheManager {
       interval: Duration(minutes: 5),
       start: permitStartTime.value,
       end: permitEndTime.value,
-      maxDuration: Duration(hours: 8),
+      maxDuration: Duration(hours: 4),
       disabledTime: TimeRange(
           startTime: TimeOfDay(hour: 17, minute: 1),
           endTime: TimeOfDay(hour: 6, minute: 59)),
@@ -76,7 +58,6 @@ class PermitController extends GetxController with CacheManager {
       selectedColor: HexColor("FCBC45").withOpacity(0.5),
     );
     if (newTime == null) {
-      Get.back();
     } else {
       permitStartTime.value = newTime.startTime;
       permitEndTime.value = newTime.endTime;
@@ -103,5 +84,9 @@ class PermitController extends GetxController with CacheManager {
         ),
       ),
     );
+  }
+
+  void permitForm() {
+    dialog("SUCCESS", "Pengajuan Izin Berhasil");
   }
 }

@@ -104,7 +104,6 @@ class ProfileController extends GetxController with CacheManager {
       await _apiClient
           .updateProfile(
               getUserId()!,
-              getScheduleId()!,
               name.text,
               religion.text,
               position.text,
@@ -174,5 +173,6 @@ class ProfileController extends GetxController with CacheManager {
 
   void logout() {
     clearStorage();
+    Get.offAndToNamed('/splashScreen');
   }
 }

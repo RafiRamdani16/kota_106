@@ -3,10 +3,11 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Screens/History/History%20Activity%20Record/HistoryActivityRecord.dart';
 
-import 'HistoryLeave/HistoryLeavePage.dart';
-import 'HistoryOvertime/HistoryOvertimePage.dart';
-import 'HistoryPermit/HistoryPermitPage.dart';
-import 'HistoryPresensi/HistoryPresensiPage.dart';
+import 'HistoryAttendance/HistoryPresensiPage.dart';
+import 'HistoryLeave/LeaveHistoryScreen.dart';
+import 'HistoryOvertime/OvertimeHistoryScreen.dart';
+import 'HistoryPermit/PermitHistoryScreen.dart';
+
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({Key? key}) : super(key: key);
@@ -48,10 +49,10 @@ class HistoryScreen extends StatelessWidget {
               height: Get.height - 170,
               width: Get.width,
               child: TabBarView(children: [
-                HistoryPresensiPage(),
+                AttendanceHistoryScreen(),
                 HistoryOvertimePage(),
-                HistoryLeavePage(),
-                HistoryPermitPage(),
+                LeaveHistoryScreen(),
+                PermitHistoryScreen(),
                 HistoryActivityRecord(),
               ]),
             )
@@ -82,7 +83,7 @@ class HistoryScreen extends StatelessWidget {
             Get.toNamed('/');
           } else if (index == 1) {
             _selectedIndex.value = index;
-            Get.toNamed('/historyPage');
+            Get.toNamed('/historyScreen');
           } else if (index == 2) {
             _selectedIndex.value = index;
             Get.toNamed('/profileScreen');

@@ -1,8 +1,8 @@
 // ignore_for_file: body_might_complete_normally_nullable
 
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
+import 'package:sizer/sizer.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Controllers/ProfileController.dart';
@@ -10,417 +10,366 @@ import 'package:kota_106/Controllers/ProfileController.dart';
 class EditProfileScreen extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
-    var screenHeightSize = MediaQuery.of(context).size.height;
-    var screenWidthSize = MediaQuery.of(context).size.width;
-    double fontSize = 10.0;
-    var _selectedIndex = 2.obs;
-    return AspectRatio(
-      aspectRatio: 100 / 100,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: HexColor('FCBC45'),
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          title: const Text(
-            'Edit Data Employee',
-            style: TextStyle(color: Colors.black),
-          ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Get.toNamed('/profileScreen');
-            },
-          ),
-          centerTitle: true,
+    double fontSize = 12.sp;
+    double headFontSize = 14.sp;
+    final _formKey = GlobalKey<FormState>();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: HexColor('FCBC45'),
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Edit Data Employee',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
         ),
-        body: Container(
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Get.toNamed('/profileScreen');
+          },
+        ),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/images/BackgroundProfile.jpg"),
                   fit: BoxFit.fill)),
-          child: Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: SingleChildScrollView(
-              child: Row(
-                children: [
-                  Card(
-                    elevation: 15,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Container(
-                      height: screenHeightSize - 150,
-                      width: screenWidthSize,
+          width: Get.width,
+          height: 80.h,
+          child: Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 5.w, right: 5.w),
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(17)),
+                  elevation: 2,
+                  child: Container(
+                    padding: EdgeInsets.only(left: 5.w, right: 5.w, top: 5.w),
+                    height: 70.h,
+                    width: Get.width,
+                    child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Wrap(
-                            spacing: 5,
-                            // crossAxisAlignment: CrossAxisAlignment.center,
-                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 10,
-                                direction: Axis.vertical,
-                                children: [
-                                  Text(
-                                    'Name',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Name',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: headFontSize),
+                                ),
+                                Container(
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      RegExp regx = RegExp(r"^[a-z_]*$",
+                                          caseSensitive: false);
+                                      if (value == "") {
+                                        return "Name Can't Be Empty";
+                                      } else if (!(regx.hasMatch(value!))) {
+                                        return "Name Can Only Use Letters";
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                        fillColor: Colors.white, filled: true),
+                                    style: TextStyle(fontSize: fontSize),
+                                    maxLines: 1,
+                                    controller: controller.name,
                                   ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      maxLines: 4,
-                                      controller: controller.name,
-                                    ),
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                Text(
+                                  'Email',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: headFontSize),
+                                ),
+                                SizedBox(
+                                  height: 0.5.h,
+                                ),
+                                Container(
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      bool isvalid = EmailValidator.validate(
+                                          value.toString());
+                                      if (value == "") {
+                                        return "Email Can't Be Empty";
+                                      } else if (!isvalid) {
+                                        return "Email is not valid";
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                        fillColor: Colors.white, filled: true),
+                                    style: TextStyle(fontSize: fontSize),
+                                    maxLines: 1,
+                                    controller: controller.email,
                                   ),
-                                  Text(
-                                    'Employee ID',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                Text(
+                                  'No KTP',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: headFontSize),
+                                ),
+                                Container(
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      RegExp regx = RegExp(r"^[0-9_]*$",
+                                          caseSensitive: false);
+                                      if (value == "") {
+                                        return "No KTP Can't Be Empty";
+                                      } else if (!(regx.hasMatch(value!))) {
+                                        return "No KTP Can Only Use Number";
+                                      } else if (value.length < 16 ||
+                                          value.length > 16) {
+                                        return "No KTP maximimum miminum 16 digit";
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                        fillColor: Colors.white, filled: true),
+                                    style: TextStyle(fontSize: fontSize),
+                                    maxLines: 1,
+                                    controller: controller.noKTP,
                                   ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      maxLines: 4,
-                                      enabled: false,
-                                      controller: controller.employeeId,
-                                    ),
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                Text(
+                                  'NPWP',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: headFontSize),
+                                ),
+                                Container(
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      RegExp regx = RegExp(r"^[0-9._]*$",
+                                          caseSensitive: false);
+                                      RegExp regExp = RegExp(
+                                          r"/^[0][1-9][.]([\d]{3})[.]([\d]{3})[.][\d][-]([\d]{3})[.]([\d]{3})*$");
+                                      if (value == "") {
+                                        return "NPWP Can't Be Empty";
+                                      } else if (!(regExp.hasMatch(value!))) {
+                                        return "NPWP is not Valid";
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                        fillColor: Colors.white, filled: true),
+                                    style: TextStyle(fontSize: fontSize),
+                                    maxLines: 1,
+                                    controller: controller.npwp,
                                   ),
-                                  Text(
-                                    'Join Date',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                Text(
+                                  'Religion',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: headFontSize),
+                                ),
+                                Container(
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      RegExp regx = RegExp(r"^[a-z_]*$",
+                                          caseSensitive: false);
+                                      if (value == "") {
+                                        return "Religion Can't Be Empty";
+                                      } else if (!(regx.hasMatch(value!))) {
+                                        return "Religion Can Only Use Letters";
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                        fillColor: Colors.white, filled: true),
+                                    style: TextStyle(fontSize: fontSize),
+                                    maxLines: 1,
+                                    controller: controller.religion,
                                   ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      maxLines: 4,
-                                      enabled: false,
-                                      controller: controller.joinDate,
-                                    ),
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                Text(
+                                  'Phone Number',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: headFontSize),
+                                ),
+                                Container(
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      RegExp regx = RegExp(r"^[0-9_]*$",
+                                          caseSensitive: false);
+                                      if (value == "") {
+                                        return "Phone Number Can't Be Empty";
+                                      } else if (!(regx.hasMatch(value!))) {
+                                        return "Phone Number Can Only Use Number";
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                        fillColor: Colors.white, filled: true),
+                                    style: TextStyle(fontSize: fontSize),
+                                    maxLines: 1,
+                                    controller: controller.phoneNumber,
                                   ),
-                                  Text(
-                                    'Email',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                Text(
+                                  'City',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: headFontSize),
+                                ),
+                                Container(
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      RegExp regx = RegExp(r"^[a-z_]*$",
+                                          caseSensitive: false);
+                                      if (value == "") {
+                                        return "City Name Number Can't Be Empty";
+                                      } else if (!(regx.hasMatch(value!))) {
+                                        return "City Name Can Only Use Letters";
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                        fillColor: Colors.white, filled: true),
+                                    style: TextStyle(fontSize: fontSize),
+                                    maxLines: 1,
+                                    controller: controller.city,
                                   ),
-                                  Container(
-                                    height: 50,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      maxLines: 4,
-                                      keyboardType: TextInputType.emailAddress,
-                                      controller: controller.email,
-                                    ),
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                Text(
+                                  'Date of Birth',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: headFontSize),
+                                ),
+                                Container(
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: TextFormField(
+                                    validator: (value) {
+                                      if (value == "") {
+                                        return "Date of Birth Can't Be Empty";
+                                      }
+                                    },
+                                    decoration: InputDecoration(
+                                        fillColor: Colors.white, filled: true),
+                                    style: TextStyle(fontSize: fontSize),
+                                    maxLines: 1,
+                                    controller: controller.dateOfBirth,
                                   ),
-                                  Text(
-                                    'No KTP',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        LengthLimitingTextInputFormatter(16),
-                                        FilteringTextInputFormatter.digitsOnly
-                                      ],
-                                      controller: controller.noKTP,
-                                    ),
-                                  ),
-                                  Text(
-                                    'NPWP',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        LengthLimitingTextInputFormatter(15),
-                                        FilteringTextInputFormatter.digitsOnly
-                                      ],
-                                      controller: controller.npwp,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Religion',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            '[a-zA-Z]')
-                                      ],
-                                      controller: controller.religion,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 10,
-                                direction: Axis.vertical,
-                                children: [
-                                  Text(
-                                    'Position',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      enabled: false,
-                                      controller: controller.position,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Status',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      enabled: false,
-                                      controller: controller.status,
-                                    ),
-                                  ),
-                                  Text(
-                                    'End Date',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      enabled: false,
-                                      controller: controller.endDate,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Phone Number',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      
+                                ),
+                                SizedBox(
+                                  height: 1.h,
+                                ),
+                                Text(
+                                  'Address',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: headFontSize),
+                                ),
+                                Container(
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: TextFormField(
                                       validator: (value) {
                                         if (value == "") {
-                                          return "Phone Number Can't Be Empty";
-                                        } else if (value!.length < 11) {
-                                          return "Phone Number Cannot Be Less Than 11 Digits";
+                                          return "Address Can't Be Empty";
                                         }
                                       },
                                       decoration: InputDecoration(
                                           fillColor: Colors.white,
                                           filled: true),
                                       style: TextStyle(fontSize: fontSize),
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        LengthLimitingTextInputFormatter(13),
-                                        FilteringTextInputFormatter.digitsOnly
-                                      ],
-                                      controller: controller.phoneNumber,
-                                    ),
-                                  ),
-                                  Text(
-                                    'City',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      validator: (value) {
-                                        if (value == "") {
-                                          return "City can't be empty";
-                                        }
-                                      },
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            '[a-zA-Z]')
-                                      ],
-                                      controller: controller.city,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Date of Birth',
-                                    style: TextStyle(
-                                        fontFamily: 'Roboto',
-                                        fontSize: fontSize),
-                                  ),
-                                  Container(
-                                    height: 40,
-                                    width: 147,
-                                    child: TextFormField(
-                                      decoration: InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true),
-                                      style: TextStyle(fontSize: fontSize),
-                                      readOnly: true,
-                                      controller: controller.dateOfBirth,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
+                                      maxLines: 4,
+                                      controller: controller.address),
+                                ),
+                                SizedBox(
+                                  height: 2.h,
+                                )
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  Container(
-                    padding: EdgeInsets.only(top: 20),
-                    width: 350,
-                    height: 60,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            elevation: 10,
-                            primary: HexColor("363636")),
-                        onPressed: () {
-                          controller.updateProfile();
-                        },
-                        child: Text(
-                          "Save Data",
-                          style: TextStyle(
-                              fontFamily: "Roboto",
-                              fontSize: 16,
-                              color: Colors.white),
-                        )),
-                  ),
-                ],
+                ),
               ),
-            ),
+              Container(
+                padding: EdgeInsets.only(top: 1.h),
+                width: 90.w,
+                height: 8.h,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                        elevation: 10,
+                        primary: HexColor("363636")),
+                    onPressed: () {
+                      // controller.updateProfile();
+                      if (_formKey.currentState!.validate()) {}
+                    },
+                    child: Text(
+                      "Save Data",
+                      style: TextStyle(
+                          fontFamily: "Roboto",
+                          fontSize: 14.sp,
+                          color: Colors.white),
+                    )),
+              ),
+            ],
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          iconSize: 30,
-          backgroundColor: Colors.black,
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.fingerprint_outlined,
-                  color: Colors.white,
-                ),
-                label: "home",
-                backgroundColor: Colors.black),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.access_time_outlined),
-                label: "histori",
-                backgroundColor: Colors.black),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: "profile",
-                backgroundColor: Colors.black)
-          ],
-          currentIndex: _selectedIndex.value,
-          onTap: (index) {
-            if (index == 0) {
-              _selectedIndex.value = index;
-              Get.toNamed('/');
-            } else if (index == 1) {
-              _selectedIndex.value = index;
-              Get.toNamed('/historyPage');
-            } else if (index == 2) {
-              _selectedIndex.value = index;
-              Get.toNamed('/profilePage');
-            }
-          },
-          selectedItemColor: Colors.amber,
-          unselectedItemColor: Colors.white,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-        ),
       ),
+     
     );
   }
 }

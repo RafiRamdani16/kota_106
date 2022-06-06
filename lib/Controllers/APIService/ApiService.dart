@@ -1,13 +1,18 @@
 import 'package:dio/dio.dart' hide Headers;
+import 'package:kota_106/Models/AfterOvertimeHistoryModel.dart';
+import 'package:kota_106/Models/AfterOvertimeModel.dart';
 
 import 'package:kota_106/Models/HistoryActivityRecordModel.dart';
 import 'package:kota_106/Models/HistoryAttendanceModel.dart';
 import 'package:kota_106/Models/LoginModel.dart';
+import 'package:kota_106/Models/OvertimeHistoryModel.dart';
 import 'package:kota_106/Models/ScheduleModel.dart';
 import 'package:kota_106/Models/UserModel.dart';
 
 import 'package:retrofit/http.dart';
 
+import '../../Models/LeaveHistoryModel.dart';
+import '../../Models/PermitHistoryModel.dart';
 import 'ApiResponse.dart';
 
 part 'ApiService.g.dart';
@@ -28,7 +33,6 @@ abstract class ApiClient {
   @POST('attendance/checkin_online')
   Future<ApiResponse<String>> checkinOnline(
       @Field("userId") int id,
-      @Field("scheduleId") int scheduleId,
       @Field("location") String location,
       @Field("photoName") String photoName,
       @Field("checkinTime") String checkinTime,
@@ -38,7 +42,6 @@ abstract class ApiClient {
   @POST('attendance/checkout_online')
   Future<ApiResponse<String>> checkoutOnline(
       @Field("userId") int id,
-      @Field("scheduleId") int scheduleId,
       @Field("location") String location,
       @Field("checkoutTime") String checkoutTime,
       @Field("description") String description,
@@ -55,8 +58,7 @@ abstract class ApiClient {
 
   @POST('attendance/checkout_offline')
   Future<ApiResponse<String>> checkoutOffline(
-      @Field("userId") int id,
-      @Field("scheduleId") int scheduleId,
+      @Field("UserId") int id,
       @Field("location") String location,
       @Field("checkoutTime") String checkoutTime,
       @Field("description") String description,
@@ -97,7 +99,6 @@ abstract class ApiClient {
   @PUT('user')
   Future<ApiResponse<UserModel>> updateProfile(
     @Path("Userid") int id,
-    @Field("ScheduleId") int scheduleId,
     @Field("Name") String name,
     @Field("Religion") String religion,
     @Field("Position") String position,
@@ -119,12 +120,6 @@ abstract class ApiClient {
     @Header("Authorization") String token,
   );
 
-  @GET('schedule/{id}')
-  Future<ApiResponse<ScheduleModel>> getSchedule(
-    @Path("id") int id,
-    @Header("Authorization") String token,
-  );
-
   @POST('refresh')
   Future<ApiResponse<String>> getRefreshToken(
     @Query('refreshToken') int id,
@@ -136,4 +131,88 @@ abstract class ApiClient {
     @Query('keyword') String keyword,
     @Header("Authorization") String token,
   );
+
+  @POST('permit')
+  Future<ApiResponse<String>> permitForm(
+    @Field("userId") int id,
+    @Header("Authorization") String token,
+    @Field("id") int permitId,
+    @Field("DateSubmit") String permitDateSubmit,
+    @Field("DatePermit") String permitDate,
+    @Field("StartTime") String permitStartTime,
+    @Field("EndTime") String permitEndTime,
+    @Field("Description") String permitDescription,
+    @Field("Attachment") String permitAttachment,
+  );
+
+  @POST('leave')
+  Future<ApiResponse<String>> leaveForm(
+    @Field("UserId") int id,
+    @Header("Authorization") String token,
+    @Field("id") int leaveId,
+    @Field("DateSubmit") String leaveDate,
+    @Field("DateStart") String leaveStartTime,
+    @Field("DateEnd") String leaveEndTime,
+    @Field("Type") String leaveType,
+    @Field("Description") String leaveDescription,
+    @Field("Attachment") String leaveAttachment,
+  );
+
+  @POST('overtime')
+  Future<ApiResponse<String>> overtimeForm(
+    @Field("UserId") int id,
+    @Header("Authorization") String token,
+    @Field("id") int overtimeId,
+    @Field("DateSubmit") String overtimeDateSubmit,
+    @Field("DateAfterOvertime") String overtimeDate,
+    @Field("StartTime") String overtimeStartTime,
+    @Field("EndTime") String overtimeEndTime,
+    @Field("Description") String overtimeDescription,
+    @Field("Attachment") String overtimeAttachment,
+  );
+
+  @POST('after_overtime')
+  Future<ApiResponse<String>> afterOvertimeForm(
+    @Field("UserId") int id,
+    @Header("Authorization") String token,
+    @Field("id") int afterOvertimeId,
+    @Field("DateSubmit") String afterOvertimeSubmitDate,
+    @Field("DateAfterOvertime") String afterOvertimeDate,
+    @Field("StartTime") String afterOvertimeStartTime,
+    @Field("EndTime") String afterOvertimeEndTime,
+    @Field("Description") String afterOvertimeDescription,
+    @Field("Attachment") String afterOvertimeAttachment,
+  );
+
+  @GET('permit')
+  Future<ApiResponse<PermitHistoryModel>> getPermitHistory(
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
+
+  @GET('leave')
+  Future<ApiResponse<LeaveHistoryModel>> getLeaveHistory(
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
+
+  @GET('overtime')
+  Future<ApiResponse<OvertimeHistoryModel>> getOvertimeHistory(
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
+
+      @GET('after_overtime')
+  Future<ApiResponse<AfterOvertimeHistoryModel>> getAfterOvertimeHistory(
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
 }

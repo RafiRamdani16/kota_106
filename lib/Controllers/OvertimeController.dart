@@ -1,19 +1,24 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Controllers/CacheManager.dart';
+import 'package:kota_106/Models/AfterOvertimeModel.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 
+import 'APIService/ApiService.dart';
+
 class OvertimeController extends GetxController with CacheManager {
+  ApiClient _apiClient = Get.put(ApiClient(Dio()));
+  AfterOvertimeModel afterOvertimeModel = Get.put(AfterOvertimeModel());
   TextEditingController overtimeDate = TextEditingController();
-  // TextEditingController permitStartTime = TextEditingController();
-  // TextEditingController permitEndTime = TextEditingController();
   TextEditingController overtimeDescription = TextEditingController();
 
   Rx<DateTime> overtimeSelectedDate = DateTime.now().obs;
   Rx<TimeOfDay> overtimeStartTime = TimeOfDay(hour: 7, minute: 0).obs;
   Rx<TimeOfDay> overtimeEndTime = TimeOfDay(hour: 17, minute: 0).obs;
-
+  int id = -1;
+  String token = "";
   void overtimeDatePicker(BuildContext context) async {
     DateTime? newDate = await showDatePicker(
         context: context,
@@ -22,39 +27,23 @@ class OvertimeController extends GetxController with CacheManager {
         lastDate: DateTime(DateTime.now().year + 1, DateTime.january, 0));
 
     if (newDate == null) {
-      Get.back();
     } else {
       overtimeSelectedDate.value = newDate;
     }
   }
 
-  // void permitStartTimePicker(BuildContext context) async {
-  //   TimeOfDay? newTime = await showTimePicker(
-  //     context: context,
-  //     initialTime: permitStartTime.value,
-  //   );
+  void editOvertimeDatePicker(BuildContext context) async {
+    DateTime? newDate = await showDatePicker(
+        context: context,
+        initialDate: overtimeSelectedDate.value,
+        firstDate: DateTime(DateTime.now().year, DateTime.january),
+        lastDate: DateTime(DateTime.now().year + 1, DateTime.january, 0));
 
-  //   if (newTime == null) {
-  //     Get.back();
-  //   } else if (newTime) {
-  //     dialog("ALERT!!!", "Start Time Invalid!!!");
-  //   } else {
-  //     permitStartTime.value = newTime;
-  //   }
-  // }
-
-  // void permitEndTimePicker(BuildContext context) async {
-  //   TimeOfDay? newTime = await showTimePicker(
-  //       initialEntryMode: TimePickerEntryMode.input,
-  //       context: context,
-  //       initialTime: permitEndTime.value);
-
-  //   if (newTime == null) {
-  //     Get.back();
-  //   } else {
-  //     permitEndTime.value = newTime;
-  //   }
-  // }
+    if (newDate == null) {
+    } else {
+      overtimeSelectedDate.value = newDate;
+    }
+  }
 
   void overtimeTimePicker(BuildContext context) async {
     TimeRange? newTime = await showTimeRangePicker(
@@ -70,26 +59,25 @@ class OvertimeController extends GetxController with CacheManager {
       selectedColor: HexColor("FCBC45").withOpacity(0.5),
     );
     if (newTime == null) {
-      Get.back();
     } else {
       overtimeStartTime.value = newTime.startTime;
       overtimeEndTime.value = newTime.endTime;
     }
   }
 
-  void dialog(String message, String content) {
+  void overtimeForm() async {
     Get.defaultDialog(
       radius: 10.0,
       contentPadding: const EdgeInsets.all(20.0),
-      title: message,
-      titleStyle: TextStyle(fontFamily: 'ROBOTO'),
-      middleText: content,
+      title: 'SUCCESS',
+      titleStyle: TextStyle(color: Colors.green),
+      middleText: 'Pengajuan lembur tanggal $overtimeSelectedDate berhasil',
       textConfirm: 'Confirm',
       confirm: OutlinedButton.icon(
         onPressed: () => Get.back(),
         icon: const Icon(
           Icons.check,
-          color: Colors.blue,
+          color: Colors.green,
         ),
         label: const Text(
           'Confirm',
@@ -98,4 +86,14 @@ class OvertimeController extends GetxController with CacheManager {
       ),
     );
   }
+
+  // Future<void> afterOvertime(int idOvertime) async {
+  //   id = getUserId()!;
+  //   token = getToken()!;
+  //   await _apiClient
+  //       .getAfterOvertimeHistory("UserId = $id", "-CreatedAt", 1, 20, token)
+  //       .then((response) {
+  //     afterOvertimeModel = response.data.data.;
+  //   });
+  // }
 }

@@ -9,8 +9,10 @@ import 'package:kota_106/Screens/Overtime/OvertimeScreen.dart';
 import 'package:kota_106/Screens/login/LoginScreen.dart';
 import 'package:sizer/sizer.dart';
 import 'BindingsApplication.dart';
-import 'Screens/Attendance/Attendance/OfficeCheckInForm.dart';
+import 'Screens/Approval/ApprovalScreen.dart';
+import 'Screens/Attendance/OfficeCheckInForm.dart';
 import 'Screens/AttendanceScreen.dart';
+import 'Screens/History/HistoryOvertime/AfterOvertimeScreen.dart';
 import 'Screens/History/HistoryScreen.dart';
 import 'Screens/Permit/PermitScreen.dart';
 import 'Screens/SplashScreen.dart';
@@ -28,9 +30,12 @@ class MyApp extends StatelessWidget {
     return Sizer(builder: (context, orientation, deviceType) {
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'KoTA_106',
-        theme: ThemeData(primarySwatch: Colors.amber, fontFamily: "Roboto"),
-        initialRoute: '/splashScreen',
+        title: 'Attendance CV Garuda',
+        theme: ThemeData(
+          primarySwatch: Colors.amber,
+          fontFamily: "Roboto",
+        ),
+        initialRoute: '/',
         initialBinding: HomeBindings(),
         getPages: [
           GetPage(name: '/splashScreen', page: () => SplashScreen()),
@@ -38,7 +43,7 @@ class MyApp extends StatelessWidget {
           GetPage(name: '/loginPage', page: () => LoginScreen()),
           GetPage(name: '/profileScreen', page: () => ProfileScreen()),
           GetPage(name: '/editProfileScreen', page: () => EditProfileScreen()),
-          GetPage(name: '/historyPage', page: () => HistoryScreen()),
+          GetPage(name: '/historyScreen', page: () => HistoryScreen()),
           GetPage(name: '/officeCheckIn', page: () => OfficeCheckInForm()),
           GetPage(name: '/activityRecord', page: () => ActivityRecordScreen()),
           GetPage(
@@ -46,6 +51,9 @@ class MyApp extends StatelessWidget {
           GetPage(name: '/leaveScreen', page: () => LeaveScreen()),
           GetPage(name: '/permitScreen', page: () => PermitScreen()),
           GetPage(name: '/overtimeScreen', page: () => OvertimeScreen()),
+          GetPage(
+              name: '/afterOvertimeScreen', page: () => AfterOvertimeScreen()),
+          GetPage(name: '/approvalScreen', page: () => ApprovalScreen()),
         ],
       );
     });

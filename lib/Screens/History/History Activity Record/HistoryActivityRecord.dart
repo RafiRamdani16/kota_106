@@ -6,7 +6,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Controllers/HistoryController.dart';
 
 import '../HistoryScreen.dart';
-import 'DetailActivityRecordScreen.dart';
+import 'DetailHistoryActivityRecordScreen.dart';
 
 class HistoryActivityRecord extends GetView<HistoryController> {
   const HistoryActivityRecord({Key? key}) : super(key: key);
