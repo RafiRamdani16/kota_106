@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kota_106/Controllers/PermitDecisionApplicationController.dart';
+import 'package:kota_106/Controllers/PermitApprovalController.dart';
 import 'package:kota_106/Models/PermitApplicationDecisionModel.dart';
 
 import 'package:sizer/sizer.dart';
@@ -9,7 +9,7 @@ import 'package:sizer/sizer.dart';
 import '../../DetailAttachmentScreen.dart';
 
 class PermitApplicationScreenDetail
-    extends GetView<PermitDecisionApplicationController> {
+    extends GetView<PermitApprovalController> {
   final PermitApplicationDecisionModel permitModel;
   const PermitApplicationScreenDetail(this.permitModel);
 

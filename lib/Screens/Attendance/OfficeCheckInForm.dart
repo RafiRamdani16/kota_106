@@ -88,17 +88,13 @@ class OfficeCheckInForm extends GetView<AttendanceController> {
               TextFormField(
                 style: TextStyle(fontSize: 12),
                 maxLines: 4,
-                controller: controller.note,
+                controller: controller.taskList,
               ),
               Container(
                   width: Get.width,
                   child: ElevatedButton(
                       onPressed: () {
-                        String checkInTime =
-                            '${controller.cDate.text} ${controller.cTime.text}';
-
-                        controller.checkInOffline(controller.clocation.text,
-                            checkInTime, controller.note.text);
+                        controller.checkInOfflineForm(controller.taskList.text);
                       },
                       child: Text('Check-in Now')))
             ]),

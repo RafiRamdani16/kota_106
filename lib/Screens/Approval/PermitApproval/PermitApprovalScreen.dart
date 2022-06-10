@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:kota_106/Controllers/PermitDecisionApplicationController.dart';
+import 'package:kota_106/Controllers/PermitApprovalController.dart';
 import 'package:sizer/sizer.dart';
 
 import 'PermitApplicationScreenDetail.dart';
 
-class PermitApplicationScreen
-    extends GetView<PermitDecisionApplicationController> {
+class PermitApplicationScreen extends GetView<PermitApprovalController> {
   const PermitApplicationScreen({Key? key}) : super(key: key);
   Widget errorView() {
     return AlertDialog(
@@ -146,7 +145,8 @@ class PermitApplicationScreen
                                         Text(
                                           controller.permitApplication[index]
                                               .employeeName,
-                                          style: TextStyle(fontSize: 10.sp,
+                                          style: TextStyle(
+                                              fontSize: 10.sp,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(

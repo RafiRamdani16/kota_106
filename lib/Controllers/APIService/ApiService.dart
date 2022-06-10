@@ -27,30 +27,29 @@ abstract class ApiClient {
     "Content-Type": "application/json",
   })
   @POST('auth/login')
-  Future<ApiResponse<LoginModel>> login(
+  Future<ApiResponse<LoginModel>> authentication(
       @Field("email") String email, @Field("password") String password);
 
   @POST('attendance/checkin_online')
   Future<ApiResponse<String>> checkinOnline(
       @Field("userId") int id,
-      @Field("location") String location,
-      @Field("photoName") String photoName,
       @Field("checkinTime") String checkinTime,
-      @Field("description") String description,
+      @Field("description") String taskList,
+      @Field("photoName") String photoSelfie,
+      @Field("location") String locationNow,
       @Header("Authorization") String token);
 
   @POST('attendance/checkout_online')
   Future<ApiResponse<String>> checkoutOnline(
       @Field("userId") int id,
-      @Field("location") String location,
       @Field("checkoutTime") String checkoutTime,
-      @Field("description") String description,
+      @Field("description") String completedTask,
+      @Field("location") String locationNow,
       @Header("Authorization") String token);
 
   @POST('attendance/checkin_offline')
   Future<ApiResponse<String>> checkinOffline(
       @Field("userId") int id,
-      @Field("scheduleId") int scheduleId,
       @Field("location") String location,
       @Field("checkinTime") String checkinTime,
       @Field("description") String description,
@@ -74,11 +73,11 @@ abstract class ApiClient {
 
   @POST('activity_record')
   Future<ApiResponse<String>> activityRecord(
-    @Field("userId") int id,
+    @Field("userId") int emploeeId,
+    @Field("date") String activityRecordTime,
+    @Field("description") String taskList,
+    @Field("photoName") String photoSelfie,
     @Field("location") String location,
-    @Field("date") String date,
-    @Field("description") String description,
-    @Field("photoName") String photoName,
     @Header("Authorization") String token,
   );
 
@@ -134,9 +133,8 @@ abstract class ApiClient {
 
   @POST('permit')
   Future<ApiResponse<String>> permitForm(
-    @Field("userId") int id,
+    @Field("userId") int employeeId,
     @Header("Authorization") String token,
-    @Field("id") int permitId,
     @Field("DateSubmit") String permitDateSubmit,
     @Field("DatePermit") String permitDate,
     @Field("StartTime") String permitStartTime,
@@ -145,31 +143,86 @@ abstract class ApiClient {
     @Field("Attachment") String permitAttachment,
   );
 
+  @PUT('permit')
+  Future<ApiResponse<String>> editPermitForm(
+    @Field("userId") int employeeId,
+    @Header("Authorization") String token,
+    @Field("DateSubmit") String permitDateSubmit,
+    @Field("DatePermit") String permitDate,
+    @Field("StartTime") String permitStartTime,
+    @Field("EndTime") String permitEndTime,
+    @Field("Description") String permitDescription,
+    @Field("Attachment") String permitAttachment,
+  );
+  @GET('permit')
+  Future<ApiResponse<PermitHistoryModel>> getPermitHistory(
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
+
   @POST('leave')
   Future<ApiResponse<String>> leaveForm(
     @Field("UserId") int id,
     @Header("Authorization") String token,
-    @Field("id") int leaveId,
     @Field("DateSubmit") String leaveDate,
-    @Field("DateStart") String leaveStartTime,
-    @Field("DateEnd") String leaveEndTime,
+    @Field("DateStart") String leaveStartDate,
+    @Field("DateEnd") String leaveEndDate,
     @Field("Type") String leaveType,
     @Field("Description") String leaveDescription,
     @Field("Attachment") String leaveAttachment,
   );
 
+  @PUT('leave')
+  Future<ApiResponse<String>> editLeaveForm(
+    @Field("UserId") int id,
+    @Header("Authorization") String token,
+    @Field("DateSubmit") String leaveDate,
+    @Field("DateStart") String leaveStartDate,
+    @Field("DateEnd") String leaveEndDate,
+    @Field("Type") String leaveType,
+    @Field("Description") String leaveDescription,
+    @Field("Attachment") String leaveAttachment,
+  );
+
+  @GET('leave')
+  Future<ApiResponse<LeaveHistoryModel>> getLeaveHistory(
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
+
   @POST('overtime')
   Future<ApiResponse<String>> overtimeForm(
     @Field("UserId") int id,
     @Header("Authorization") String token,
-    @Field("id") int overtimeId,
     @Field("DateSubmit") String overtimeDateSubmit,
-    @Field("DateAfterOvertime") String overtimeDate,
+    @Field("DateOvertime") String overtimeDate,
     @Field("StartTime") String overtimeStartTime,
     @Field("EndTime") String overtimeEndTime,
     @Field("Description") String overtimeDescription,
-    @Field("Attachment") String overtimeAttachment,
   );
+
+  @PUT('overtime')
+  Future<ApiResponse<String>> editOvertimeForm(
+    @Field("UserId") int id,
+    @Header("Authorization") String token,
+    @Field("DateSubmit") String overtimeDateSubmit,
+    @Field("DateOvertime") String overtimeDate,
+    @Field("StartTime") String overtimeStartTime,
+    @Field("EndTime") String overtimeEndTime,
+    @Field("Description") String overtimeDescription,
+  );
+
+  @GET('overtime')
+  Future<ApiResponse<OvertimeHistoryModel>> getOvertimeHistory(
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
 
   @POST('after_overtime')
   Future<ApiResponse<String>> afterOvertimeForm(
@@ -184,31 +237,20 @@ abstract class ApiClient {
     @Field("Attachment") String afterOvertimeAttachment,
   );
 
-  @GET('permit')
-  Future<ApiResponse<PermitHistoryModel>> getPermitHistory(
-      @Query("Filters") String filters,
-      @Query("Sorts") String sorts,
-      @Query("Page") int page,
-      @Query("PageSize") int limit,
-      @Header("Authorization") String token);
+  @PUT('after_overtime')
+  Future<ApiResponse<String>> editAfterOvertimeForm(
+    @Field("UserId") int id,
+    @Header("Authorization") String token,
+    @Field("id") int afterOvertimeId,
+    @Field("DateSubmit") String afterOvertimeSubmitDate,
+    @Field("DateAfterOvertime") String afterOvertimeDate,
+    @Field("StartTime") String afterOvertimeStartTime,
+    @Field("EndTime") String afterOvertimeEndTime,
+    @Field("Description") String afterOvertimeDescription,
+    @Field("Attachment") String afterOvertimeAttachment,
+  );
 
-  @GET('leave')
-  Future<ApiResponse<LeaveHistoryModel>> getLeaveHistory(
-      @Query("Filters") String filters,
-      @Query("Sorts") String sorts,
-      @Query("Page") int page,
-      @Query("PageSize") int limit,
-      @Header("Authorization") String token);
-
-  @GET('overtime')
-  Future<ApiResponse<OvertimeHistoryModel>> getOvertimeHistory(
-      @Query("Filters") String filters,
-      @Query("Sorts") String sorts,
-      @Query("Page") int page,
-      @Query("PageSize") int limit,
-      @Header("Authorization") String token);
-
-      @GET('after_overtime')
+  @GET('after_overtime')
   Future<ApiResponse<AfterOvertimeHistoryModel>> getAfterOvertimeHistory(
       @Query("Filters") String filters,
       @Query("Sorts") String sorts,

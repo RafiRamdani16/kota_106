@@ -5,6 +5,7 @@ import 'package:hexcolor/hexcolor.dart';
 
 import 'package:kota_106/Controllers/HistoryController.dart';
 import 'package:kota_106/Screens/History/HistoryScreen.dart';
+import 'package:sizer/sizer.dart';
 import 'DetailHistoryPresensiPage.dart';
 
 class AttendanceHistoryScreen extends GetView<HistoryController> {
@@ -37,7 +38,7 @@ class AttendanceHistoryScreen extends GetView<HistoryController> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: controller.getHistoryAttendance(),
+      future: controller.attendanceHistoryList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -60,7 +61,7 @@ class AttendanceHistoryScreen extends GetView<HistoryController> {
         AnimationLimiter(
             child: SizedBox(
                 width: Get.width,
-                height: Get.height - 200,
+               height: Get.height - 25.h,
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,

@@ -10,7 +10,7 @@ import 'APIService/ApiService.dart';
 class ProfileController extends GetxController with CacheManager {
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
 
-  TextEditingController employeeId = TextEditingController();
+  TextEditingController Id = TextEditingController();
   TextEditingController joinDate = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController noKTP = TextEditingController();
@@ -28,13 +28,17 @@ class ProfileController extends GetxController with CacheManager {
   TextEditingController photoName = TextEditingController();
 
   RxBool isLoading = true.obs;
+  int employeeId = -1;
+  String token = "";
   UserModel userModel = Get.put(UserModel());
   // UserModel userModel = Get.put(UserModel());
 
-  Future<void> getProfile() async {
+  Future<void> profile() async {
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
     try {
       await _apiClient
-          .getProfile(getUserId()!, getToken()!)
+          .getProfile(employeeId, token)
           .then((response) async {
         print(response.status);
         if (response.status == 200) {
@@ -57,7 +61,7 @@ class ProfileController extends GetxController with CacheManager {
           // isLoading.value = false;
 
           photoName.text = response.data.photoName;
-          employeeId.text = '${response.data.userId}';
+          Id.text = '${response.data.userId}';
           joinDate.text = '2022-07-05';
           email.text = response.data.email;
           noKTP.text = '3273241612010001';
@@ -78,7 +82,7 @@ class ProfileController extends GetxController with CacheManager {
         }
       });
     } catch (e) {
-      employeeId.text = '2';
+      Id.text = '2';
       joinDate.text = '2022-07-05';
       email.text = 'ramdanirafi412@gmail.com';
       noKTP.text = '3273241612010001';
@@ -99,11 +103,13 @@ class ProfileController extends GetxController with CacheManager {
     // await Future.delayed(Duration(seconds: 3));
   }
 
-  void updateProfile() async {
+  void editProfileForm() async {
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
     try {
       await _apiClient
           .updateProfile(
-              getUserId()!,
+              employeeId,
               name.text,
               religion.text,
               position.text,
@@ -122,7 +128,7 @@ class ProfileController extends GetxController with CacheManager {
               userModel.password,
               userModel.photoName,
               userModel.superiorId,
-              getToken()!)
+              token)
           .then((response) {
         if (response.status == 200) {
           Get.defaultDialog(

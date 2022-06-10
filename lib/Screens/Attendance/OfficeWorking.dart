@@ -34,18 +34,18 @@ class OfficePresensiPage extends GetView<AttendanceController> {
             child: Padding(
               padding: EdgeInsets.only(top: 2.h),
               child: TabBarView(children: [
-                OfficeCheckInForm(),
-                OfficeCheckOutForm()
-                // Obx(() {
-                //   return controller.statusCheckinScan.value
-                //       ? OfficeCheckInForm()
-                //       : controller.scanQRPage('check-in');
-                // }),
-                // Obx(() {
-                //   return controller.statusCheckoutScan.value
-                //       ? OfficeCheckOutForm()
-                //       : controller.scanQRPage('check-out');
-                // })
+                // OfficeCheckInForm(),
+                // OfficeCheckOutForm()
+                Obx(() {
+                  return controller.statusCheckinScan.value
+                      ? OfficeCheckInForm()
+                      : controller.scanQRPage('check-in');
+                }),
+                Obx(() {
+                  return controller.statusCheckoutScan.value
+                      ? OfficeCheckOutForm()
+                      : controller.scanQRPage('check-out');
+                })
               ]),
             ),
           )

@@ -38,7 +38,7 @@ class HistoryActivityRecord extends GetView<HistoryController> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: controller.getHistoryActivityRecord(),
+      future: controller.activityRecordHistory(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -65,9 +65,9 @@ class HistoryActivityRecord extends GetView<HistoryController> {
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  itemCount: controller.activityRecordHistory.length,
+                  itemCount: controller.activityRecordHistoryList.length,
                   itemBuilder: (BuildContext context, int index) {
-                    if (controller.activityRecordHistory.length < 1) {
+                    if (controller.activityRecordHistoryList.length < 1) {
                       return Container(
                           child: Center(
                         child: Text(
@@ -80,7 +80,7 @@ class HistoryActivityRecord extends GetView<HistoryController> {
                       ));
                     }
                     controller.changeFormatDateForActivityHistory(
-                        controller.activityRecordHistory[index].date);
+                        controller.activityRecordHistoryList[index].date);
                     return AnimationConfiguration.staggeredList(
                         position: index,
                         child: SlideAnimation(
@@ -183,7 +183,7 @@ class HistoryActivityRecord extends GetView<HistoryController> {
                                                         (BuildContext context) {
                                                       return DetailActivityRecordScreen(
                                                           controller
-                                                                  .activityRecordHistory[
+                                                                  .activityRecordHistoryList[
                                                               index]);
                                                     });
                                               },

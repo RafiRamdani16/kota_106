@@ -59,7 +59,7 @@ class LeaveHistoryScreen extends GetView<HistoryController> {
         AnimationLimiter(
             child: SizedBox(
                 width: Get.width,
-                height: Get.height,
+                height: Get.height - 25.h,
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,

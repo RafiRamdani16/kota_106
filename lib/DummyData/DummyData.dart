@@ -66,7 +66,7 @@ class DummyData {
         ..statusPermit = index < 3 ? "Rejected" : "Approved");
 
   List<OvertimeModel> overtimeDummy = List<OvertimeModel>.generate(
-      4,
+      10,
       (index) => OvertimeModel()
         ..overtimeDate = "2022-12-13"
         ..overtimeDateSubmitted = "2022-12-${10 + index + 2}"

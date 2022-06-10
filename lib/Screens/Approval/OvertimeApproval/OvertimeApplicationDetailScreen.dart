@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kota_106/Controllers/OvertimeApplicationDecisionController.dart';
+import 'package:kota_106/Controllers/OvertimeApprovalController.dart';
 import 'package:kota_106/Models/OvertimeApplicationDecisionModel.dart';
 
 import 'package:sizer/sizer.dart';

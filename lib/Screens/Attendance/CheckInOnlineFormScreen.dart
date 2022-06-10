@@ -119,17 +119,14 @@ class CheckInForm extends GetView<AttendanceController> {
                     InputDecoration(fillColor: Colors.white, filled: true),
                 style: TextStyle(fontSize: 12),
                 maxLines: 4,
-                controller: controller.note,
+                controller: controller.taskList,
               ),
               Container(
                   width: Get.width - 20,
                   child: ElevatedButton(
                       onPressed: () {
-                        String checkInTime =
-                            '${controller.cDate.text} ${controller.cTime.text}';
-
-                        controller.checkInOnline(controller.clocation.text,
-                            checkInTime, controller.note.text);
+                        controller.checkInOnlineForm(controller.taskList.text,
+                            controller.photoName.value);
                       },
                       child: Text('Check-in Now')))
             ]),

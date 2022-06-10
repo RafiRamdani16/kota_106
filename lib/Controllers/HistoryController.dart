@@ -42,12 +42,12 @@ class HistoryController extends GetxController with CacheManager {
   RxInt checkOutHour = 0.obs;
   List rawData = [];
   List data = [];
-  int id = -1;
+  int employeeId = -1;
   String token = "";
   int scheduleId = -1;
 
   List<AttendanceModel> attendanceHistory = <AttendanceModel>[];
-  List<ActivityRecordModel> activityRecordHistory = <ActivityRecordModel>[];
+  List<ActivityRecordModel> activityRecordHistoryList = <ActivityRecordModel>[];
   List<PermitModel> permitHistory = <PermitModel>[];
   List<OvertimeModel> overtimeHistory = <OvertimeModel>[];
   List<LeaveModel> leaveHistory = <LeaveModel>[];
@@ -56,45 +56,55 @@ class HistoryController extends GetxController with CacheManager {
 
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
 
-  Future<void> getHistoryAttendance() async {
+  Future<void> attendanceHistoryList() async {
     DummyData dummy = Get.put(DummyData());
     attendanceHistory = dummy.dummy2;
     isThereItemActivity.value = true;
-    // await _apiClient
-    //     .getHistoryAttendance('UserId==${getUserId()!}', "-CreatedAt",
-    //         page.value, limit.value, getToken()!)
-    //     .then((response) async {
-    //   print(response.status);
-    //   if (response.status == 200) {
-    //     attendanceHistory = response.data.data.toList();
-    //     isThereItemAttendance.value = true;
-    //   } else if (response.status == 401) {
-    //     await _apiClient.getRefreshToken(id, getToken()!).then((response) {
-    //       saveToken(response.data);
-    //       getHistoryAttendance();
-    //     });
-    //   }
-    // });
+
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
+
+    await _apiClient
+        .getHistoryAttendance(
+            'UserId==$employeeId', "-CreatedAt", page.value, limit.value, token)
+        .then((response) async {
+      print(response.status);
+      if (response.status == 200) {
+        attendanceHistory = response.data.data.toList();
+        isThereItemAttendance.value = true;
+      } else if (response.status == 401) {
+        await _apiClient
+            .getRefreshToken(employeeId, getToken()!)
+            .then((response) {
+          saveToken(response.data);
+          attendanceHistoryList();
+        });
+      }
+    });
   }
 
-  Future<void> getHistoryActivityRecord() async {
+  Future<void> activityRecordHistory() async {
     DummyData dummyData = Get.put(DummyData());
-    activityRecordHistory = dummyData.activityDummy;
+    activityRecordHistoryList = dummyData.activityDummy;
     isThereItemActivity.value = true;
+    // employeeId = getEmployeeId()!;
+    // token = getToken()!;
     // await _apiClient
-    //     .getHistoryActivityRecord('UserId==${getUserId()!}', "-CreatedAt",
-    //         page.value, limit.value, getToken()!)
+    //     .getHistoryActivityRecord('UserId==$employeeId', "-CreatedAt",
+    //         page.value, limit.value, token)
     //     .then((response) async {
     //   if (response.status == 200) {
-    //     activityRecordHistory = response.data.data.toList();
+    //     activityRecordHistoryList = response.data.data.toList();
 
     //     isThereItemActivity.value = true;
     //     update();
     //     await Future.delayed(Duration(seconds: 3));
     //   } else if (response.status == 401) {
-    //     await _apiClient.getRefreshToken(id, getToken()!).then((response) {
+    //     await _apiClient
+    //         .getRefreshToken(employeeId, getToken()!)
+    //         .then((response) {
     //       saveToken(response.data);
-    //       getHistoryActivityRecord();
+    //       activityRecordHistory();
     //     });
     //   }
     // });
@@ -120,6 +130,7 @@ class HistoryController extends GetxController with CacheManager {
     overtimeHistory = dummyData.overtimeDummy;
 
     overtimeHistory.add(OvertimeModel()
+      ..idOvertime = 2
       ..overtimeDate = "2022-12-13"
       ..overtimeDateSubmitted = "2022-12-15"
       ..overtimeTimeSubmitted = "15:00"
@@ -145,10 +156,11 @@ class HistoryController extends GetxController with CacheManager {
   }
 
   Future<void> getAfterOvertimeHistory(int idOvertime) async {
-    id = getUserId()!;
+    employeeId = getEmployeeId()!;
     token = getToken()!;
     await _apiClient
-        .getAfterOvertimeHistory("UserId = $id", "-CreatedAt", 1, 20, token)
+        .getAfterOvertimeHistory(
+            "UserId = $employeeId", "-CreatedAt", 1, 20, token)
         .then((response) {
       afterOvertimeModel = response.data.data[idOvertime];
     });

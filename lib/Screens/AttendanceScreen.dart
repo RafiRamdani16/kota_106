@@ -5,7 +5,7 @@ import 'package:kota_106/Controllers/AttendanceController.dart';
 import 'package:kota_106/Controllers/HistoryController.dart';
 import 'package:sizer/sizer.dart';
 
-import 'Attendance/OfficePresensi.dart';
+import 'Attendance/OfficeWorking.dart';
 import 'Attendance/RemoteWorking.dart';
 
 class AttendanceScreen extends StatelessWidget {
@@ -20,10 +20,15 @@ class AttendanceScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 5.h),
-              Text(
-                "Attendance",
-                style: TextStyle(
-                    fontFamily: "Roboto", fontSize: 20.sp, color: Colors.black),
+              Padding(
+                padding: EdgeInsets.only(left: 6.w),
+                child: Text(
+                  "Attendance",
+                  style: TextStyle(
+                      fontFamily: "Roboto",
+                      fontSize: 20.sp,
+                      color: Colors.black),
+                ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -544,6 +549,9 @@ class AttendanceScreen extends StatelessWidget {
                                               fontSize: 10.sp,
                                               color: Colors.white),
                                         )),
+                                  ),
+                                  SizedBox(
+                                    height: 3.h,
                                   )
                                 ],
                               ),

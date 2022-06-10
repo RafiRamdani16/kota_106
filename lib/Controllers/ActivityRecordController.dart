@@ -23,18 +23,19 @@ class ActivityRecordController extends GetxController with CacheManager {
   TextEditingController dateNow = TextEditingController();
   TextEditingController timeNow = TextEditingController();
   TextEditingController locationNow = TextEditingController();
-  TextEditingController description = TextEditingController();
+  TextEditingController taskList = TextEditingController();
 
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
   Rx<File> tmpFile = File('').obs;
   Rx<XFile> imageFile = XFile('').obs;
-
-  RxString photoName = ''.obs;
+  int employeeId = -1;
+  String token = "";
+  RxString photoSelfie = ''.obs;
 
   Widget setImageView() {
     if (imageFile.value.path != '') {
       tmpFile.value = File(imageFile.value.path);
-      photoName.value =
+      photoSelfie.value =
           base64Encode(File(imageFile.value.path).readAsBytesSync()).trim();
       return Image.file(tmpFile.value, width: 100, height: 100);
     } else {
@@ -51,11 +52,11 @@ class ActivityRecordController extends GetxController with CacheManager {
     try {
       imageFile.value = (await _image.pickImage(source: ImageSource.camera))!;
       print(imageFile.value.name);
-      photoName.value = imageFile.value.name;
+      photoSelfie.value = imageFile.value.name;
     } catch (e) {}
   }
 
-  void getLocationActivityRecord() async {
+  void getLocation() async {
     _locationData = await location.getLocation();
     List<Placemark> p = await GeocodingPlatform.instance
         .placemarkFromCoordinates(
@@ -65,7 +66,7 @@ class ActivityRecordController extends GetxController with CacheManager {
         "${place.thoroughfare}-${place.locality}- ${place.postalCode}-${place.subAdministrativeArea}";
   }
 
-  void currentDate() async {
+  void dateTimeNow() async {
     String rawDate = "";
     WidgetsFlutterBinding.ensureInitialized();
     await initializeDateFormatting('id_ID', null).then((_) => rawDate =
@@ -76,42 +77,43 @@ class ActivityRecordController extends GetxController with CacheManager {
     update();
   }
 
-  Future<void> addActivityRecord() async {
-    // try {
-    //   await _apiClient
-    //       .activityRecord(
-    //           getUserId()!,
-    //           locationNow.text,
-    //           "${dateNow.text} ${timeNow.text}",
-    //           description.text,
-    //           'data:image/jpeg;base64,${photoName.value}',
-    //           getToken()!)
-    //       .then((response) async {
-    //     if (response.status == 200) {
-    //       dialog('SUCCESS', 'CHECK-IN BERHASIL');
-    //     } else if (response.status == 401) {
-    //       await _apiClient
-    //           .getRefreshToken(getUserId()!, getToken()!)
-    //           .then((response) {
-    //         saveToken(response.data);
-    //         addActivityRecord();
-    //       });
-    //     }else{
-    //       dialog('ALERT', 'Activity Record untuk jadwal ini sudah ditambahkan sebelumnya');
-    //     }
-    //   });
-    // } catch (e) {
-    //   dialog('ALERT', 'Terjadi Kesalahan');
-    // }
-    dialog('SUCCESS', 'CHECK-IN BERHASIL');
+  Future<void> activityRecordForm(String taskList, String photoSelfie) async {
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
+    try {
+      await _apiClient
+          .activityRecord(
+              employeeId,
+              locationNow.text,
+              "${dateNow.text} ${timeNow.text}",
+              taskList,
+              'data:image/jpeg;base64,$photoSelfie',
+              getToken()!)
+          .then((response) async {
+        if (response.status == 200) {
+          message('SUCCESS', 'Activity Record Berhasil');
+        } else if (response.status == 401) {
+          await _apiClient.getRefreshToken(employeeId, token).then((response) {
+            saveToken(response.data);
+            activityRecordForm(taskList, photoSelfie);
+          });
+        } else {
+          message('ALERT',
+              'Activity Record untuk jadwal ini sudah ditambahkan sebelumnya');
+        }
+      });
+    } catch (e) {
+      message('ALERT', 'Terjadi Kesalahan');
+    }
+    message('SUCCESS', 'Activity Record Berhasil');
   }
 
-  void dialog(String message, String content) {
+  void message(String message, String content) {
     Get.defaultDialog(
       radius: 10.0,
       contentPadding: const EdgeInsets.all(20.0),
       title: message,
-      titleStyle: TextStyle(fontFamily: 'ROBOTO'),
+      titleStyle: TextStyle(fontWeight: FontWeight.bold),
       middleText: content,
       textConfirm: 'Confirm',
       confirm: OutlinedButton.icon(

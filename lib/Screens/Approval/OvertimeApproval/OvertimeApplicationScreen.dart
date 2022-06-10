@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:kota_106/Controllers/OvertimeApplicationDecisionController.dart';
+import 'package:kota_106/Controllers/OvertimeApprovalController.dart';
 
 import 'package:sizer/sizer.dart';
 

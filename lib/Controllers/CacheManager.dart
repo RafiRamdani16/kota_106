@@ -21,7 +21,7 @@ mixin CacheManager {
     return box.read(CacheManagerKey.TOKEN.toString());
   }
 
-  int? getUserId() {
+  int? getEmployeeId() {
     return box.read(CacheManagerKey.USERID.toString());
   }
 

@@ -5,7 +5,7 @@ import 'package:sizer/sizer.dart';
 
 import 'LeaveApproval/LeaveApplicationScreen.dart';
 import 'OvertimeApproval/OvertimeApplicationScreen.dart';
-import 'PermitApproval/PermitApplicationScreen.dart';
+import 'PermitApproval/PermitApprovalScreen.dart';
 
 class ApprovalScreen extends StatelessWidget {
   const ApprovalScreen({Key? key}) : super(key: key);

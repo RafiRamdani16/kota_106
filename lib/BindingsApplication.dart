@@ -5,10 +5,10 @@ import 'package:kota_106/Controllers/LeaveApplicationDecisionController.dart';
 import 'package:kota_106/Controllers/LeaveController.dart';
 import 'package:kota_106/Controllers/LoginController.dart';
 import 'package:kota_106/Controllers/PermitController.dart';
-import 'package:kota_106/Controllers/PermitDecisionApplicationController.dart';
+import 'package:kota_106/Controllers/PermitApprovalController.dart';
 
 import 'Controllers/AttendanceController.dart';
-import 'Controllers/OvertimeApplicationDecisionController.dart';
+import 'Controllers/OvertimeApprovalController.dart';
 import 'Controllers/OvertimeController.dart';
 import 'Controllers/ProfileController.dart';
 
@@ -23,8 +23,7 @@ class HomeBindings implements Bindings {
     Get.put<LeaveController>(LeaveController());
     Get.put<PermitController>(PermitController());
     Get.put<OvertimeController>(OvertimeController());
-    Get.put<PermitDecisionApplicationController>(
-        PermitDecisionApplicationController());
+    Get.put<PermitApprovalController>(PermitApprovalController());
     Get.put<OvertimeDecisionApplicationController>(
         OvertimeDecisionApplicationController());
         Get.put<LeaveApplicationDecisionController>(

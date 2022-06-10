@@ -97,7 +97,7 @@ class CheckOutForm extends GetView<AttendanceController> {
                     InputDecoration(fillColor: Colors.white, filled: true),
                 style: TextStyle(fontSize: 12),
                 maxLines: 4,
-                controller: controller.note,
+                controller: controller.taskList,
               ),
               SizedBox(
                 height: 20.0,
@@ -106,11 +106,8 @@ class CheckOutForm extends GetView<AttendanceController> {
                   width: Get.width,
                   child: ElevatedButton(
                       onPressed: () {
-                        String checkOutTime =
-                            '${controller.cDate.text} ${controller.cTime.text}';
 
-                        controller.checkOutOnline(controller.clocation.text,
-                            checkOutTime, controller.note.text);
+                        controller.checkOutOnline(controller.taskList.text);
                       },
                       child: Text('Check-out Now')))
             ]),

@@ -354,8 +354,10 @@ class EditProfileScreen extends GetView<ProfileController> {
                         elevation: 10,
                         primary: HexColor("363636")),
                     onPressed: () {
-                      // controller.updateProfile();
-                      if (_formKey.currentState!.validate()) {}
+                      
+                      if (_formKey.currentState!.validate()) {
+                        controller.editProfileForm();
+                      }
                     },
                     child: Text(
                       "Save Data",

@@ -109,7 +109,7 @@ class ProfileScreen extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: controller.getProfile(),
+      future: controller.profile(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return waitingView(context);
@@ -183,7 +183,7 @@ class ProfileScreen extends GetView<ProfileController> {
                       InputDecoration(fillColor: Colors.white, filled: true),
                   style: TextStyle(fontSize: fontSize),
                   maxLines: 1,
-                  controller: controller.employeeId,
+                  controller: controller.Id,
                 ),
               ),
               SizedBox(

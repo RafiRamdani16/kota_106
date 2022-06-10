@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Controllers/ActivityRecordController.dart';
 import 'package:sizer/sizer.dart';
+
 class ActivityRecordScreen extends GetView<ActivityRecordController> {
   @override
   Widget build(BuildContext context) {
-    controller.currentDate();
-    controller.getLocationActivityRecord();
+    
+    controller.getLocation();
+    controller.dateTimeNow();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -36,7 +38,7 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                   image: AssetImage("assets/images/BackgroundProfile.jpg"),
                   fit: BoxFit.cover)),
           child: Padding(
-            padding: EdgeInsets.only(top: 5.h,left: 5.w,right: 5.w),
+            padding: EdgeInsets.only(top: 5.h, left: 5.w, right: 5.w),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -56,18 +58,19 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                             children: [
                               Row(
                                 children: [
-                                  Text('Date',style: TextStyle(
-                        fontSize: 11.sp,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: "Roboto",
-                        )),
-                                  Padding(
-                                      padding: EdgeInsets.only(left: 160)),
-                                  Text('Time',style: TextStyle(
-                                    fontSize: 11.sp,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: "Roboto",
-                                  ))
+                                  Text('Date',
+                                      style: TextStyle(
+                                        fontSize: 11.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Roboto",
+                                      )),
+                                  Padding(padding: EdgeInsets.only(left: 160)),
+                                  Text('Time',
+                                      style: TextStyle(
+                                        fontSize: 11.sp,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Roboto",
+                                      ))
                                 ],
                               ),
                               Row(
@@ -110,11 +113,12 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                               SizedBox(
                                 height: 20,
                               ),
-                              Text('Location',style: TextStyle(
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Roboto",
-                              )),
+                              Text('Location',
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Roboto",
+                                  )),
                               Padding(padding: EdgeInsets.only(top: 10)),
                               TextFormField(
                                 decoration: InputDecoration(
@@ -126,26 +130,28 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                               SizedBox(
                                 height: 20,
                               ),
-                              Text('Description...',style: TextStyle(
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Roboto",
-                              )),
+                              Text('Description...',
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Roboto",
+                                  )),
                               TextFormField(
                                 decoration: InputDecoration(
                                     fillColor: Colors.white, filled: true),
                                 style: TextStyle(fontSize: 12),
                                 maxLines: 4,
-                                controller: controller.description,
+                                controller: controller.taskList,
                               ),
                               SizedBox(
                                 height: 20.0,
                               ),
-                              Text('Photo',style: TextStyle(
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "Roboto",
-                              )),
+                              Text('Photo',
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "Roboto",
+                                  )),
                               Row(
                                 children: [
                                   Obx((() {
@@ -155,8 +161,7 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                                       style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(
-                                                      15.0)),
+                                                  BorderRadius.circular(15.0)),
                                           primary: HexColor('FFC368')),
                                       onPressed: () {
                                         controller.openCamera();
@@ -164,8 +169,7 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                                       child: Text(
                                         'Add Photo',
                                         style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.black),
+                                            fontSize: 12, color: Colors.black),
                                       )),
                                 ],
                               ),
@@ -173,7 +177,9 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 1.h,),
+                  SizedBox(
+                    height: 1.h,
+                  ),
                   Container(
                     width: 90.w,
                     height: 4.h,
@@ -184,7 +190,9 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                             elevation: 10,
                             primary: HexColor("363636")),
                         onPressed: () {
-                          controller.addActivityRecord();
+                          controller.activityRecordForm(
+                              controller.taskList.text,
+                              controller.photoSelfie.value);
                         },
                         child: Text(
                           "New Activity",

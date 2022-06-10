@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:kota_106/Controllers/PermitController.dart';
+import 'package:kota_106/Screens/Submission/DetailSubmissionAttachmentScreen.dart';
 import 'package:sizer/sizer.dart';
 
 class PermitScreen extends GetView<PermitController> {
@@ -196,7 +197,56 @@ class PermitScreen extends GetView<PermitController> {
                                               borderRadius:
                                                   BorderRadius.circular(15.0)),
                                           primary: HexColor('FFC368')),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Attachment"),
+                                                content: Text(
+                                                    "Upload Attachment From..."),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        controller.openCamera();
+                                                      },
+                                                      child: Text(
+                                                        "Camera",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        controller
+                                                            .openGallery();
+                                                      },
+                                                      child: Text(
+                                                        "Gallery",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                      child: Text(
+                                                        "Cancel",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ))
+                                                ],
+                                              );
+                                            });
+                                      },
                                       child: Text(
                                         'UPLOAD',
                                         style: TextStyle(
@@ -205,6 +255,20 @@ class PermitScreen extends GetView<PermitController> {
                                             fontWeight: FontWeight.bold),
                                       )),
                                 ],
+                              ),
+                              SizedBox(
+                                height: 1.h,
+                              ),
+                              Center(
+                                child: Obx((() {
+                                  return GestureDetector(
+                                      onTap: (() {
+                                        Get.to(DetailSubmissionAttachmentScreen(
+                                            controller.tmpFile.value));
+                                      }),
+                                      child:
+                                          controller.setImageView(30.h, 30.h));
+                                })),
                               ),
                             ]),
                       ),
@@ -222,7 +286,12 @@ class PermitScreen extends GetView<PermitController> {
                               elevation: 10,
                               primary: HexColor("363636")),
                           onPressed: () {
-                            controller.permitForm();
+                            controller.permitForm(
+                                "${controller.permitSelectedDate.value}",
+                                "${controller.permitStartTime.value}",
+                                "${controller.permitEndTime.value}",
+                                controller.permitDescription.text,
+                                controller.permitAttachment.value);
                           },
                           child: Text(
                             "Apply Permit",

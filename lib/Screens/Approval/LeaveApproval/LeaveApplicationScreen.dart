@@ -3,7 +3,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Controllers/LeaveApplicationDecisionController.dart';
-import 'package:kota_106/Controllers/PermitDecisionApplicationController.dart';
+import 'package:kota_106/Controllers/PermitApprovalController.dart';
 import 'package:sizer/sizer.dart';
 
 import 'LeaveApplicationDetailScreen.dart';

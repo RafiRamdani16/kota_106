@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:kota_106/Controllers/LeaveController.dart';
 
+import '../DetailSubmissionAttachmentScreen.dart';
+
 class LeaveScreen extends GetView<LeaveController> {
   @override
   Widget build(BuildContext context) {
@@ -202,7 +204,56 @@ class LeaveScreen extends GetView<LeaveController> {
                                               borderRadius:
                                                   BorderRadius.circular(15.0)),
                                           primary: HexColor('FFC368')),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Attachment"),
+                                                content: Text(
+                                                    "Upload Attachment From..."),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        controller.openCamera();
+                                                      },
+                                                      child: Text(
+                                                        "Camera",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        controller
+                                                            .openGallery();
+                                                      },
+                                                      child: Text(
+                                                        "Gallery",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                      child: Text(
+                                                        "Cancel",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ))
+                                                ],
+                                              );
+                                            });
+                                      },
                                       child: Text(
                                         'UPLOAD',
                                         style: TextStyle(
@@ -210,6 +261,20 @@ class LeaveScreen extends GetView<LeaveController> {
                                             fontSize: 11.sp),
                                       )),
                                 ],
+                              ),
+                              SizedBox(
+                                height: 0.5.h,
+                              ),
+                              Center(
+                                child: Obx((() {
+                                  return GestureDetector(
+                                      onTap: (() {
+                                        Get.to(DetailSubmissionAttachmentScreen(
+                                            controller.tmpFile.value));
+                                      }),
+                                      child:
+                                          controller.setImageView(15.h, 30.h));
+                                })),
                               ),
                             ]),
                       ),
@@ -227,7 +292,12 @@ class LeaveScreen extends GetView<LeaveController> {
                               elevation: 10,
                               primary: HexColor("363636")),
                           onPressed: () {
-                            controller.leaveForm();
+                            controller.leaveForm(
+                                controller.selectedType.value,
+                                "${controller.startLeaveDate.value}",
+                                "${controller.endLeaveDate.value}",
+                                controller.leaveDescription.text,
+                                controller.leaveAttachment.value);
                           },
                           child: Text(
                             "Apply Leave",

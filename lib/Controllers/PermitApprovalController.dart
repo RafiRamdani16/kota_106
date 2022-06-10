@@ -5,8 +5,7 @@ import 'package:kota_106/Controllers/CacheManager.dart';
 import 'package:kota_106/DummyData/DummyData.dart';
 import 'package:kota_106/Models/PermitApplicationDecisionModel.dart';
 
-class PermitDecisionApplicationController extends GetxController
-    with CacheManager {
+class PermitApprovalController extends GetxController with CacheManager {
   RxString employeeName = "".obs;
   RxString employeePosition = "".obs;
   RxString permitDescription = "".obs;
@@ -33,7 +32,7 @@ class PermitDecisionApplicationController extends GetxController
       ..permitEndTime = "15:00"
       ..permitAttachment = "Photo.jpg");
 
-      permitApplication.add(PermitApplicationDecisionModel()
+    permitApplication.add(PermitApplicationDecisionModel()
       ..employeeName = "Fahreza Ramadhani"
       ..employeePosition = "Junior Programmer"
       ..permitDateSubmitted = "2022-09-18"
@@ -53,7 +52,7 @@ class PermitDecisionApplicationController extends GetxController
         DateFormat('MMMM').format(DateTime(0, formatedDateTime.month));
   }
 
-   Widget setImageView(
+  Widget setImageView(
       String photoName, double width, double height, String type) {
     return Image.asset(
       'assets/images/TestingSuketSakit2.jpg',
