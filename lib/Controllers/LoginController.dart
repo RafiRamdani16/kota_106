@@ -46,7 +46,7 @@ class LoginController extends GetxController with CacheManager {
     //         contentPadding: const EdgeInsets.all(20.0),
     //         title: 'ALERT',
     //         titleStyle: TextStyle(color: Colors.red),
-    //         middleText: 'Terjadi Kesalahan, Silahkan Ulangi Kembali',
+    //         middleText: 'User Tidak Ditemukan',
     //         textConfirm: 'Confirm',
     //         confirm: OutlinedButton.icon(
     //           onPressed: () => Get.back(),

@@ -6,7 +6,7 @@
    <application
         android:label="kota_106"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@drawable/logo_garuda">
         <activity
             android:name=".MainActivity"
             android:exported="true"

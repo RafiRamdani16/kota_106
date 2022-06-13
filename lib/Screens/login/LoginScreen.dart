@@ -8,7 +8,6 @@ import '../../Controllers/LoginController.dart';
 class LoginScreen extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       body: Container(
         height: Get.height,

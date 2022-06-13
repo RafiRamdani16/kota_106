@@ -5,7 +5,9 @@ import 'package:intl/intl.dart';
 
 import 'package:kota_106/Controllers/LeaveController.dart';
 import 'package:kota_106/Models/LeaveModel.dart';
+import 'package:sizer/sizer.dart';
 
+import '../../Submission/DetailSubmissionAttachmentScreen.dart';
 import 'DetailLeaveHistoryScreen.dart';
 
 class EditLeaveHistoryScreen extends GetView<LeaveController> {
@@ -60,8 +62,8 @@ class EditLeaveHistoryScreen extends GetView<LeaveController> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
-                        height: Get.height - 200,
-                        width: 335,
+                        height: 70.h,
+                        width: 90.w,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -97,7 +99,27 @@ class EditLeaveHistoryScreen extends GetView<LeaveController> {
                                           controller.selectedType.value =
                                               value!;
                                         },
-                                        items: controller.typeLeave,
+                                        items: <DropdownMenuItem<String>>[
+                                          DropdownMenuItem(
+                                            child: Text(
+                                              "Annual Leave",
+                                              style: TextStyle(fontSize: 11.sp),
+                                            ),
+                                            value: "Annual Leave",
+                                          ),
+                                          DropdownMenuItem(
+                                            child: Text("Sick Leave",
+                                                style:
+                                                    TextStyle(fontSize: 11.sp)),
+                                            value: "Sick Leave",
+                                          ),
+                                          DropdownMenuItem(
+                                            child: Text("Other Leave",
+                                                style:
+                                                    TextStyle(fontSize: 11.sp)),
+                                            value: "Other Leave",
+                                          ),
+                                        ],
                                       );
                                     },
                                   )),
@@ -182,7 +204,54 @@ class EditLeaveHistoryScreen extends GetView<LeaveController> {
                                                   BorderRadius.circular(15.0)),
                                           primary: HexColor('FFC368')),
                                       onPressed: () {
-                                        print(controller.selectedType.value);
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Attachment"),
+                                                content: Text(
+                                                    "Upload Attachment From..."),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        controller.openCamera();
+                                                      },
+                                                      child: Text(
+                                                        "Camera",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        controller
+                                                            .openGallery();
+                                                      },
+                                                      child: Text(
+                                                        "Gallery",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                      child: Text(
+                                                        "Cancel",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ))
+                                                ],
+                                              );
+                                            });
                                       },
                                       child: Text(
                                         'UPLOAD',
@@ -191,6 +260,20 @@ class EditLeaveHistoryScreen extends GetView<LeaveController> {
                                       )),
                                 ],
                               ),
+                              SizedBox(
+                                height: 0.5.h,
+                              ),
+                              Center(
+                                child: Obx((() {
+                                  return GestureDetector(
+                                      onTap: (() {
+                                        Get.to(DetailSubmissionAttachmentScreen(
+                                            controller.tmpFile.value));
+                                      }),
+                                      child:
+                                          controller.setImageView(15.h, 30.h));
+                                })),
+                              ),
                             ]),
                       ),
                     ),
@@ -198,8 +281,8 @@ class EditLeaveHistoryScreen extends GetView<LeaveController> {
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Container(
-                      width: 335,
-                      height: 40,
+                      width: 80.w,
+                      height: 5.h,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(

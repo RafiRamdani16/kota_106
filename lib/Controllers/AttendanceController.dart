@@ -5,11 +5,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:kota_106/Models/ScheduleModel.dart';
 import 'package:location/location.dart';
-
 import 'package:geocoding/geocoding.dart' hide Location;
 
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -48,7 +45,6 @@ class AttendanceController extends GetxController with CacheManager {
 
   @override
   onInit() {
-    initializeDateFormatting('id_ID', null);
     getLocationPermission();
     super.onInit();
   }
@@ -119,7 +115,7 @@ class AttendanceController extends GetxController with CacheManager {
     return true;
   }
 
-  void getCurrentLocation() async {
+  void getLocation() async {
     if (_permission.value) {
       getData.value = true;
       _locationData = await location.getLocation();
@@ -138,7 +134,6 @@ class AttendanceController extends GetxController with CacheManager {
     ImagePicker _image = Get.put(ImagePicker());
     try {
       imageFile.value = (await _image.pickImage(source: ImageSource.camera))!;
-      print(imageFile.value.name);
       photoName.value = imageFile.value.name;
     } catch (e) {
       // return 'Terjadi Kesalahan';
@@ -161,15 +156,12 @@ class AttendanceController extends GetxController with CacheManager {
     }
   }
 
-  Future<void> currentDate() async {
-    WidgetsFlutterBinding.ensureInitialized();
-
+  Future<void> getDateTimeNow() async {
     date.value = DateFormat("yyyy-MM-dd", "id_ID").format(DateTime.now());
     time.value = DateFormat("HH:mm", "id_ID").format(DateTime.now());
 
     cDate.text = date.value;
     cTime.text = time.value;
-    update();
   }
 
   Widget showAlert() {

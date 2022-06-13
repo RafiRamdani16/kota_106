@@ -187,7 +187,7 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                     showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
-                          return DetailAfterOvertimeHistory(overtimeModel.idOvertime);
+                          return DetailAfterOvertimeHistory(1);
                         });
                   },
                   child: Text(

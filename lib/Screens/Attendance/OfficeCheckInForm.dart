@@ -7,8 +7,8 @@ class OfficeCheckInForm extends GetView<AttendanceController> {
   @override
   Widget build(BuildContext context) {
     
-    controller.currentDate();
-    controller.getCurrentLocation();
+    controller.getDateTimeNow();
+    controller.getLocation();
     return SingleChildScrollView(
       child: Center(
         child: Form(

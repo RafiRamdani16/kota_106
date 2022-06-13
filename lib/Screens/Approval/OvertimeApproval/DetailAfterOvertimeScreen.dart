@@ -8,13 +8,15 @@ import '../../../Models/AfterOvertimeModel.dart';
 import '../../DetailAttachmentScreen.dart';
 
 class DetailAfterOvertimeApproval extends GetView<HistoryController> {
-  final AfterOvertimeModel afterOvertimeModel;
-  const DetailAfterOvertimeApproval(this.afterOvertimeModel);
+  // final AfterOvertimeModel afterOvertimeModel;
+  // const DetailAfterOvertimeApproval(this.afterOvertimeModel);
 
   @override
   Widget build(BuildContext context) {
+    controller.getAfterOvertimeHistory(1);
     var status = false;
-    controller.description.text = afterOvertimeModel.afterOvertimeDescription;
+    controller.description.text =
+        controller.afterOvertimeModel.afterOvertimeDescription;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,50 +46,27 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Text("Status Approval",
-                                style: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.bold)),
-                            SizedBox(
-                              width: 10.w,
-                            ),
-                            Container(
-                              width: 20.w,
-                              height: 2.h,
-                              decoration: BoxDecoration(
-                                  color: controller.checkStatus(
-                                      afterOvertimeModel.afterOvertimeStatus),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Text(
-                                afterOvertimeModel.afterOvertimeStatus,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            )
-                          ],
-                        ),
+                        
                         SizedBox(
                           height: 1.h,
                         ),
                         Text(
-                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(afterOvertimeModel.afterOvertimeDateSubmitted))} ',
-                          style: TextStyle(fontSize: 12.sp),
+                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel.afterOvertimeDateSubmitted))} ',
+                          style: TextStyle(fontSize: 11.sp),
                         ),
                         SizedBox(
                           height: 3.h,
                         ),
                         Text(
-                          'Time Submitted:  ${afterOvertimeModel.afterOvertimeTimeSubmitted} ',
-                          style: TextStyle(fontSize: 12.sp),
+                          'Time Submitted:  ${controller.afterOvertimeModel.afterOvertimeTimeSubmitted} ',
+                          style: TextStyle(fontSize: 11.sp),
                         ),
                         SizedBox(
                           height: 4.h,
                         ),
                         Text(
-                          'Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(afterOvertimeModel.afterOvertimeDate))}',
-                          style: TextStyle(fontSize: 12.sp),
+                          'After Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel.afterOvertimeDate))}',
+                          style: TextStyle(fontSize: 11.sp),
                         ),
                         SizedBox(
                           height: 4.h,
@@ -99,15 +78,16 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                                 Text(
                                   "Start Time: ",
                                   style: TextStyle(
-                                      fontSize: 12.sp,
+                                      fontSize: 11.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(
                                   height: 1.h,
                                 ),
                                 Text(
-                                  afterOvertimeModel.afterOvertimeStartTime,
-                                  style: TextStyle(fontSize: 12.sp),
+                                  controller.afterOvertimeModel
+                                      .afterOvertimeStartTime,
+                                  style: TextStyle(fontSize: 11.sp),
                                 )
                               ],
                             ),
@@ -119,15 +99,16 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                                 Text(
                                   "End Time: ",
                                   style: TextStyle(
-                                      fontSize: 12.sp,
+                                      fontSize: 11.sp,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 SizedBox(
                                   height: 1.h,
                                 ),
                                 Text(
-                                  afterOvertimeModel.afterOvertimeEndTime,
-                                  style: TextStyle(fontSize: 12.sp),
+                                  controller
+                                      .afterOvertimeModel.afterOvertimeEndTime,
+                                  style: TextStyle(fontSize: 11.sp),
                                 )
                               ],
                             )
@@ -147,13 +128,13 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                 Text(
                   'Description',
                   style:
-                      TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold),
                 ),
                 TextFormField(
                   enabled: false,
                   decoration:
                       InputDecoration(fillColor: Colors.white, filled: true),
-                  style: TextStyle(fontSize: 12.sp),
+                  style: TextStyle(fontSize: 11.sp),
                   maxLines: 4,
                   controller: controller.description,
                 ),
@@ -161,14 +142,14 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                 Text(
                   'Attachment:',
                   style:
-                      TextStyle(fontSize: 12.sp, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 11.sp, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(
                   height: 1.h,
                 ),
                 Center(
                   child: controller.setImageView(
-                      afterOvertimeModel.afterOvertimeAttachment,
+                      controller.afterOvertimeModel.afterOvertimeAttachment,
                       20.w,
                       15.h,
                       "Overtime"),
@@ -190,7 +171,7 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                         child: Text(
                           "See Full Attachment",
                           style:
-                              TextStyle(fontSize: 14.sp, color: Colors.white),
+                              TextStyle(fontSize: 12.sp, color: Colors.white),
                         )),
                   ),
                 ),
@@ -206,13 +187,52 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0)),
                     elevation: 10,
+                    side: BorderSide(color: Colors.lightGreen),
+                    primary: Colors.lightGreen),
+                onPressed: () {},
+                child: Text(
+                  "Approve",
+                  style: TextStyle(fontSize: 14.sp, color: Colors.white),
+                )),
+          ),
+          SizedBox(height: 2.h),
+          Visibility(
+            visible: true,
+            child: Container(
+              height: 5.h,
+              width: 90.w,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      elevation: 10,
+                      side: BorderSide(color: Colors.red),
+                      primary: Colors.red),
+                  onPressed: () {},
+                  child: Text(
+                    "Disapprove",
+                    style: TextStyle(fontSize: 14.sp, color: Colors.white),
+                  )),
+            ),
+          ),
+          SizedBox(
+            height: 2.h,
+          ),
+          Container(
+            height: 5.h,
+            width: 90.w,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0)),
+                    elevation: 10,
                     side: BorderSide(color: Colors.black),
                     primary: Color.fromRGBO(0, 0, 0, 1)),
                 onPressed: () {
                   Get.back();
                 },
                 child: Text(
-                  "Back To Detail Overtime",
+                  "Back To Detail Approval Overtime",
                   style: TextStyle(fontSize: 14.sp, color: Colors.white),
                 )),
           ),

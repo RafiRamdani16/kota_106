@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+
 import 'package:kota_106/Controllers/APIService/ApiService.dart';
 import 'package:kota_106/Controllers/CacheManager.dart';
-import 'package:sizer/sizer.dart';
+
 
 class LeaveController extends GetxController with CacheManager {
   TextEditingController leaveType = TextEditingController();
@@ -33,23 +34,23 @@ class LeaveController extends GetxController with CacheManager {
   DateTimeRange leaveDateTimeRange = DateTimeRange(
       start: DateTime.now(), end: DateTime.now().add(Duration(days: 31)));
 
-  List<DropdownMenuItem<String>> typeLeave = [
-    DropdownMenuItem(
-      child: Text(
-        "Annual Leave",
-        style: TextStyle(fontSize: 11.sp),
-      ),
-      value: "Annual Leave",
-    ),
-    DropdownMenuItem(
-      child: Text("Sick Leave", style: TextStyle(fontSize: 11.sp)),
-      value: "Sick Leave",
-    ),
-    DropdownMenuItem(
-      child: Text("Other Leave", style: TextStyle(fontSize: 11.sp)),
-      value: "Other Leave",
-    ),
-  ];
+  // List<DropdownMenuItem<String>> typeLeave = [
+  //   DropdownMenuItem(
+  //     child: Text(
+  //       "Annual Leave",
+  //       style: TextStyle(fontSize: 11.sp),
+  //     ),
+  //     value: "Annual Leave",
+  //   ),
+  //   DropdownMenuItem(
+  //     child: Text("Sick Leave", style: TextStyle(fontSize: 11.sp)),
+  //     value: "Sick Leave",
+  //   ),
+  //   DropdownMenuItem(
+  //     child: Text("Other Leave", style: TextStyle(fontSize: 11.sp)),
+  //     value: "Other Leave",
+  //   ),
+  // ];
 
   void pickLeaveDate(BuildContext context) async {
     DateTimeRange? newLeaveDateTime = await showDateRangePicker(

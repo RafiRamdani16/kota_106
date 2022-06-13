@@ -77,7 +77,7 @@ class ProfileController extends GetxController with CacheManager {
           name.text = response.data.name;
           position.text = response.data.position;
           isLoading.value = false;
-          await Future.delayed(Duration(seconds: 3));
+          
           update();
         }
       });

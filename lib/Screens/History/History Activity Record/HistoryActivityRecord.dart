@@ -9,7 +9,6 @@ import '../HistoryScreen.dart';
 import 'DetailHistoryActivityRecordScreen.dart';
 
 class HistoryActivityRecord extends GetView<HistoryController> {
-  const HistoryActivityRecord({Key? key}) : super(key: key);
   
   Widget errorView() {
     return AlertDialog(

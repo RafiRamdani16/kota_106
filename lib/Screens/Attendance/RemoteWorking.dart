@@ -17,8 +17,7 @@ class RemoteScreen extends GetView<AttendanceController> {
     // var scheduleStartTime = controller.time.value;
     // // var scheduleEndTime = scheduleModel.endCheckinAt;
     // var scheduleEndTime = controller.time.value;
-    controller.getCurrentLocation();
-    controller.currentDate();
+    
     const List<Tab> tabs = <Tab>[
       Tab(text: 'Check-in'),
       Tab(text: 'Check-out'),

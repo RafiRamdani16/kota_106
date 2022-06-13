@@ -146,7 +146,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                             side: BorderSide(color: Colors.amber),
                             primary: Colors.amber),
                         onPressed: () {
-                          Get.to(DetailAttachmentScreen("TestingSuketSakit2"));
+                          Get.to(DetailAttachmentScreen(leaveModel.leaveAttachment));
                         },
                         child: Text(
                           "See Full Attachment",

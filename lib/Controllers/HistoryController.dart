@@ -113,7 +113,6 @@ class HistoryController extends GetxController with CacheManager {
   Future<void> getPermitHistory() async {
     DummyData dummyData = Get.put(DummyData());
     permitHistory = dummyData.permitDummy;
-
     permitHistory.add(PermitModel()
       ..permitDateSubmitted = "2022-02-16"
       ..permitTimeSubmitted = "09.00"
@@ -156,14 +155,24 @@ class HistoryController extends GetxController with CacheManager {
   }
 
   Future<void> getAfterOvertimeHistory(int idOvertime) async {
-    employeeId = getEmployeeId()!;
-    token = getToken()!;
-    await _apiClient
-        .getAfterOvertimeHistory(
-            "UserId = $employeeId", "-CreatedAt", 1, 20, token)
-        .then((response) {
-      afterOvertimeModel = response.data.data[idOvertime];
-    });
+    afterOvertimeModel = AfterOvertimeModel()
+      ..afterOvertimeAttachment = ""
+      ..afterOvertimeDate = "2022-12-13"
+      ..afterOvertimeDateSubmitted = "2022-12-10"
+      ..afterOvertimeDescription = "Melakukan ShowCase"
+      ..afterOvertimeStartTime = "18:00"
+      ..afterOvertimeEndTime = "19:00"
+      ..afterOvertimeStatus = "Remaining"
+      ..afterOvertimeTimeSubmitted = "20:00";
+
+    // employeeId = getEmployeeId()!;
+    // token = getToken()!;
+    // await _apiClient
+    //     .getAfterOvertimeHistory(
+    //         "UserId = $employeeId", "-CreatedAt", 1, 20, token)
+    //     .then((response) {
+    //   afterOvertimeModel = response.data.data[idOvertime];
+    // });
   }
 
   Color checkStatus(String permitStatus) {

@@ -9,6 +9,7 @@ import '../HistoryScreen.dart';
 
 class LeaveHistoryScreen extends GetView<HistoryController> {
   const LeaveHistoryScreen({Key? key}) : super(key: key);
+  
   Widget errorView() {
     return AlertDialog(
       title: const Text('ALERT'),

@@ -102,7 +102,27 @@ class LeaveScreen extends GetView<LeaveController> {
                                           controller.selectedType.value =
                                               value!;
                                         },
-                                        items: controller.typeLeave,
+                                        items: <DropdownMenuItem<String>>[
+                                          DropdownMenuItem(
+                                            child: Text(
+                                              "Annual Leave",
+                                              style: TextStyle(fontSize: 11.sp),
+                                            ),
+                                            value: "Annual Leave",
+                                          ),
+                                          DropdownMenuItem(
+                                            child: Text("Sick Leave",
+                                                style:
+                                                    TextStyle(fontSize: 11.sp)),
+                                            value: "Sick Leave",
+                                          ),
+                                          DropdownMenuItem(
+                                            child: Text("Other Leave",
+                                                style:
+                                                    TextStyle(fontSize: 11.sp)),
+                                            value: "Other Leave",
+                                          ),
+                                        ],
                                       );
                                     },
                                   )),

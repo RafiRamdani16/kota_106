@@ -5,6 +5,9 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:kota_106/Controllers/PermitController.dart';
 import 'package:kota_106/Models/PermitModel.dart';
+import 'package:sizer/sizer.dart';
+
+import '../../Submission/DetailSubmissionAttachmentScreen.dart';
 
 class EditPermitHistoryScreen extends GetView<PermitController> {
   final PermitModel permitModel;
@@ -59,8 +62,8 @@ class EditPermitHistoryScreen extends GetView<PermitController> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
-                        height: Get.height - 200,
-                        width: 335,
+                        height: 70.h,
+                        width: 90.w,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -176,13 +179,76 @@ class EditPermitHistoryScreen extends GetView<PermitController> {
                                               borderRadius:
                                                   BorderRadius.circular(15.0)),
                                           primary: HexColor('FFC368')),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Attachment"),
+                                                content: Text(
+                                                    "Upload Attachment From..."),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        controller.openCamera();
+                                                      },
+                                                      child: Text(
+                                                        "Camera",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        controller
+                                                            .openGallery();
+                                                      },
+                                                      child: Text(
+                                                        "Gallery",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                      child: Text(
+                                                        "Cancel",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ))
+                                                ],
+                                              );
+                                            });
+                                      },
                                       child: Text(
                                         'UPLOAD',
                                         style: TextStyle(
                                             fontSize: 12, color: Colors.black),
                                       )),
                                 ],
+                              ),
+                              SizedBox(
+                                height: 2.h,
+                              ),
+                              Center(
+                                child: Obx((() {
+                                  return GestureDetector(
+                                      onTap: (() {
+                                        Get.to(DetailSubmissionAttachmentScreen(
+                                            controller.tmpFile.value));
+                                      }),
+                                      child:
+                                          controller.setImageView(20.h, 30.h));
+                                })),
                               ),
                             ]),
                       ),
@@ -191,8 +257,8 @@ class EditPermitHistoryScreen extends GetView<PermitController> {
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Container(
-                      width: 335,
-                      height: 40,
+                      width: 80.w,
+                      height: 5.h,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(

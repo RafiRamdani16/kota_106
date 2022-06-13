@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.amber,
           fontFamily: "Roboto",
         ),
-        initialRoute: '/',
+        initialRoute: '/splashScreen',
         initialBinding: HomeBindings(),
         getPages: [
           GetPage(name: '/splashScreen', page: () => SplashScreen()),

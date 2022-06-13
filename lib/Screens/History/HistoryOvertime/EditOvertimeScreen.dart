@@ -4,6 +4,7 @@ import 'package:kota_106/Controllers/OvertimeController.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:kota_106/Models/OvertimeModel.dart';
+import 'package:sizer/sizer.dart';
 
 class EditOvertimeScreen extends GetView<OvertimeController> {
   final OvertimeModel overtimeModel;
@@ -62,8 +63,8 @@ class EditOvertimeScreen extends GetView<OvertimeController> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
-                        height: Get.height - 200,
-                        width: 335,
+                        height: 70.h,
+                        width: 90.w,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -152,18 +153,17 @@ class EditOvertimeScreen extends GetView<OvertimeController> {
                                 maxLines: 2,
                                 controller: controller.overtimeDescription,
                               ),
-                              SizedBox(
-                                height: 20,
-                              ),
                             ]),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(20.0),
+                  SizedBox(
+                    height: 1.h,
+                  ),
+                  Center(
                     child: Container(
-                      width: 335,
-                      height: 40,
+                      width: 80.w,
+                      height: 5.h,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(

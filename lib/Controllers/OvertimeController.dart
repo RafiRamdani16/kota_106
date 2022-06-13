@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kota_106/Controllers/CacheManager.dart';
 import 'package:kota_106/Models/AfterOvertimeModel.dart';
 import 'package:time_range_picker/time_range_picker.dart';
@@ -17,8 +21,14 @@ class OvertimeController extends GetxController with CacheManager {
   Rx<DateTime> overtimeSelectedDate = DateTime.now().obs;
   Rx<TimeOfDay> overtimeStartTime = TimeOfDay(hour: 7, minute: 0).obs;
   Rx<TimeOfDay> overtimeEndTime = TimeOfDay(hour: 17, minute: 0).obs;
+  RxString afterOvertimeAttachment = "".obs;
   int id = -1;
   String token = "";
+
+  Rx<File> tmpFile = File('').obs;
+  Rx<XFile> imageFile = XFile('').obs;
+  ImagePicker _image = Get.put(ImagePicker());
+
   void overtimeDatePicker(BuildContext context) async {
     DateTime? newDate = await showDatePicker(
         context: context,
@@ -85,6 +95,42 @@ class OvertimeController extends GetxController with CacheManager {
         ),
       ),
     );
+  }
+
+  Widget setImageView(double height, double width) {
+    if (imageFile.value.path != '') {
+      tmpFile.value = File(imageFile.value.path);
+      afterOvertimeAttachment.value =
+          base64Encode(File(imageFile.value.path).readAsBytesSync()).trim();
+      return Image.file(
+        tmpFile.value,
+        height: height,
+        width: width,
+      );
+    } else {
+      // photoName.value = 'assets/images/Icon/AccountBox.png';
+      return Image.asset(
+        'assets/images/Icon/AccountBox.png',
+        width: 100,
+        height: 100,
+      );
+    }
+  }
+
+  void openCamera() async {
+    try {
+      imageFile.value = (await _image.pickImage(source: ImageSource.camera))!;
+    } catch (e) {
+      // return 'Terjadi Kesalahan';
+    }
+  }
+
+  Future<void> openGallery() async {
+    try {
+      imageFile.value = (await _image.pickImage(source: ImageSource.gallery))!;
+    } catch (e) {
+      // return 'Terjadi Kesalahan';
+    }
   }
 
   // Future<void> afterOvertime(int idOvertime) async {

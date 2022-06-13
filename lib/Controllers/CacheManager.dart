@@ -75,8 +75,6 @@ mixin CacheManager {
   Future<void> removeCheckoutTime() async {
     await box.remove(CacheManagerKey.CHECKOUTTIME.toString());
   }
-
-
 }
 
 enum CacheManagerKey {

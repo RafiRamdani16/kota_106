@@ -8,6 +8,8 @@ import '../../Controllers/AttendanceController.dart';
 class CheckInForm extends GetView<AttendanceController> {
   @override
   Widget build(BuildContext context) {
+    controller.getLocation();
+    controller.getDateTimeNow();
     return SingleChildScrollView(
       child: Center(
         child: Form(

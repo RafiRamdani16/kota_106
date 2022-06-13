@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -26,8 +24,9 @@ class PermitController extends GetxController with CacheManager {
   ImagePicker _image = Get.put(ImagePicker());
   Rx<DateTime> permitSelectedDate = DateTime.now().obs;
   var permitStartTime = TimeOfDay(hour: 8, minute: 0).obs;
-  var permitEndTime = TimeOfDay(hour: 17, minute: 0).obs;
+  var permitEndTime = TimeOfDay(hour: 12, minute: 0).obs;
   RxString permitAttachment = "".obs;
+
   void permitDatePicker(BuildContext context) async {
     DateTime? newDate = await showDatePicker(
         context: context,
@@ -62,7 +61,7 @@ class PermitController extends GetxController with CacheManager {
       maxDuration: Duration(hours: 4),
       disabledTime: TimeRange(
           startTime: TimeOfDay(hour: 17, minute: 1),
-          endTime: TimeOfDay(hour: 6, minute: 59)),
+          endTime: TimeOfDay(hour: 7, minute: 59)),
       disabledColor: Colors.white,
       strokeColor: HexColor("FCBC45"),
       ticksColor: HexColor("FCBC45"),
@@ -70,6 +69,9 @@ class PermitController extends GetxController with CacheManager {
       selectedColor: HexColor("FCBC45").withOpacity(0.5),
     );
     if (newTime == null) {
+    } else if (newTime.startTime.hour > DateTime.now().hour ||
+        newTime.startTime.hour == DateTime.now().hour &&
+            newTime.startTime.minute >= DateTime.now().minute) {
     } else {
       permitStartTime.value = newTime.startTime;
       permitEndTime.value = newTime.endTime;
@@ -103,7 +105,11 @@ class PermitController extends GetxController with CacheManager {
       tmpFile.value = File(imageFile.value.path);
       permitAttachment.value =
           base64Encode(File(imageFile.value.path).readAsBytesSync()).trim();
-      return Image.file(tmpFile.value, height: height, width: width,);
+      return Image.file(
+        tmpFile.value,
+        height: height,
+        width: width,
+      );
     } else {
       // photoName.value = 'assets/images/Icon/AccountBox.png';
       return Image.asset(

@@ -4,12 +4,11 @@ import 'package:sizer/sizer.dart';
 import '../../Controllers/AttendanceController.dart';
 
 class OfficeCheckOutForm extends GetView<AttendanceController> {
-  const OfficeCheckOutForm({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    controller.currentDate();
-    controller.getCurrentLocation();
+    controller.getDateTimeNow();
+    controller.getLocation();
     return SingleChildScrollView(
       child: Center(
         child: Form(

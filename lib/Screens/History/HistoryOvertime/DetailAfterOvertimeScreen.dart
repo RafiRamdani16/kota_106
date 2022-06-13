@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kota_106/Controllers/HistoryController.dart';
+import 'package:kota_106/Screens/History/HistoryOvertime/EditAfterOvertimeScreen.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../Models/AfterOvertimeModel.dart';
@@ -216,7 +217,7 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                       side: BorderSide(color: Colors.amber),
                       primary: Colors.amber),
                   onPressed: () {
-                    Get.toNamed('/afterOvertimeScreen');
+                    Get.to(EditAfterOvertimeScreen(controller.afterOvertimeModel));
                   },
                   child: Text(
                     "Edit After Overtime",

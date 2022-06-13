@@ -88,7 +88,7 @@ class ActivityRecordController extends GetxController with CacheManager {
               "${dateNow.text} ${timeNow.text}",
               taskList,
               'data:image/jpeg;base64,$photoSelfie',
-              getToken()!)
+              token)
           .then((response) async {
         if (response.status == 200) {
           message('SUCCESS', 'Activity Record Berhasil');
