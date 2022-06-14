@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
-import 'package:kota_106/Screens/ActivityRecord/ActivityRecordScreen.dart';
-import 'package:kota_106/Screens/login/LoginScreen.dart';
+import 'package:kota_106/ActivityRecord/ActivityRecordScreen.dart';
+import 'package:kota_106/Login/LoginScreen.dart';
 import 'package:sizer/sizer.dart';
+import 'Approval/ApprovalScreen.dart';
 import 'BindingsApplication.dart';
-import 'Screens/Approval/ApprovalScreen.dart';
-import 'Screens/Attendance/OfficeCheckInForm.dart';
-import 'Screens/AttendanceScreen.dart';
-import 'Screens/History/HistoryOvertime/AfterOvertimeScreen.dart';
-import 'Screens/History/HistoryScreen.dart';
+import 'Attendance/Offline/CheckIn/OfficeCheckInForm.dart';
+import 'AttendanceScreen.dart';
+import 'History/HistoryScreen.dart';
+import 'SplashScreen.dart';
+import 'Submission/AfterOvertime/AfterOvertimeScreen.dart';
 
-import 'Screens/SplashScreen.dart';
-import 'Screens/Submission/Leave/LeaveScreen.dart';
-import 'Screens/Submission/Overtime/OvertimeScreen.dart';
-import 'Screens/Submission/Permit/PermitScreen.dart';
-import 'Screens/profile/EditProfileScreen.dart';
-import 'Screens/profile/ProfileScreen.dart';
+import 'Profile/EditProfileScreen.dart';
+import 'Profile/ProfileScreen.dart';
+import 'Submission/Leave/LeaveScreen.dart';
+import 'Submission/Overtime/OvertimeScreen.dart';
+import 'Submission/Permit/PermitScreen.dart';
 
 void main() async {
   await GetStorage.init();
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         getPages: [
           GetPage(name: '/splashScreen', page: () => SplashScreen()),
           GetPage(name: '/', page: () => AttendanceScreen()),
-          GetPage(name: '/loginPage', page: () => LoginScreen()),
+          GetPage(name: '/loginScreen', page: () => LoginScreen()),
           GetPage(name: '/profileScreen', page: () => ProfileScreen()),
           GetPage(name: '/editProfileScreen', page: () => EditProfileScreen()),
           GetPage(name: '/historyScreen', page: () => HistoryScreen()),

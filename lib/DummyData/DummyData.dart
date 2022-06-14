@@ -1,14 +1,15 @@
 import 'dart:math';
 
-import 'package:kota_106/Models/AttendanceModel.dart';
-import 'package:kota_106/Models/LeaveApplicationDecisionModel.dart';
-import 'package:kota_106/Models/LeaveModel.dart';
-import 'package:kota_106/Models/OvertimeModel.dart';
-import 'package:kota_106/Models/PermitApplicationDecisionModel.dart';
-import 'package:kota_106/Models/PermitModel.dart';
+import 'package:kota_106/Attendance/AttendanceModel.dart';
+import 'package:kota_106/Approval/LeaveApproval/LeaveApprovalDetail/LeaveApprovalModel.dart';
+import 'package:kota_106/Submission/Leave/LeaveModel.dart';
+import 'package:kota_106/Submission/Overtime/OvertimeModel.dart';
+import 'package:kota_106/Approval/PermitApproval/PermitApprovalDetail/PermitApprovalModel.dart';
+import 'package:kota_106/Submission/Permit/PermitModel.dart';
 
-import '../Models/ActivityRecordModel.dart';
-import '../Models/OvertimeApplicationDecisionModel.dart';
+import '../ActivityRecord/ActivityRecordModel.dart';
+import '../Approval/OvertimeApproval/OvertimeApprovalDetail/OvertimeApprovalModel.dart';
+
 
 class DummyData {
   List<AttendanceModel> dummy2 = List<AttendanceModel>.generate(
@@ -57,7 +58,7 @@ class DummyData {
       4,
       (index) => PermitModel()
         ..permitDateSubmitted = "2022-02-${10 + index + 1}"
-        ..permitTimeSubmitted = "09.00"
+        // ..permitTimeSubmitted = "09.00"
         ..permitStartTime = "13:00"
         ..permitDate = "2022-05-${10 + index}"
         ..permitDescription = "Izin kerumah sakit"
@@ -70,7 +71,7 @@ class DummyData {
       (index) => OvertimeModel()
         ..overtimeDate = "2022-12-13"
         ..overtimeDateSubmitted = "2022-12-${10 + index + 2}"
-        ..overtimeTimeSubmitted = "15:00"
+        // ..overtimeTimeSubmitted = "15:00"
         ..overtimeDescription = "Testing Profile Aplikasi"
         ..overtimeStartTime = "20:00"
         ..overtimeEndTime = "21:00"
@@ -79,22 +80,20 @@ class DummyData {
   List<LeaveModel> leaveDummy = List<LeaveModel>.generate(
       4,
       (index) => LeaveModel()
-        ..leaveRemainingDays = "10 days"
+        // ..leaveRemainingDays = "10 days"
         ..leaveDateSubmitted = "2022-05-${10 + index + 2}"
         ..leaveDescription = "Cuti dirawat karena sakit DBD"
         ..leaveStartDate = "2022-04-15"
         ..leaveEndDate = "2022-04-20"
         ..leaveStatus = index < 3 ? "Rejected" : "Approved"
-        ..leaveTimeSubmitted = "09:00"
+        // ..leaveTimeSubmitted = "09:00"
         ..leaveType = "Sick Leave"
         ..leaveAttachment = "photo.jpg");
 
-  List<PermitApplicationDecisionModel> permitApplicationDummy =
-      List<PermitApplicationDecisionModel>.generate(
+  List<PermitApprovalModel> permitApplicationDummy =
+      List<PermitApprovalModel>.generate(
           4,
-          (index) => PermitApplicationDecisionModel()
-            ..employeeName = "Azhar Bani Rashif"
-            ..employeePosition = "Junior Programmer"
+          (index) => PermitApprovalModel()
             ..permitDateSubmitted = "2022-09-${10 + index + 1}"
             ..permitTimeSubmitted = "09.00"
             ..permitStartTime = "13:00"
@@ -103,12 +102,10 @@ class DummyData {
             ..permitEndTime = "15:00"
             ..permitAttachment = "Photo.jpg");
 
-  List<OvertimeApplicationDecisionModel> overtimeApplicationDummy =
-      List<OvertimeApplicationDecisionModel>.generate(
+  List<OvertimeApprovalModel> overtimeApplicationDummy =
+      List<OvertimeApprovalModel>.generate(
           4,
-          (index) => OvertimeApplicationDecisionModel()
-            ..employeeName = "Fahreza Ramadhani"
-            ..employeePosition = "Junior Programmer"
+          (index) => OvertimeApprovalModel()
             ..overtimeDate = "2022-04-13"
             ..overtimeDateSubmitted = "2022-03-${10 + index + 2}"
             ..overtimeTimeSubmitted = "15:00"
@@ -116,12 +113,10 @@ class DummyData {
             ..overtimeStartTime = "20:00"
             ..overtimeEndTime = "21:00"
             ..overtimeAttachment = "photo.jpg");
-  List<LeaveApplicationDecisionModel> leaveApplicationDummy =
-      List<LeaveApplicationDecisionModel>.generate(
+  List<LeaveApprovalModel> leaveApplicationDummy =
+      List<LeaveApprovalModel>.generate(
           4,
-          (index) => LeaveApplicationDecisionModel()
-            ..employeeName = "Fahreza Ramadhani"
-            ..employeePosition = "Junior Programmer"
+          (index) => LeaveApprovalModel()
             ..leaveRemainingDays = "10 days"
             ..leaveDateSubmitted = "2022-06-${10 + index}"
             ..leaveDescription = "Dirawat karena penyakit tipes"

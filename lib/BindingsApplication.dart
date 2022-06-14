@@ -1,16 +1,16 @@
 import 'package:get/get.dart';
-import 'package:kota_106/Controllers/ActivityRecordController.dart';
-import 'package:kota_106/Controllers/HistoryController.dart';
-import 'package:kota_106/Controllers/LeaveApplicationDecisionController.dart';
-import 'package:kota_106/Controllers/LeaveController.dart';
-import 'package:kota_106/Controllers/LoginController.dart';
-import 'package:kota_106/Controllers/PermitController.dart';
-import 'package:kota_106/Controllers/PermitApprovalController.dart';
+import 'package:kota_106/ActivityRecord/ActivityRecordController.dart';
+import 'package:kota_106/History/HistoryController.dart';
+import 'package:kota_106/Approval/LeaveApproval/LeaveApprovalController.dart';
+import 'package:kota_106/Submission/Leave/LeaveController.dart';
+import 'package:kota_106/Login/LoginController.dart';
+import 'package:kota_106/Submission/Permit/PermitController.dart';
+import 'package:kota_106/Approval/PermitApproval/PermitApprovalController.dart';
 
-import 'Controllers/AttendanceController.dart';
-import 'Controllers/OvertimeApprovalController.dart';
-import 'Controllers/OvertimeController.dart';
-import 'Controllers/ProfileController.dart';
+import 'Attendance/AttendanceController.dart';
+import 'Approval/OvertimeApproval/OvertimeApprovalController.dart';
+import 'Submission/Overtime/OvertimeController.dart';
+import 'Profile/ProfileController.dart';
 
 class HomeBindings implements Bindings {
   @override
@@ -26,7 +26,6 @@ class HomeBindings implements Bindings {
     Get.put<PermitApprovalController>(PermitApprovalController());
     Get.put<OvertimeDecisionApplicationController>(
         OvertimeDecisionApplicationController());
-        Get.put<LeaveApplicationDecisionController>(
-        LeaveApplicationDecisionController());
+    Get.put<LeaveApprovalController>(LeaveApprovalController());
   }
 }
