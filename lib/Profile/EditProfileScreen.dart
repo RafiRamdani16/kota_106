@@ -172,14 +172,8 @@ class EditProfileScreen extends GetView<ProfileController> {
                                       border: Border.all(color: Colors.black)),
                                   child: TextFormField(
                                     validator: (value) {
-                                      RegExp regx = RegExp(r"^[0-9._]*$",
-                                          caseSensitive: false);
-                                      RegExp regExp = RegExp(
-                                          r"/^[0][1-9][.]([\d]{3})[.]([\d]{3})[.][\d][-]([\d]{3})[.]([\d]{3})*$");
                                       if (value == "") {
                                         return "NPWP Can't Be Empty";
-                                      } else if (!(regExp.hasMatch(value!))) {
-                                        return "NPWP is not Valid";
                                       }
                                     },
                                     decoration: InputDecoration(
@@ -354,7 +348,6 @@ class EditProfileScreen extends GetView<ProfileController> {
                         elevation: 10,
                         primary: HexColor("363636")),
                     onPressed: () {
-                      
                       if (_formKey.currentState!.validate()) {
                         controller.editProfileForm();
                       }
@@ -371,7 +364,6 @@ class EditProfileScreen extends GetView<ProfileController> {
           ),
         ),
       ),
-     
     );
   }
 }

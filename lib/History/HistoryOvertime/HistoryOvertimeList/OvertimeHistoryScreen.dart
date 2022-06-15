@@ -43,7 +43,7 @@ class HistoryOvertimePage extends GetView<HistoryController> {
           return Center(child: CircularProgressIndicator());
         } else {
           if (snapshot.hasError)
-            return displayHistory();
+            return errorView();
           else
             return displayHistory();
         }
@@ -79,7 +79,7 @@ class HistoryOvertimePage extends GetView<HistoryController> {
                       ));
                     }
                     controller.formatDate(controller
-                        .overtimeHistory[index].overtimeDateSubmitted);
+                        .overtimeHistory[index].dateSubmit);
                     return AnimationConfiguration.staggeredList(
                         position: index,
                         child: SlideAnimation(
@@ -204,12 +204,12 @@ class HistoryOvertimePage extends GetView<HistoryController> {
                                       decoration: BoxDecoration(
                                           color: controller.checkStatus(
                                               controller.overtimeHistory[index]
-                                                  .overtimeStatus),
+                                                  .statusOvertime),
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: Text(
                                         controller.overtimeHistory[index]
-                                            .overtimeStatus,
+                                            .statusOvertime,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(color: Colors.white),
                                       ),

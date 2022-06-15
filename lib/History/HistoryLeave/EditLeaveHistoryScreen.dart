@@ -4,11 +4,11 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 
 import 'package:kota_106/Submission/Leave/LeaveController.dart';
-import 'package:kota_106/Submission/Leave/LeaveModel.dart';
+
 import 'package:sizer/sizer.dart';
 
 import '../../Submission/DetailSubmissionAttachmentScreen.dart';
-import 'HistoryLeaveDetail/DetailLeaveHistoryScreen.dart';
+
 
 class EditLeaveHistoryScreen extends GetView<LeaveController> {
   final int leaveId;

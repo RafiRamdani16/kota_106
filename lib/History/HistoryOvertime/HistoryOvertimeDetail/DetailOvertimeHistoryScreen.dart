@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kota_106/History/HistoryController.dart';
+import 'package:kota_106/Submission/AfterOvertime/AfterOvertimeScreen.dart';
 import 'package:kota_106/Submission/Overtime/OvertimeModel.dart';
 
 import 'package:sizer/sizer.dart';
 
-import '../../../DetailAttachmentScreen.dart';
+
 import '../../History After Overtime/DetailAfterOvertimeScreen.dart';
 import '../EditOvertimeScreen.dart';
 
@@ -16,8 +17,8 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
 
   @override
   Widget build(BuildContext context) {
-    var status = false;
-    controller.description.text = overtimeModel.overtimeDescription;
+    
+    controller.description.text = overtimeModel.description;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,7 +49,7 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(overtimeModel.overtimeDateSubmitted))} ',
+                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(overtimeModel.dateSubmit))} ',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -62,7 +63,7 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                           height: 4.h,
                         ),
                         Text(
-                          'Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(overtimeModel.overtimeDate))}',
+                          'Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(overtimeModel.dateOvertime))}',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -80,7 +81,7 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  overtimeModel.overtimeStartTime,
+                                  overtimeModel.startTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -98,7 +99,7 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  overtimeModel.overtimeEndTime,
+                                  overtimeModel.endTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -130,65 +131,65 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                 ),
                 SizedBox(height: 1.h),
 
-                Row(
-                  children: [
-                    Text(overtimeModel.nameApprovalAdmin),
-                    Container(
-                      width: 20.w,
-                      height: 2.h,
-                      decoration: BoxDecoration(
-                          color: controller
-                              .checkStatus(overtimeModel.statusApprovalAdmin),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Text(
-                        overtimeModel.statusApprovalAdmin,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-                Visibility(
-                    visible: controller.isHR(),
-                    child: Row(
-                      children: [
-                        Text(overtimeModel.nameApprovalHR),
-                        Container(
-                          width: 20.w,
-                          height: 2.h,
-                          decoration: BoxDecoration(
-                              color: controller
-                                  .checkStatus(overtimeModel.statusApprovalHR),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            overtimeModel.statusApprovalHR,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    )),
-                Visibility(
-                    visible: controller.isAtasan(),
-                    child: Row(
-                      children: [
-                        Text(overtimeModel.nameApprovalAtasan),
-                        Container(
-                          width: 20.w,
-                          height: 2.h,
-                          decoration: BoxDecoration(
-                              color: controller
-                                  .checkStatus(
-                                  overtimeModel.statusApprovalAtasan),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            overtimeModel.statusApprovalAtasan,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ))
+                // Row(
+                //   children: [
+                //     Text(overtimeModel.usernameApproval1),
+                //     Container(
+                //       width: 20.w,
+                //       height: 2.h,
+                //       decoration: BoxDecoration(
+                //           color: controller
+                //               .checkStatus(overtimeModel.statusApproval1),
+                //           borderRadius: BorderRadius.circular(10)),
+                //       child: Text(
+                //         overtimeModel.statusApproval1,
+                //         textAlign: TextAlign.center,
+                //         style: TextStyle(color: Colors.white),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // Visibility(
+                //     visible: controller.isHR(),
+                //     child: Row(
+                //       children: [
+                //         Text(overtimeModel.usernameApproval2),
+                //         Container(
+                //           width: 20.w,
+                //           height: 2.h,
+                //           decoration: BoxDecoration(
+                //               color: controller
+                //                   .checkStatus(overtimeModel.statusApproval2),
+                //               borderRadius: BorderRadius.circular(10)),
+                //           child: Text(
+                //             overtimeModel.statusApproval2,
+                //             textAlign: TextAlign.center,
+                //             style: TextStyle(color: Colors.white),
+                //           ),
+                //         ),
+                //       ],
+                //     )),
+                // Visibility(
+                //     visible: controller.isAtasan(),
+                //     child: Row(
+                //       children: [
+                //         Text(overtimeModel.usernameApproval3),
+                //         Container(
+                //           width: 20.w,
+                //           height: 2.h,
+                //           decoration: BoxDecoration(
+                //               color: controller
+                //                   .checkStatus(
+                //                   overtimeModel.statusApproval3),
+                //               borderRadius: BorderRadius.circular(10)),
+                //           child: Text(
+                //             overtimeModel.statusApproval3,
+                //             textAlign: TextAlign.center,
+                //             style: TextStyle(color: Colors.white),
+                //           ),
+                //         ),
+                //       ],
+                //     ))
               ],
             ),
           ),
@@ -212,7 +213,7 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
           ),
           SizedBox(height: 2.h),
           Visibility(
-            visible: false,
+            visible: true,
             child: Container(
               height: 5.h,
               width: 90.w,
@@ -224,7 +225,8 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                       side: BorderSide(color: Colors.amber),
                       primary: Colors.amber),
                   onPressed: () {
-                    Get.toNamed('/afterOvertimeScreen');
+                    print(overtimeModel.overtimeId);
+                    Get.to(AfterOvertimeScreen(overtimeModel.overtimeId));
                   },
                   child: Text(
                     "Form After Overtime",
@@ -233,7 +235,7 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
             ),
           ),
           Visibility(
-            visible: true,
+            visible: false,
             child: Container(
               height: 5.h,
               width: 90.w,
@@ -248,7 +250,8 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                     showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
-                          return DetailAfterOvertimeHistory(overtimeModel.overtimeId);
+                          return DetailAfterOvertimeHistory(
+                              overtimeModel.overtimeId);
                         });
                   },
                   child: Text(

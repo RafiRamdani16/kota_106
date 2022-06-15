@@ -11,6 +11,7 @@ OvertimeApprovalModel _$OvertimeApprovalModelFromJson(
     OvertimeApprovalModel()
       ..overtimeId = json['overtimeId'] as int
       ..userId = json['userId'] as int
+      ..afterOvertimeId = json['afterOvertimeId'] as int
       ..userName = json['userName'] as String
       ..position = json['position'] as String
       ..overtimeDateSubmitted = json['overtimeDateSubmitted'] as String
@@ -36,6 +37,7 @@ Map<String, dynamic> _$OvertimeApprovalModelToJson(
     <String, dynamic>{
       'overtimeId': instance.overtimeId,
       'userId': instance.userId,
+      'afterOvertimeId': instance.afterOvertimeId,
       'userName': instance.userName,
       'position': instance.position,
       'overtimeDateSubmitted': instance.overtimeDateSubmitted,

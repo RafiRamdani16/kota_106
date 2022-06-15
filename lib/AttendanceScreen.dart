@@ -4,8 +4,8 @@ import 'package:hexcolor/hexcolor.dart';
 
 import 'package:sizer/sizer.dart';
 
-import 'Attendance/Offline/OfficeWorking.dart';
-import 'Attendance/Online/RemoteWorking.dart';
+import 'Attendance/Offline/OfficeScreen.dart';
+import 'Attendance/Online/RemoteScreen.dart';
 import 'Login/LoginController.dart';
 
 class AttendanceScreen extends GetView<LoginController> {
@@ -46,9 +46,9 @@ class AttendanceScreen extends GetView<LoginController> {
                       child: Column(children: [
                         ListTile(
                           leading: CircleAvatar(
-                            backgroundImage:
-                                AssetImage('assets/images/akun.png'),
-                          ),
+                              backgroundImage: NetworkImage(
+                                  'https://e438-2001-448a-3048-620d-b4bc-9fb0-d429-7e71.ap.ngrok.io/${controller.getPhoto() ?? "DefaultImage.jpg"}'),
+                              radius: 5.h),
                           title: Text(
                             controller.getName() ?? "Rafi Ramdani",
                             style: TextStyle(fontSize: 12.sp),

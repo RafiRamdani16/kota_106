@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sizer/sizer.dart';
 import '../../AttendanceController.dart';
+import 'package:sizer/sizer.dart';
 
-class OfficeCheckOutForm extends GetView<AttendanceController> {
-
+class CheckInOfflineScreen extends GetView<AttendanceController> {
+  const CheckInOfflineScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     controller.getDateTimeNow();
@@ -30,7 +30,9 @@ class OfficeCheckOutForm extends GetView<AttendanceController> {
                 controller: controller.clocation,
                 enabled: false,
               ),
-              SizedBox(height: 2.h,),
+              SizedBox(
+                height: 2.h,
+              ),
               Row(
                 children: [
                   Image.asset('assets/images/Icon/Calendar.png'),
@@ -74,11 +76,13 @@ class OfficeCheckOutForm extends GetView<AttendanceController> {
                   ),
                 ],
               ),
-              SizedBox(height: 2.h,),
+              SizedBox(
+                height: 2.h,
+              ),
               Row(
                 children: [
                   Image.asset('assets/images/Icon/Note.png'),
-                  Text('Done List...'),
+                  Text('You Want To...'),
                 ],
               ),
               TextFormField(
@@ -90,9 +94,9 @@ class OfficeCheckOutForm extends GetView<AttendanceController> {
                   width: Get.width,
                   child: ElevatedButton(
                       onPressed: () {
-                        controller.checkOutOffline(controller.taskList.text);
+                        controller.checkInOfflineForm(controller.taskList.text);
                       },
-                      child: Text('Check-out Now')))
+                      child: Text('Check-in Now')))
             ]),
           ),
         ),

@@ -3,20 +3,19 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kota_106/Approval/OvertimeApproval/OvertimeApprovalController.dart';
 
-
 import 'package:sizer/sizer.dart';
 
 import '../../AfterOvertimeApproval/DetailAfterOvertimeScreen.dart';
 import 'OvertimeApprovalModel.dart';
 
 class OvertimeApprovalDetailScreen
-    extends GetView<OvertimeDecisionApplicationController> {
+    extends GetView<OvertimeApprovalController> {
   final OvertimeApprovalModel overtimeModel;
   const OvertimeApprovalDetailScreen(this.overtimeModel);
 
   @override
   Widget build(BuildContext context) {
-    var status = false;
+    
     controller.overtimeDescription.value = overtimeModel.overtimeDescription;
     return SingleChildScrollView(
       child: Column(
@@ -149,7 +148,9 @@ class OvertimeApprovalDetailScreen
                     elevation: 10,
                     side: BorderSide(color: Colors.lightGreen),
                     primary: Colors.lightGreen),
-                onPressed: () {},
+                onPressed: () {
+                  controller.giveDecision("Approved", overtimeModel);
+                },
                 child: Text(
                   "Approve",
                   style: TextStyle(fontSize: 14.sp, color: Colors.white),
@@ -168,7 +169,9 @@ class OvertimeApprovalDetailScreen
                       elevation: 10,
                       side: BorderSide(color: Colors.red),
                       primary: Colors.red),
-                  onPressed: () {},
+                  onPressed: () {
+                    controller.giveDecision("Rejected", overtimeModel);
+                  },
                   child: Text(
                     "Disapprove",
                     style: TextStyle(fontSize: 14.sp, color: Colors.white),

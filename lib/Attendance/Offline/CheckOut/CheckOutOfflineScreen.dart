@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../AttendanceController.dart';
 import 'package:sizer/sizer.dart';
-class OfficeCheckInForm extends GetView<AttendanceController> {
-  const OfficeCheckInForm({Key? key}) : super(key: key);
+import '../../AttendanceController.dart';
+
+class CheckOutOfflineScreen extends GetView<AttendanceController> {
   @override
   Widget build(BuildContext context) {
-    
     controller.getDateTimeNow();
     controller.getLocation();
     return SingleChildScrollView(
@@ -82,7 +81,7 @@ class OfficeCheckInForm extends GetView<AttendanceController> {
               Row(
                 children: [
                   Image.asset('assets/images/Icon/Note.png'),
-                  Text('You Want To...'),
+                  Text('Done List...'),
                 ],
               ),
               TextFormField(
@@ -94,9 +93,9 @@ class OfficeCheckInForm extends GetView<AttendanceController> {
                   width: Get.width,
                   child: ElevatedButton(
                       onPressed: () {
-                        controller.checkInOfflineForm(controller.taskList.text);
+                        controller.checkOutOffline(controller.taskList.text);
                       },
-                      child: Text('Check-in Now')))
+                      child: Text('Check-out Now')))
             ]),
           ),
         ),

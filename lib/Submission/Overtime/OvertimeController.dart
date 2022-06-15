@@ -7,13 +7,12 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kota_106/CacheManager.dart';
-import 'package:kota_106/Approval/OvertimeApproval/OvertimeApprovalController.dart';
+
 import 'package:kota_106/Submission/AfterOvertime/AfterOvertimeModel.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 
 import '../../APIService/ApiService.dart';
 import '../../Approval/OvertimeApproval/OvertimeApprovalDetail/OvertimeApprovalModel.dart';
-
 
 class OvertimeController extends GetxController with CacheManager {
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
@@ -21,14 +20,13 @@ class OvertimeController extends GetxController with CacheManager {
   TextEditingController overtimeDate = TextEditingController();
   TextEditingController overtimeDescription = TextEditingController();
 
-  OvertimeApprovalModel overtimeEditModel =
-      Get.put(OvertimeApprovalModel());
+  OvertimeApprovalModel overtimeEditModel = Get.put(OvertimeApprovalModel());
 
   Rx<DateTime> overtimeSelectedDate = DateTime.now().obs;
   Rx<TimeOfDay> overtimeStartTime = TimeOfDay(hour: 7, minute: 0).obs;
-  Rx<TimeOfDay> overtimeEndTime = TimeOfDay(hour: 17, minute: 0).obs;
+  Rx<TimeOfDay> overtimeEndTime = TimeOfDay(hour: 15, minute: 0).obs;
   RxString afterOvertimeAttachment = "".obs;
-  int id = -1;
+  int employeeId = -1;
   String token = "";
 
   Rx<File> tmpFile = File('').obs;
@@ -81,8 +79,81 @@ class OvertimeController extends GetxController with CacheManager {
     }
   }
 
-  void overtimeForm() async {
-    message("SUCCESS", "Pengajuan Lembur Berhasil");
+  void overtimeForm(String overtimeDate, String overtimeStartTime,
+      String overtimeEndTime, String overtimeDescription) async {
+    String overtimeSubmit = "${DateTime.now()}";
+    token = getToken()!;
+    employeeId = getEmployeeId()!;
+
+    // print("Date $overtimeDate");
+    // print("start $overtimeStartTime");
+    // print("end $overtimeEndTime");
+    try {
+      await _apiClient
+          .overtimeForm(employeeId, overtimeSubmit, overtimeDate,
+              overtimeStartTime, overtimeEndTime, overtimeDescription, token)
+          .then(
+        (response) {
+          if (response.status == 200) {
+            message("SUCCESS", "Pengajuan Lembur Berhasil");
+          } else if (response.status == 401) {
+            _apiClient.getRefreshToken(employeeId, token).then((response) {
+              removeToken();
+              saveToken(token);
+              overtimeForm(overtimeDate, overtimeStartTime, overtimeEndTime,
+                  overtimeDescription);
+            });
+          } else {
+            message("FAILED", "Terjadi Kesalahan Silahkan Ulangi Pengajuan");
+          }
+        },
+      );
+    } catch (e) {
+      print(token);
+      print("error $e");
+      message("ALERT", "Terjadi Kesalahan Jaringan");
+    }
+  }
+
+  Future<void> afterOvertimeForm(
+      int overtimeId,
+      String overtimeDate,
+      String overtimeStartTime,
+      String overtimeEndTime,
+      String overtimeDescription,
+      String overtimeAttachment) async {
+    token = getToken()!;
+    String afterOvertimeSubmitDate = "${DateTime.now()}";
+    
+    try {
+      await _apiClient
+          .afterOvertimeForm(
+        overtimeId,
+        afterOvertimeSubmitDate,
+        overtimeDate,
+        overtimeStartTime,
+        overtimeEndTime,
+        overtimeDescription,
+        'data:image/jpeg;base64,$overtimeAttachment',
+        token,
+      )
+          .then((response) {
+        if (response.status == 200) {
+          message("SUCCESS", "Pengajuan Setelah Lembur Berhasil");
+        } else if (response.status == 401) {
+          _apiClient.getRefreshToken(employeeId, token).then((response) {
+            removeToken();
+            saveToken(token);
+            afterOvertimeForm(overtimeId, overtimeDate, overtimeStartTime,
+                overtimeEndTime, overtimeDescription, overtimeAttachment);
+          });
+        } else {
+          message("FAILED", "Terjadi Kesalahan Silahkan Ulangi Pengajuan");
+        }
+      });
+    } catch (e) {
+      message("ALERT", "Terjadi Kesalahan Jaringan");
+    }
   }
 
   void message(String message, String content) {
@@ -145,7 +216,7 @@ class OvertimeController extends GetxController with CacheManager {
 
   void getDetailOvertime(int overtimeId) {
     token = getToken()!;
-    _apiClient.getDetailOvertime(id, token).then((response) {
+    _apiClient.getDetailOvertime(overtimeId, token).then((response) {
       if (response.status == 200) {
         overtimeEditModel = response.data;
       } else {

@@ -9,6 +9,8 @@ class OvertimeApprovalModel {
   @JsonKey()
   late int userId;
   @JsonKey()
+  late int afterOvertimeId;
+  @JsonKey()
   late String userName;
   @JsonKey()
   late String position;

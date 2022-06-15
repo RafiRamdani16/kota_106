@@ -9,38 +9,20 @@ class PermitModel {
   @JsonKey()
   late int userId;
   @JsonKey()
-  late String permitDateSubmitted;
+  late String dateSubmit;
   @JsonKey()
-  late String permitDate;
+  late String datePermit;
   @JsonKey()
-  late String permitStartTime;
+  late String startTime;
   @JsonKey()
-  late String permitEndTime;
+  late String endTime;
   @JsonKey()
-  late String permitDescription;
+  late String description;
   @JsonKey()
-  late String permitAttachment;
+  late String attachment;
   @JsonKey()
   late String statusPermit;
-  @JsonKey()
-  late String nameApprovalAdmin;
-  @JsonKey()
-  late String nameApprovalHR;
-  @JsonKey()
-  late String nameApprovalAtasan;
-  @JsonKey()
-  late String statusApprovalAdmin;
-  @JsonKey()
-  late String statusApprovalHR;
-  @JsonKey()
-  late String statusApprovalAtasan;
-  @JsonKey()
-  late String dateApprovalAdmin;
-  @JsonKey()
-  late String dateApprovalHR;
-  @JsonKey()
-  late String dateApprovalAtasan;
-
+  
   PermitModel();
 
   factory PermitModel.fromJson(Map<String, dynamic> json) =>

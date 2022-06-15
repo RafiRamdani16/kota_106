@@ -85,10 +85,10 @@ class ActivityRecordController extends GetxController with CacheManager {
       await _apiClient
           .activityRecord(
               employeeId,
-              locationNow.text,
               "${dateNow.text} ${timeNow.text}",
-              taskList,
               'data:image/jpeg;base64,$photoSelfie',
+              taskList,
+              locationNow.text,
               token)
           .then((response) async {
         if (response.status == 200) {
@@ -106,7 +106,6 @@ class ActivityRecordController extends GetxController with CacheManager {
     } catch (e) {
       message('ALERT', 'Terjadi Kesalahan');
     }
-    message('SUCCESS', 'Activity Record Berhasil');
   }
 
   void message(String message, String content) {

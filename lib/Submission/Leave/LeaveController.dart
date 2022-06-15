@@ -5,7 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+
 
 import 'package:kota_106/CacheManager.dart';
 import 'package:kota_106/Approval/LeaveApproval/LeaveApprovalDetail/LeaveApprovalModel.dart';
@@ -110,27 +110,43 @@ class LeaveController extends GetxController with CacheManager {
     }
   }
 
-  void leaveForm(String leaveType, String leaveStartDate, String leaveEndDate,
-      String leaveDescription, String leaveAttachment) {
+  Future<void> leaveForm(
+      String leaveType,
+      String leaveStartDate,
+      String leaveEndDate,
+      String leaveDescription,
+      String leaveAttachment) async {
     employeeId = getEmployeeId()!;
     token = getToken()!;
 
-    String leaveDateSubmit =
-        DateFormat("yyyy-MM-dd", "id_ID").format(DateTime.now());
-
-    _apiClient
-        .leaveForm(employeeId, token, leaveDateSubmit, leaveStartDate,
-            leaveEndDate, leaveType, leaveDescription, leaveAttachment)
-        .then((response) {
-      if (response.status == 200) {
-        message();
-      } else if (response.status == 401) {
-        removeToken();
-        saveToken(token);
-        leaveForm(leaveType, leaveStartDate, leaveEndDate, leaveDescription,
-            leaveAttachment);
-      }
-    });
+    String leaveDateSubmit = "${DateTime.now()}";
+    try {
+      await _apiClient
+          .leaveForm(
+        employeeId,
+        leaveDateSubmit,
+        leaveStartDate,
+        leaveEndDate,
+        leaveType,
+        leaveDescription,
+        'data:image/jpeg;base64,$leaveAttachment',
+        token,
+      )
+          .then((response) {
+        if (response.status == 200) {
+          message("SUCCESS", "Pengajuan Cuti Berhasil");
+        } else if (response.status == 401) {
+          removeToken();
+          saveToken(token);
+          leaveForm(leaveType, leaveStartDate, leaveEndDate, leaveDescription,
+              leaveAttachment);
+        } else {
+          message("FAILED", "Terjadi Kesalahan Silahkan Ulangi Pengajuan");
+        }
+      });
+    } catch (e) {
+      message("ALERT", "Terjadi Kesalahan Jaringan");
+    }
   }
 
   void getDetailLeave(int leaveId) {
@@ -142,19 +158,19 @@ class LeaveController extends GetxController with CacheManager {
     });
   }
 
-  void message() {
+  void message(String message, String content) {
     Get.defaultDialog(
       radius: 10.0,
       contentPadding: const EdgeInsets.all(20.0),
-      title: 'SUCCESS',
-      titleStyle: TextStyle(color: Colors.green),
-      middleText: 'Pengajuan cuti berhasil',
+      title: message,
+      titleStyle: TextStyle(fontFamily: 'ROBOTO'),
+      middleText: content,
       textConfirm: 'Confirm',
       confirm: OutlinedButton.icon(
         onPressed: () => Get.back(),
         icon: const Icon(
           Icons.check,
-          color: Colors.green,
+          color: Colors.blue,
         ),
         label: const Text(
           'Confirm',

@@ -25,7 +25,7 @@ mixin CacheManager {
     return box.read(CacheManagerKey.USERID.toString());
   }
 
-  int? getSuperiorId(){
+  int? getSuperiorId() {
     return box.read(CacheManagerKey.SUPERIORID.toString());
   }
 
@@ -37,6 +37,10 @@ mixin CacheManager {
     return box.read(CacheManagerKey.ROLE.toString());
   }
 
+  String? getPhoto() {
+    return box.read(CacheManagerKey.PHOTONAME.toString());
+  }
+
   String? getPosition() {
     return box.read(CacheManagerKey.POSITION.toString());
   }
@@ -45,13 +49,14 @@ mixin CacheManager {
     await box.erase();
   }
 
-  Future<bool> saveLoginData(
-      String name, String position, int userId, int superiorID,String role) async {
+  Future<bool> saveLoginData(String name, String position, int userId,
+      int superiorID, String role, String photoName) async {
     await box.write(CacheManagerKey.NAME.toString(), name);
     await box.write(CacheManagerKey.POSITION.toString(), position);
     await box.write(CacheManagerKey.USERID.toString(), userId);
     await box.write(CacheManagerKey.ROLE.toString(), role);
     await box.write(CacheManagerKey.SUPERIORID.toString(), superiorID);
+    await box.write(CacheManagerKey.PHOTONAME.toString(), photoName);
     return true;
   }
 
@@ -91,5 +96,6 @@ enum CacheManagerKey {
   POSITION,
   NAME,
   CHECKINTIME,
-  CHECKOUTTIME
+  CHECKOUTTIME,
+  PHOTONAME,
 }

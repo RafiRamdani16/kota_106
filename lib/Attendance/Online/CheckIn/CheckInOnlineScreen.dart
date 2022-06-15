@@ -5,7 +5,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../AttendanceController.dart';
 
-class CheckInForm extends GetView<AttendanceController> {
+class CheckInOnlineScreen extends GetView<AttendanceController> {
   @override
   Widget build(BuildContext context) {
     controller.getLocation();

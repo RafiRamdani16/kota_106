@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:kota_106/CacheManager.dart';
 import 'package:kota_106/Profile/UserModel.dart';
+import 'package:kota_106/SplashScreen.dart';
+import 'package:sizer/sizer.dart';
 
 import '../APIService/ApiService.dart';
 
@@ -175,8 +177,16 @@ class ProfileController extends GetxController with CacheManager {
     }
   }
 
+  Widget photo() {
+    String photoName = getPhoto()!;
+    return CircleAvatar(
+        backgroundImage: NetworkImage(
+            'https://e438-2001-448a-3048-620d-b4bc-9fb0-d429-7e71.ap.ngrok.io/$photoName'),
+        radius: 7.h);
+  }
+
   void logout() {
     clearStorage();
-    Get.offAndToNamed('/splashScreen');
+    Get.offAll(SplashScreen());
   }
 }

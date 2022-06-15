@@ -9,37 +9,20 @@ class LeaveModel {
   @JsonKey()
   late int userId;
   @JsonKey()
-  late String leaveDateSubmitted;
+  late String dateSubmit;
   @JsonKey()
-  late String leaveStartDate;
+  late String dateStart;
   @JsonKey()
-  late String leaveEndDate;
+  late String dateEnd;
   @JsonKey()
-  late String leaveType;
+  late String type;
   @JsonKey()
-  late String leaveDescription;
+  late String description;
   @JsonKey()
-  late String leaveAttachment;
+  late String attachment;
   @JsonKey()
-  late String leaveStatus;
-  @JsonKey()
-  late String nameApprovalAdmin;
-  @JsonKey()
-  late String nameApprovalHR;
-  @JsonKey()
-  late String nameApprovalAtasan;
-  @JsonKey()
-  late String statusApprovalAdmin;
-  @JsonKey()
-  late String statusApprovalHR;
-  @JsonKey()
-  late String statusApprovalAtasan;
-  @JsonKey()
-  late String dateApprovalAdmin;
-  @JsonKey()
-  late String dateApprovalHR;
-  @JsonKey()
-  late String dateApprovalAtasan;
+  late String statusLeave;
+ 
 
   LeaveModel();
 

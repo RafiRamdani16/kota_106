@@ -14,7 +14,7 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.description.text = permitModel.permitDescription;
+    controller.description.text = permitModel.description;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -45,7 +45,7 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(permitModel.permitDateSubmitted))} ',
+                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(permitModel.dateSubmit))} ',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -59,7 +59,7 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
                           height: 4.h,
                         ),
                         Text(
-                          'Permit Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(permitModel.permitDate))}',
+                          'Permit Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(permitModel.datePermit))}',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -77,7 +77,7 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  permitModel.permitStartTime,
+                                  permitModel.startTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -95,7 +95,7 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  permitModel.permitEndTime,
+                                  permitModel.endTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -135,7 +135,7 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
                 ),
                 Center(
                   child: controller.setImageView(
-                      permitModel.permitAttachment, 200, 100, "Permit"),
+                      permitModel.attachment, 200, 100, "Permit"),
                 ),
                 SizedBox(
                   height: 1.h,
@@ -160,67 +160,67 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
                         )),
                   ),
                 ),
-                Row(
-                  children: [
-                    Text(permitModel.nameApprovalAdmin),
-                    SizedBox(width: 20.w),
-                    Container(
-                      width: 20.w,
-                      height: 2.h,
-                      decoration: BoxDecoration(
-                          color: controller
-                              .checkStatus(permitModel.statusApprovalAdmin),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Text(
-                        permitModel.statusApprovalAdmin,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-                Visibility(
-                    visible: controller.isHR(),
-                    child: Row(
-                      children: [
-                        Text(permitModel.nameApprovalHR),
-                        SizedBox(width: 20.w),
-                        Container(
-                          width: 20.w,
-                          height: 2.h,
-                          decoration: BoxDecoration(
-                              color: controller
-                                  .checkStatus(permitModel.statusApprovalHR),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            permitModel.statusApprovalHR,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    )),
-                Visibility(
-                    visible: controller.isAtasan(),
-                    child: Row(
-                      children: [
-                        Text(permitModel.nameApprovalAtasan),
-                        SizedBox(width: 20.w),
-                        Container(
-                          width: 20.w,
-                          height: 2.h,
-                          decoration: BoxDecoration(
-                              color: controller.checkStatus(
-                                  permitModel.statusApprovalAtasan),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            permitModel.statusApprovalAtasan,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ))
+                // Row(
+                //   children: [
+                //     Text(permitModel.usernameApproval1),
+                //     SizedBox(width: 20.w),
+                //     Container(
+                //       width: 20.w,
+                //       height: 2.h,
+                //       decoration: BoxDecoration(
+                //           color: controller
+                //               .checkStatus(permitModel.statusApproval1),
+                //           borderRadius: BorderRadius.circular(10)),
+                //       child: Text(
+                //         permitModel.statusApproval1,
+                //         textAlign: TextAlign.center,
+                //         style: TextStyle(color: Colors.white),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // Visibility(
+                //     visible: controller.isHR(),
+                //     child: Row(
+                //       children: [
+                //         Text(permitModel.usernameApproval2),
+                //         SizedBox(width: 20.w),
+                //         Container(
+                //           width: 20.w,
+                //           height: 2.h,
+                //           decoration: BoxDecoration(
+                //               color: controller
+                //                   .checkStatus(permitModel.statusApproval2),
+                //               borderRadius: BorderRadius.circular(10)),
+                //           child: Text(
+                //             permitModel.statusApproval3,
+                //             textAlign: TextAlign.center,
+                //             style: TextStyle(color: Colors.white),
+                //           ),
+                //         ),
+                //       ],
+                //     )),
+                // Visibility(
+                //     visible: controller.isAtasan(),
+                //     child: Row(
+                //       children: [
+                //         Text(permitModel.usernameApproval3),
+                //         SizedBox(width: 20.w),
+                //         Container(
+                //           width: 20.w,
+                //           height: 2.h,
+                //           decoration: BoxDecoration(
+                //               color: controller.checkStatus(
+                //                   permitModel.statusApproval3),
+                //               borderRadius: BorderRadius.circular(10)),
+                //           child: Text(
+                //             permitModel.statusApproval3,
+                //             textAlign: TextAlign.center,
+                //             style: TextStyle(color: Colors.white),
+                //           ),
+                //         ),
+                //       ],
+                //     ))
               ],
             ),
           ),

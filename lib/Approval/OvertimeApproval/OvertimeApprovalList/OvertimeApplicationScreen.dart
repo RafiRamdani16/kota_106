@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:kota_106/Approval/ApprovalScreen.dart';
 import 'package:kota_106/Approval/OvertimeApproval/OvertimeApprovalController.dart';
 
 import 'package:sizer/sizer.dart';
 
 import '../OvertimeApprovalDetail/OvertimeApprovalDetailScreen.dart';
 
-class OvertimeApplicationScreen
-    extends GetView<OvertimeDecisionApplicationController> {
+class OvertimeApplicationScreen extends GetView<OvertimeApprovalController> {
   const OvertimeApplicationScreen({Key? key}) : super(key: key);
 
   Widget errorView() {
@@ -28,7 +28,9 @@ class OvertimeApplicationScreen
             'Refresh',
             style: TextStyle(color: Colors.red),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Get.to(ApprovalScreen());
+          },
         ),
       ],
     );
@@ -43,7 +45,7 @@ class OvertimeApplicationScreen
           return Center(child: CircularProgressIndicator());
         } else {
           if (snapshot.hasError)
-            return displayApplication();
+            return errorView();
           else
             return displayApplication();
         }

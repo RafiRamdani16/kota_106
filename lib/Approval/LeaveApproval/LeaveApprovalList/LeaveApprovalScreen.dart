@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:kota_106/Approval/ApprovalScreen.dart';
 import 'package:kota_106/Approval/LeaveApproval/LeaveApprovalController.dart';
 import 'package:sizer/sizer.dart';
 
@@ -25,7 +26,9 @@ class LeaveApprovalScreen extends GetView<LeaveApprovalController> {
             'Refresh',
             style: TextStyle(color: Colors.red),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Get.to(ApprovalScreen());
+          },
         ),
       ],
     );
@@ -34,13 +37,13 @@ class LeaveApprovalScreen extends GetView<LeaveApprovalController> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: controller.getLeaveApplication(),
+      future: controller.getLeaveApproval(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else {
           if (snapshot.hasError)
-            return displayListApplication();
+            return errorView();
           else
             return displayListApplication();
         }

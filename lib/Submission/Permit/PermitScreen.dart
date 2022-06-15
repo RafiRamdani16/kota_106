@@ -174,15 +174,6 @@ class PermitScreen extends GetView<PermitController> {
                               SizedBox(
                                 height: 1.h,
                               ),
-                              // Text('Description...'),
-                              // TextFormField(
-                              //   decoration: InputDecoration(
-                              //       fillColor: Colors.white, filled: true),
-                              //   style: TextStyle(fontSize: 12),
-                              //   maxLines: 4,
-                              //   controller: controller.description,
-                              // ),
-
                               Row(
                                 children: [
                                   Text("Attachment",
@@ -289,8 +280,8 @@ class PermitScreen extends GetView<PermitController> {
                           onPressed: () {
                             controller.permitForm(
                                 "${controller.permitSelectedDate.value}",
-                                "${controller.permitStartTime.value}",
-                                "${controller.permitEndTime.value}",
+                                "${controller.permitStartTime.value.format(context)}",
+                                "${controller.permitEndTime.value.format(context)}",
                                 controller.permitDescription.text,
                                 controller.permitAttachment.value);
                           },

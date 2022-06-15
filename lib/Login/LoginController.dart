@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kota_106/Login/LoginModel.dart';
 import 'package:kota_106/Login/LoginScreen.dart';
 import 'package:kota_106/AttendanceScreen.dart';
+import 'package:sizer/sizer.dart';
 
 import '../APIService/ApiService.dart';
 import '../CacheManager.dart';
@@ -16,7 +18,7 @@ class LoginController extends GetxController with CacheManager {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   late RxBool isObsecure;
-
+  LoginModel loginModel = Get.put(LoginModel());
   @override
   void onInit() {
     isObsecure = true.obs;
@@ -28,21 +30,23 @@ class LoginController extends GetxController with CacheManager {
       await _apiClient.authentication(email, password).then((response) async {
         var status = response.status;
         if (status == 200) {
-          await saveToken(response.data.accessToken);
-          await saveRefreshToken(response.data.refreshToken);
-          await saveLoginData(response.data.name, response.data.position,
-              response.data.id, response.data.superiorId, response.data.role);
-
+          saveToken("Bearer ${response.data.accessToken}");
+          saveRefreshToken(response.data.refreshToken);
+          saveLoginData(
+              response.data.name,
+              response.data.position,
+              response.data.id,
+              response.data.superiorId,
+              response.data.role,
+              response.data.photoName);
           Get.offAndToNamed('/');
         } else {
           message("FAILED", "User Tidak Ditemukan");
         }
       });
-      Get.toNamed('/');
     } catch (e) {
       message("ALERT", "Terjadi Kesalahan Silahkan Ulangi");
     }
-    Get.toNamed('/');
   }
 
   void securePassword() {
@@ -65,9 +69,14 @@ class LoginController extends GetxController with CacheManager {
   }
 
   Widget cekLogin() {
-    return Obx(() {
-      return isLogged.value ? AttendanceScreen() : LoginScreen();
-    });
+    return isLogged.value ? AttendanceScreen() : LoginScreen();
+  }
+
+  Widget photo() {
+    String photoName = getPhoto()!;
+    return CircleAvatar(
+        backgroundImage: NetworkImage('data:image/jpeg;base64,$photoName'),
+        radius: 5.h);
   }
 
   void message(String message, String content) {

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:kota_106/CacheManager.dart';
 import 'package:kota_106/Approval/PermitApproval/PermitApprovalDetail/PermitApprovalModel.dart';
 import 'package:time_range_picker/time_range_picker.dart';
@@ -15,8 +14,7 @@ import '../../APIService/ApiService.dart';
 
 class PermitController extends GetxController with CacheManager {
   TextEditingController permitDate = TextEditingController();
-  // TextEditingController permitStartTime = TextEditingController();
-  // TextEditingController permitEndTime = TextEditingController();
+
   TextEditingController permitDescription = TextEditingController();
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
 
@@ -156,28 +154,52 @@ class PermitController extends GetxController with CacheManager {
     });
   }
 
-  void permitForm(String permitDate, String permitStartTime,
-      String permitEndTime, String permitDescription, String permitAttachment) {
+  Future<void> permitForm(
+      String permitDate,
+      String permitStartTime,
+      String permitEndTime,
+      String permitDescription,
+      String permitAttachment) async {
     employeeId = getEmployeeId()!;
     token = getToken()!;
-
-    String permitDateSubmit =
-        DateFormat("yyyy-MM-dd", "id_ID").format(DateTime.now());
-    _apiClient
-        .permitForm(employeeId, token, permitDateSubmit, permitDate,
-            permitStartTime, permitEndTime, permitDescription, permitAttachment)
-        .then((response) {
-      if (response.status == 200) {
-        message("SUCCESS", "Pengajuan Izin Berhasil");
-      } else if (response.status == 401) {
-        _apiClient.getRefreshToken(employeeId, token).then((response) {
-          removeToken();
-          saveToken(token);
-          permitForm(permitDate, permitStartTime, permitEndTime,
-              permitDescription, permitAttachment);
-        });
-      }
-    });
-    message("SUCCESS", "Pengajuan Izin Berhasil");
+    print("attachment: $permitAttachment");
+    print("permitDate: $permitDate");
+    print("permitStartTime: $permitStartTime");
+    print("permitEndTime: $permitEndTime");
+    print("permitEndTime: $permitDescription");
+    print("token: $token");
+    print("employee: $employeeId");
+    String permitDateSubmit = "${DateTime.now()}";
+    try {
+      await _apiClient
+          .permitForm(
+        employeeId,
+        permitDateSubmit,
+        permitDate,
+        permitStartTime,
+        permitEndTime,
+        permitDescription,
+        'data:image/jpeg;base64,${this.permitAttachment.value}',
+        token,
+      )
+          .then((response) {
+        if (response.status == 200) {
+          
+          message("SUCCESS", "Pengajuan Izin Berhasil");
+        } else if (response.status == 401) {
+          _apiClient.getRefreshToken(employeeId, token).then((response) {
+            removeToken();
+            saveToken(token);
+            permitForm(permitDate, permitStartTime, permitEndTime,
+                permitDescription, permitAttachment);
+          });
+        } else {
+          message("FAILED", "Terjadi Kesalahan Silahkan Ulangi Pengajuan");
+        }
+      });
+    } catch (e) {
+      print("error $e");
+      message("ALERT", "Terjadi Kesalahan Jaringan");
+    }
   }
 }

@@ -9,35 +9,20 @@ class OvertimeModel {
   @JsonKey()
   late int userId;
   @JsonKey()
-  late String overtimeDateSubmitted;
+  late int afterOvertimeId;
   @JsonKey()
-  late String overtimeDate;
+  late String dateSubmit;
   @JsonKey()
-  late String overtimeStartTime;
+  late String dateOvertime;
   @JsonKey()
-  late String overtimeEndTime;
+  late String startTime;
   @JsonKey()
-  late String overtimeDescription;
+  late String endTime;
   @JsonKey()
-  late String overtimeStatus;
+  late String description;
   @JsonKey()
-  late String nameApprovalAdmin;
-  @JsonKey()
-  late String nameApprovalHR;
-  @JsonKey()
-  late String nameApprovalAtasan;
-  @JsonKey()
-  late String statusApprovalAdmin;
-  @JsonKey()
-  late String statusApprovalHR;
-  @JsonKey()
-  late String statusApprovalAtasan;
-  @JsonKey()
-  late String dateApprovalAdmin;
-  @JsonKey()
-  late String dateApprovalHR;
-  @JsonKey()
-  late String dateApprovalAtasan;
+  late String statusOvertime;
+  
 
 
   OvertimeModel();

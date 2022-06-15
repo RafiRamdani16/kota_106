@@ -14,9 +14,9 @@ class OvertimeScreen extends GetView<OvertimeController> {
         elevation: 0,
         backgroundColor: HexColor('FCBC45'),
         automaticallyImplyLeading: false,
-        title:  Text(
+        title: Text(
           'Overtime Form',
-          style: TextStyle( fontWeight: FontWeight.bold, fontSize: 16.sp),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16.sp),
         ),
         leading: IconButton(
           icon: Icon(
@@ -190,7 +190,11 @@ class OvertimeScreen extends GetView<OvertimeController> {
                               elevation: 10,
                               primary: HexColor("363636")),
                           onPressed: () {
-                            controller.overtimeForm();
+                            controller.overtimeForm(
+                                "${controller.overtimeSelectedDate.value}",
+                                "${controller.overtimeStartTime.value.hour}:${controller.overtimeStartTime.value.minute}",
+                                "${controller.overtimeEndTime.value.hour}:${controller.overtimeEndTime.value.minute}",
+                                controller.overtimeDescription.text);
                           },
                           child: Text(
                             "Apply Overtime",

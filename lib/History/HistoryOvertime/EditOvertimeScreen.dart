@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:kota_106/Submission/Overtime/OvertimeController.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
-import 'package:kota_106/Submission/Overtime/OvertimeModel.dart';
+
 import 'package:sizer/sizer.dart';
 
 class EditOvertimeScreen extends GetView<OvertimeController> {

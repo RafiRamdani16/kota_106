@@ -3,10 +3,10 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import '../AttendanceController.dart';
-// import '../../../Models/ScheduleModel.dart';
-import 'CheckIn/CheckInOnlineFormScreen.dart';
+import 'CheckIn/CheckInOnlineScreen.dart';
 import 'CheckOut/CheckOutOnlineFormScreen.dart';
 import 'package:sizer/sizer.dart';
+
 class RemoteScreen extends GetView<AttendanceController> {
   @override
   Widget build(BuildContext context) {
@@ -17,12 +17,12 @@ class RemoteScreen extends GetView<AttendanceController> {
     // var scheduleStartTime = controller.time.value;
     // // var scheduleEndTime = scheduleModel.endCheckinAt;
     // var scheduleEndTime = controller.time.value;
-    
+
     const List<Tab> tabs = <Tab>[
       Tab(text: 'Check-in'),
       Tab(text: 'Check-out'),
     ];
-
+    controller.checkTimeCheckIn();
     return DefaultTabController(
       length: 2,
       initialIndex: 0,
@@ -42,16 +42,18 @@ class RemoteScreen extends GetView<AttendanceController> {
             child: Padding(
               padding: EdgeInsets.only(top: 2.h),
               child: TabBarView(children: [
-                controller.checkInStatus()
-                    ? CheckInForm()
-                    : controller.showAlert(),
+                Obx(() {
+                  return controller.statusTimeCheckIn.value &&
+                          controller.checkInStatus()
+                      ? CheckInOnlineScreen()
+                      : controller.showAlert();
+                }),
                 controller.checkOutStatus()
                     ? CheckOutForm()
                     : controller.showAlert()
               ]),
             ),
           )
-          
         ],
       ),
     );

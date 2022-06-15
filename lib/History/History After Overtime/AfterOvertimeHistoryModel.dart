@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:kota_106/Submission/AfterOvertime/AfterOvertimeModel.dart';
-import 'package:kota_106/Submission/Leave/LeaveModel.dart';
+
 
 part 'AfterOvertimeHistoryModel.g.dart';
 

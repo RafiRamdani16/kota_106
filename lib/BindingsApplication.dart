@@ -24,8 +24,7 @@ class HomeBindings implements Bindings {
     Get.put<PermitController>(PermitController());
     Get.put<OvertimeController>(OvertimeController());
     Get.put<PermitApprovalController>(PermitApprovalController());
-    Get.put<OvertimeDecisionApplicationController>(
-        OvertimeDecisionApplicationController());
+    Get.put<OvertimeApprovalController>(OvertimeApprovalController());
     Get.put<LeaveApprovalController>(LeaveApprovalController());
   }
 }

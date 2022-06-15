@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 import '../AttendanceController.dart';
-import 'CheckIn/OfficeCheckInForm.dart';
-import 'CheckOut/OfficeCheckOutForm.dart';
+import 'CheckIn/CheckinOfflineScreen.dart';
+import 'CheckOut/CheckOutOfflineScreen.dart';
 import 'package:sizer/sizer.dart';
 
 class OfficePresensiPage extends GetView<AttendanceController> {
@@ -38,12 +38,12 @@ class OfficePresensiPage extends GetView<AttendanceController> {
                 // OfficeCheckOutForm()
                 Obx(() {
                   return controller.statusCheckinScan.value
-                      ? OfficeCheckInForm()
+                      ? CheckInOfflineScreen()
                       : controller.scanQRPage('check-in');
                 }),
                 Obx(() {
                   return controller.statusCheckoutScan.value
-                      ? OfficeCheckOutForm()
+                      ? CheckOutOfflineScreen()
                       : controller.scanQRPage('check-out');
                 })
               ]),

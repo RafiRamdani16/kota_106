@@ -11,7 +11,6 @@ class ApprovalScreen extends StatelessWidget {
   const ApprovalScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    var _selectedIndex = 1.obs;
     List<Widget> tabs = <Widget>[
       Container(width: 70, child: Tab(text: 'Overtime')),
       Container(width: 70, child: Tab(text: 'Permit')),

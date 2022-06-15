@@ -16,7 +16,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.description.text = leaveModel.leaveDescription;
+    controller.description.text = leaveModel.description;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -47,7 +47,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.leaveDateSubmitted))} ',
+                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.dateSubmit))} ',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -61,7 +61,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                           height: 4.h,
                         ),
                         Text(
-                          'Leave Type:  ${leaveModel.leaveType}',
+                          'Leave Type:  ${leaveModel.type}',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -79,7 +79,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  "${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.leaveStartDate))}",
+                                  "${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.dateStart))}",
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -97,7 +97,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  "${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.leaveEndDate))}",
+                                  "${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.dateEnd))}",
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -134,7 +134,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                 ),
                 Center(
                   child: controller.setImageView(
-                      leaveModel.leaveAttachment, 500, 100, "Leave"),
+                      leaveModel.attachment, 500, 100, "Leave"),
                 ),
                 SizedBox(height: 1.h),
                 Center(
@@ -149,7 +149,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                             primary: Colors.amber),
                         onPressed: () {
                           Get.to(DetailAttachmentScreen(
-                              leaveModel.leaveAttachment));
+                              leaveModel.attachment));
                         },
                         child: Text(
                           "See Full Attachment",
@@ -158,64 +158,64 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                         )),
                   ),
                 ),
-                Row(
-                  children: [
-                    Text(leaveModel.nameApprovalAdmin),
-                    Container(
-                      width: 20.w,
-                      height: 2.h,
-                      decoration: BoxDecoration(
-                          color: controller
-                              .checkStatus(leaveModel.statusApprovalAdmin),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Text(
-                        leaveModel.statusApprovalAdmin,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-                Visibility(
-                    visible: controller.isHR(),
-                    child: Row(
-                      children: [
-                        Text(leaveModel.nameApprovalHR),
-                        Container(
-                          width: 20.w,
-                          height: 2.h,
-                          decoration: BoxDecoration(
-                              color: controller
-                                  .checkStatus(leaveModel.statusApprovalHR),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            leaveModel.statusApprovalHR,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    )),
-                Visibility(
-                    visible: controller.isAtasan(),
-                    child: Row(
-                      children: [
-                        Text(leaveModel.nameApprovalAtasan),
-                        Container(
-                          width: 20.w,
-                          height: 2.h,
-                          decoration: BoxDecoration(
-                              color: controller
-                                  .checkStatus(leaveModel.statusApprovalAtasan),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Text(
-                            leaveModel.statusApprovalAtasan,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ))
+                // Row(
+                //   children: [
+                //     Text(leaveModel.usernameApproval1),
+                //     Container(
+                //       width: 20.w,
+                //       height: 2.h,
+                //       decoration: BoxDecoration(
+                //           color: controller
+                //               .checkStatus(leaveModel.usernameApproval1),
+                //           borderRadius: BorderRadius.circular(10)),
+                //       child: Text(
+                //         leaveModel.statusApproval1,
+                //         textAlign: TextAlign.center,
+                //         style: TextStyle(color: Colors.white),
+                //       ),
+                //     ),
+                //   ],
+                // ),
+                // Visibility(
+                //     visible: controller.isHR(),
+                //     child: Row(
+                //       children: [
+                //         Text(leaveModel.usernameApproval2),
+                //         Container(
+                //           width: 20.w,
+                //           height: 2.h,
+                //           decoration: BoxDecoration(
+                //               color: controller
+                //                   .checkStatus(leaveModel.usernameApproval2),
+                //               borderRadius: BorderRadius.circular(10)),
+                //           child: Text(
+                //             leaveModel.statusApproval2,
+                //             textAlign: TextAlign.center,
+                //             style: TextStyle(color: Colors.white),
+                //           ),
+                //         ),
+                //       ],
+                //     )),
+                // Visibility(
+                //     visible: controller.isAtasan(),
+                //     child: Row(
+                //       children: [
+                //         Text(leaveModel.usernameApproval3),
+                //         Container(
+                //           width: 20.w,
+                //           height: 2.h,
+                //           decoration: BoxDecoration(
+                //               color: controller
+                //                   .checkStatus(leaveModel.usernameApproval3),
+                //               borderRadius: BorderRadius.circular(10)),
+                //           child: Text(
+                //             leaveModel.statusApproval3,
+                //             textAlign: TextAlign.center,
+                //             style: TextStyle(color: Colors.white),
+                //           ),
+                //         ),
+                //       ],
+                //     ))
               ],
             ),
           ),

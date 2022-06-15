@@ -5,7 +5,12 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
+import '../DetailSubmissionAttachmentScreen.dart';
+
 class AfterOvertimeScreen extends GetView<OvertimeController> {
+  final int index;
+  const AfterOvertimeScreen(this.index);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,7 +177,52 @@ class AfterOvertimeScreen extends GetView<OvertimeController> {
                                             borderRadius:
                                                 BorderRadius.circular(15.0)),
                                         primary: HexColor('FFC368')),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text("Attachment"),
+                                              content: Text(
+                                                  "Upload Attachment From..."),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () {
+                                                      controller.openCamera();
+                                                    },
+                                                    child: Text(
+                                                      "Camera",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      controller.openGallery();
+                                                    },
+                                                    child: Text(
+                                                      "Gallery",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    )),
+                                                TextButton(
+                                                    onPressed: () {
+                                                      Get.back();
+                                                    },
+                                                    child: Text(
+                                                      "Cancel",
+                                                      style: TextStyle(
+                                                          color: Colors.black,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ))
+                                              ],
+                                            );
+                                          });
+                                    },
                                     child: Text(
                                       'UPLOAD',
                                       style: TextStyle(
@@ -180,6 +230,20 @@ class AfterOvertimeScreen extends GetView<OvertimeController> {
                                       ),
                                     ))
                               ]),
+                              SizedBox(
+                                height: 1.h,
+                              ),
+                              Center(
+                                child: Obx((() {
+                                  return GestureDetector(
+                                      onTap: (() {
+                                        Get.to(DetailSubmissionAttachmentScreen(
+                                            controller.tmpFile.value));
+                                      }),
+                                      child:
+                                          controller.setImageView(20.h, 20.h));
+                                })),
+                              ),
                             ]),
                       ),
                     ),
@@ -195,7 +259,16 @@ class AfterOvertimeScreen extends GetView<OvertimeController> {
                                   borderRadius: BorderRadius.circular(20.0)),
                               elevation: 10,
                               primary: HexColor("363636")),
-                          onPressed: () {},
+                          onPressed: () {
+                            
+                            controller.afterOvertimeForm(
+                                index,
+                                controller.overtimeDate.text,
+                                "${controller.overtimeStartTime.value.hour}:${controller.overtimeStartTime.value.minute}",
+                                "${controller.overtimeEndTime.value.hour}:${controller.overtimeEndTime.value.minute}",
+                                controller.overtimeDescription.text,
+                                controller.afterOvertimeAttachment.value);
+                          },
                           child: Text("Apply After Overtime",
                               style: TextStyle(
                                   fontSize: 13.sp,

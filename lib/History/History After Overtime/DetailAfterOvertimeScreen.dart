@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:kota_106/History/HistoryController.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../Submission/AfterOvertime/AfterOvertimeModel.dart';
 import '../../DetailAttachmentScreen.dart';
 import 'EditAfterOvertimeScreen.dart';
 
@@ -15,9 +14,9 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
   @override
   Widget build(BuildContext context) {
     controller.getAfterOvertimeHistory(idOvertime);
-    var status = false;
+    
     controller.description.text =
-        controller.afterOvertimeModel.afterOvertimeDescription;
+        controller.afterOvertimeModel[idOvertime].afterOvertimeDescription;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -61,11 +60,13 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                               height: 2.h,
                               decoration: BoxDecoration(
                                   color: controller.checkStatus(controller
-                                      .afterOvertimeModel.afterOvertimeStatus),
+                                      .afterOvertimeModel[idOvertime]
+                                      .afterOvertimeStatus),
                                   borderRadius: BorderRadius.circular(10)),
                               child: Text(
                                 controller
-                                    .afterOvertimeModel.afterOvertimeStatus,
+                                    .afterOvertimeModel[idOvertime]
+                                    .afterOvertimeStatus,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white),
                               ),
@@ -76,7 +77,7 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                           height: 1.h,
                         ),
                         Text(
-                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel.afterOvertimeDateSubmitted))} ',
+                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel[idOvertime].afterOvertimeDateSubmitted))} ',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -90,7 +91,7 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                           height: 4.h,
                         ),
                         Text(
-                          'Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel.afterOvertimeDate))}',
+                          'Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel[idOvertime].afterOvertimeDate))}',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -110,7 +111,7 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  controller.afterOvertimeModel
+                                  controller.afterOvertimeModel[idOvertime]
                                       .afterOvertimeStartTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
@@ -132,7 +133,8 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                                 ),
                                 Text(
                                   controller
-                                      .afterOvertimeModel.afterOvertimeEndTime,
+                                      .afterOvertimeModel[idOvertime]
+                                      .afterOvertimeEndTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -174,7 +176,8 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                 ),
                 Center(
                   child: controller.setImageView(
-                      controller.afterOvertimeModel.afterOvertimeAttachment,
+                      controller.afterOvertimeModel[idOvertime]
+                          .afterOvertimeAttachment,
                       20.w,
                       15.h,
                       "Overtime"),
@@ -217,7 +220,8 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                       side: BorderSide(color: Colors.amber),
                       primary: Colors.amber),
                   onPressed: () {
-                    Get.to(EditAfterOvertimeScreen(controller.afterOvertimeModel));
+                    Get.to(EditAfterOvertimeScreen(
+                        controller.afterOvertimeModel[idOvertime]));
                   },
                   child: Text(
                     "Edit After Overtime",

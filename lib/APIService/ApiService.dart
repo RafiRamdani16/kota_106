@@ -1,14 +1,17 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:kota_106/Approval/AfterOvertimeApproval/AfterOvertimeApprovalModel.dart';
+import 'package:kota_106/Approval/LeaveApproval/LeaveApprovalList/LeaveApprovalListModel.dart';
+import 'package:kota_106/Approval/OvertimeApproval/OvertimeApprovalList/OvertimeApprovalListModel.dart';
+import 'package:kota_106/Approval/PermitApproval/PermitApprovalList/PermitApprovalListModel.dart';
 import 'package:kota_106/History/History%20After%20Overtime/AfterOvertimeHistoryModel.dart';
-import 'package:kota_106/Submission/AfterOvertime/AfterOvertimeModel.dart';
+
 
 import 'package:kota_106/History/History%20Activity%20Record/HistoryActivityRecordList/HistoryActivityRecordModel.dart';
 import 'package:kota_106/Approval/LeaveApproval/LeaveApprovalDetail/LeaveApprovalModel.dart';
 import 'package:kota_106/Login/LoginModel.dart';
 import 'package:kota_106/History/HistoryOvertime/HistoryOvertimeList/OvertimeHistoryModel.dart';
 import 'package:kota_106/Approval/PermitApproval/PermitApprovalDetail/PermitApprovalModel.dart';
-import 'package:kota_106/Submission/Permit/PermitModel.dart';
+
 import 'package:kota_106/Profile/UserModel.dart';
 import 'package:retrofit/http.dart';
 import '../../History/HistoryLeave/HistoryLeaveList/LeaveHistoryModel.dart';
@@ -21,32 +24,34 @@ part 'ApiService.g.dart';
 
 @RestApi(
     baseUrl:
-        "https://bbbe-2001-448a-304c-3893-1d52-5ff3-6470-a748.ngrok.io/api/")
+        "https://e438-2001-448a-3048-620d-b4bc-9fb0-d429-7e71.ap.ngrok.io/api/")
 abstract class ApiClient {
   factory ApiClient(Dio dio) = _ApiClient;
 
   @Headers(<String, dynamic>{
     "Content-Type": "application/json",
   })
-  @POST('auth/login')
+  @POST('auth/login_mobile')
   Future<ApiResponse<LoginModel>> authentication(
       @Field("email") String email, @Field("password") String password);
-
+  @Headers(<String, dynamic>{
+    "Content-Type": "application/json",
+  })
   @POST('attendance/checkin_online')
   Future<ApiResponse<String>> checkinOnline(
       @Field("userId") int id,
+      @Field("location") String locationNow,
+      @Field("photoName") String photoSelfie,
       @Field("checkinTime") String checkinTime,
       @Field("description") String taskList,
-      @Field("photoName") String photoSelfie,
-      @Field("location") String locationNow,
       @Header("Authorization") String token);
 
   @POST('attendance/checkout_online')
   Future<ApiResponse<String>> checkoutOnline(
       @Field("userId") int id,
+      @Field("location") String locationNow,
       @Field("checkoutTime") String checkoutTime,
       @Field("description") String completedTask,
-      @Field("location") String locationNow,
       @Header("Authorization") String token);
 
   @POST('attendance/checkin_offline')
@@ -77,8 +82,8 @@ abstract class ApiClient {
   Future<ApiResponse<String>> activityRecord(
     @Field("userId") int emploeeId,
     @Field("date") String activityRecordTime,
-    @Field("description") String taskList,
     @Field("photoName") String photoSelfie,
+    @Field("description") String taskList,
     @Field("location") String location,
     @Header("Authorization") String token,
   );
@@ -128,21 +133,28 @@ abstract class ApiClient {
   );
 
   @POST('attendance/check_QRCode_attendance')
-  Future<ApiResponse<String>> checkQRCodeO(
-    @Query('keyword') String keyword,
+  Future<ApiResponse<String>> checkQRCode(
+    @Field('QRCodeValue') String keyword,
+    @Field('typeQRCode') String tipeQRCode,
+    @Header("Authorization") String token,
+  );
+
+  @GET('attendance/check_status')
+  Future<ApiResponse<String>> checkStatusCheckin(
+    @Query("request") String checkInDate,
     @Header("Authorization") String token,
   );
 
   @POST('permit')
   Future<ApiResponse<String>> permitForm(
     @Field("userId") int employeeId,
+    @Field("dateSubmit") String permitDateSubmit,
+    @Field("datePermit") String permitDate,
+    @Field("startTime") String permitStartTime,
+    @Field("endTime") String permitEndTime,
+    @Field("description") String permitDescription,
+    @Field("attachment") String permitAttachment,
     @Header("Authorization") String token,
-    @Field("DateSubmit") String permitDateSubmit,
-    @Field("DatePermit") String permitDate,
-    @Field("StartTime") String permitStartTime,
-    @Field("EndTime") String permitEndTime,
-    @Field("Description") String permitDescription,
-    @Field("Attachment") String permitAttachment,
   );
 
   @PUT('permit')
@@ -156,9 +168,9 @@ abstract class ApiClient {
     @Field("EndTime") String permitEndTime,
     @Field("Description") String permitDescription,
     @Field("Attachment") String permitAttachment,
-    @Field("UserIdApproval1") String idApprovalAdmin,
-    @Field("UserIdApproval2") String idApprovalHR,
-    @Field("UserIdApproval3") String idApprovalAtasan,
+    @Field("UserIdApproval1") int idApprovalAdmin,
+    @Field("UserIdApproval2") int idApprovalHR,
+    @Field("UserIdApproval3") int idApprovalAtasan,
     @Field("StatusApproval1") String statusApprovalAdmin,
     @Field("StatusApproval2") String statusApprovalHR,
     @Field("StatusApproval3") String statusApprovalAtasan,
@@ -183,7 +195,7 @@ abstract class ApiClient {
   );
 
   @GET('permit/approval')
-  Future<ApiResponse<PermitApprovalModel>> getPermitApproval(
+  Future<ApiResponse<PermitApprovalListModel>> getPermitApproval(
     @Query("Filters") String filters,
     @Query("Sorts") String sorts,
     @Query("Page") int page,
@@ -193,14 +205,14 @@ abstract class ApiClient {
 
   @POST('leave')
   Future<ApiResponse<String>> leaveForm(
-    @Field("UserId") int id,
+    @Field("userId") int id,
+    @Field("dateSubmit") String leaveDate,
+    @Field("dateStart") String leaveStartDate,
+    @Field("dateEnd") String leaveEndDate,
+    @Field("type") String leaveType,
+    @Field("description") String leaveDescription,
+    @Field("attachment") String leaveAttachment,
     @Header("Authorization") String token,
-    @Field("DateSubmit") String leaveDate,
-    @Field("DateStart") String leaveStartDate,
-    @Field("DateEnd") String leaveEndDate,
-    @Field("Type") String leaveType,
-    @Field("Description") String leaveDescription,
-    @Field("Attachment") String leaveAttachment,
   );
 
   @PUT('leave')
@@ -214,9 +226,9 @@ abstract class ApiClient {
     @Field("Type") String leaveType,
     @Field("Description") String leaveDescription,
     @Field("Attachment") String leaveAttachment,
-    @Field("UserIdApproval1") String idApprovalAdmin,
-    @Field("UserIdApproval2") String idApprovalHR,
-    @Field("UserIdApproval3") String idApprovalAtasan,
+    @Field("UserIdApproval1") int idApprovalAdmin,
+    @Field("UserIdApproval2") int idApprovalHR,
+    @Field("UserIdApproval3") int idApprovalAtasan,
     @Field("StatusApproval1") String statusApprovalAdmin,
     @Field("StatusApproval2") String statusApprovalHR,
     @Field("StatusApproval3") String statusApprovalAtasan,
@@ -227,11 +239,11 @@ abstract class ApiClient {
 
   @GET('leave')
   Future<ApiResponse<LeaveHistoryModel>> getLeaveHistory(
-    @Query("Filters") String filters,
-    @Query("Sorts") String sorts,
-    @Query("Page") int page,
-    @Query("PageSize") int limit,
-  );
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
 
   @GET('leave/{id}')
   Future<ApiResponse<LeaveApprovalModel>> getDetailLeave(
@@ -240,44 +252,44 @@ abstract class ApiClient {
   );
 
   @GET('leave/approval')
-  Future<ApiResponse<LeaveApprovalModel>> getLeaveApproval(
-    @Query("Filters") String filters,
-    @Query("Sorts") String sorts,
-    @Query("Page") int page,
-    @Query("PageSize") int limit,
-  );
+  Future<ApiResponse<LeaveApprovalListModel>> getLeaveApproval(
+      @Query("Filters") String filters,
+      @Query("Sorts") String sorts,
+      @Query("Page") int page,
+      @Query("PageSize") int limit,
+      @Header("Authorization") String token);
 
   @POST('overtime')
   Future<ApiResponse<String>> overtimeForm(
-    @Field("UserId") int id,
+    @Field("userId") int id,
+    @Field("dateSubmit") String overtimeDateSubmit,
+    @Field("dateOvertime") String overtimeDate,
+    @Field("startTime") String overtimeStartTime,
+    @Field("endTime") String overtimeEndTime,
+    @Field("description") String overtimeDescription,
     @Header("Authorization") String token,
-    @Field("DateSubmit") String overtimeDateSubmit,
-    @Field("DateOvertime") String overtimeDate,
-    @Field("StartTime") String overtimeStartTime,
-    @Field("EndTime") String overtimeEndTime,
-    @Field("Description") String overtimeDescription,
   );
 
   @PUT('overtime')
   Future<ApiResponse<String>> editOvertimeForm(
-    @Field("OvertimeId") int overtimeid,
-    @Field("UserId") int id,
-    @Field("AfterOvertimeId") int afterOvertime,
+    @Field("overtimeId") int overtimeid,
+    @Field("userId") int id,
+    @Field("afterOvertimeId") int afterOvertime,
     @Header("Authorization") String token,
-    @Field("DateSubmit") String overtimeDateSubmit,
-    @Field("DateOvertime") String overtimeDate,
-    @Field("StartTime") String overtimeStartTime,
-    @Field("EndTime") String overtimeEndTime,
-    @Field("Description") String overtimeDescription,
-    @Field("UserIdApproval1") String idApprovalAdmin,
-    @Field("UserIdApproval2") String idApprovalHR,
-    @Field("UserIdApproval3") String idApprovalAtasan,
-    @Field("StatusApproval1") String statusApprovalAdmin,
-    @Field("StatusApproval2") String statusApprovalHR,
-    @Field("StatusApproval3") String statusApprovalAtasan,
-    @Field("DateApproval1") String dateApprovalAdmin,
-    @Field("DateApproval2") String dateApprovalHR,
-    @Field("DateApproval3") String dateApprovalAtasan,
+    @Field("dateSubmit") String overtimeDateSubmit,
+    @Field("dateOvertime") String overtimeDate,
+    @Field("startTime") String overtimeStartTime,
+    @Field("endTime") String overtimeEndTime,
+    @Field("description") String overtimeDescription,
+    @Field("userIdApproval1") int idApprovalAdmin,
+    @Field("userIdApproval2") int idApprovalHR,
+    @Field("userIdApproval3") int idApprovalAtasan,
+    @Field("statusApproval1") String statusApprovalAdmin,
+    @Field("statusApproval2") String statusApprovalHR,
+    @Field("statusApproval3") String statusApprovalAtasan,
+    @Field("dateApproval1") String dateApprovalAdmin,
+    @Field("dateApproval2") String dateApprovalHR,
+    @Field("dateApproval3") String dateApprovalAtasan,
   );
 
   @GET('overtime')
@@ -295,7 +307,7 @@ abstract class ApiClient {
   );
 
   @GET('overtime/approval')
-  Future<ApiResponse<OvertimeApprovalModel>> getOvertimeApproval(
+  Future<ApiResponse<OvertimeApprovalListModel>> getOvertimeApproval(
       @Query("Filters") String filters,
       @Query("Sorts") String sorts,
       @Query("Page") int page,
@@ -304,37 +316,36 @@ abstract class ApiClient {
 
   @POST('after_overtime')
   Future<ApiResponse<String>> afterOvertimeForm(
-    @Field("UserId") int id,
+    @Field("overtimeId") int overtimeId,
+    @Field("dateSubmit") String afterOvertimeSubmitDate,
+    @Field("dateAfterOvertime") String afterOvertimeDate,
+    @Field("startTime") String afterOvertimeStartTime,
+    @Field("endTime") String afterOvertimeEndTime,
+    @Field("description") String afterOvertimeDescription,
+    @Field("attachment") String afterOvertimeAttachment,
     @Header("Authorization") String token,
-    @Field("id") int afterOvertimeId,
-    @Field("DateSubmit") String afterOvertimeSubmitDate,
-    @Field("DateAfterOvertime") String afterOvertimeDate,
-    @Field("StartTime") String afterOvertimeStartTime,
-    @Field("EndTime") String afterOvertimeEndTime,
-    @Field("Description") String afterOvertimeDescription,
-    @Field("Attachment") String afterOvertimeAttachment,
   );
 
   @PUT('after_overtime')
   Future<ApiResponse<String>> editAfterOvertimeForm(
-    @Field("AfterOvertimeId") int afterOvertimeid,
+    @Field("afterOvertimeId") int afterOvertimeid,
     @Header("Authorization") String token,
-    @Field("Overtimeid") int afterOvertimeId,
-    @Field("DateSubmit") String afterOvertimeSubmitDate,
-    @Field("DateAfterOvertime") String afterOvertimeDate,
-    @Field("StartTime") String afterOvertimeStartTime,
-    @Field("EndTime") String afterOvertimeEndTime,
-    @Field("Description") String afterOvertimeDescription,
-    @Field("Attachment") String afterOvertimeAttachment,
-    @Field("UserIdApproval1") String idApprovalAdmin,
-    @Field("UserIdApproval2") String idApprovalHR,
-    @Field("UserIdApproval3") String idApprovalAtasan,
-    @Field("StatusApproval1") String statusApprovalAdmin,
-    @Field("StatusApproval2") String statusApprovalHR,
-    @Field("StatusApproval3") String statusApprovalAtasan,
-    @Field("DateApproval1") String dateApprovalAdmin,
-    @Field("DateApproval2") String dateApprovalHR,
-    @Field("DateApproval3") String dateApprovalAtasan,
+    @Field("overtimeid") int afterOvertimeId,
+    @Field("dateSubmit") String afterOvertimeSubmitDate,
+    @Field("dateAfterOvertime") String afterOvertimeDate,
+    @Field("startTime") String afterOvertimeStartTime,
+    @Field("endTime") String afterOvertimeEndTime,
+    @Field("description") String afterOvertimeDescription,
+    @Field("attachment") String afterOvertimeAttachment,
+    @Field("userIdApproval1") int idApprovalAdmin,
+    @Field("userIdApproval2") int idApprovalHR,
+    @Field("userIdApproval3") int idApprovalAtasan,
+    @Field("statusApproval1") String statusApprovalAdmin,
+    @Field("statusApproval2") String statusApprovalHR,
+    @Field("statusApproval3") String statusApprovalAtasan,
+    @Field("dateApproval1") String dateApprovalAdmin,
+    @Field("dateApproval2") String dateApprovalHR,
+    @Field("dateApproval3") String dateApprovalAtasan,
   );
 
   @GET('after_overtime')

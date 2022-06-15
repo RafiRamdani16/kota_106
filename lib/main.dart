@@ -7,11 +7,11 @@ import 'package:kota_106/Login/LoginScreen.dart';
 import 'package:sizer/sizer.dart';
 import 'Approval/ApprovalScreen.dart';
 import 'BindingsApplication.dart';
-import 'Attendance/Offline/CheckIn/OfficeCheckInForm.dart';
+import 'Attendance/Offline/CheckIn/CheckinOfflineScreen.dart';
 import 'AttendanceScreen.dart';
 import 'History/HistoryScreen.dart';
 import 'SplashScreen.dart';
-import 'Submission/AfterOvertime/AfterOvertimeScreen.dart';
+
 
 import 'Profile/EditProfileScreen.dart';
 import 'Profile/ProfileScreen.dart';
@@ -44,15 +44,14 @@ class MyApp extends StatelessWidget {
           GetPage(name: '/profileScreen', page: () => ProfileScreen()),
           GetPage(name: '/editProfileScreen', page: () => EditProfileScreen()),
           GetPage(name: '/historyScreen', page: () => HistoryScreen()),
-          GetPage(name: '/officeCheckIn', page: () => OfficeCheckInForm()),
+          GetPage(name: '/officeCheckIn', page: () => CheckInOfflineScreen()),
           GetPage(name: '/activityRecord', page: () => ActivityRecordScreen()),
           GetPage(
               name: '/addActivityRecord', page: () => ActivityRecordScreen()),
           GetPage(name: '/leaveScreen', page: () => LeaveScreen()),
           GetPage(name: '/permitScreen', page: () => PermitScreen()),
           GetPage(name: '/overtimeScreen', page: () => OvertimeScreen()),
-          GetPage(
-              name: '/afterOvertimeScreen', page: () => AfterOvertimeScreen()),
+          
           GetPage(name: '/approvalScreen', page: () => ApprovalScreen()),
         ],
       );

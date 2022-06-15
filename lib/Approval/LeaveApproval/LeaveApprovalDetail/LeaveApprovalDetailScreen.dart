@@ -178,7 +178,9 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                     elevation: 10,
                     side: BorderSide(color: Colors.lightGreen),
                     primary: Colors.lightGreen),
-                onPressed: () {},
+                onPressed: () {
+                  controller.giveDecision("Approved", leaveModel);
+                },
                 child: Text(
                   "Approve",
                   style: TextStyle(fontSize: 14.sp, color: Colors.white),
@@ -195,7 +197,9 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                     elevation: 10,
                     side: BorderSide(color: Colors.red),
                     primary: Colors.red),
-                onPressed: () {},
+                onPressed: () {
+                  controller.giveDecision("Rejected", leaveModel);
+                },
                 child: Text(
                   "Disapprove",
                   style: TextStyle(fontSize: 14.sp, color: Colors.white),

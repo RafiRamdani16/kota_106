@@ -5,6 +5,7 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:kota_106/Approval/PermitApproval/PermitApprovalController.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../ApprovalScreen.dart';
 import '../PermitApprovalDetail/PermitApprovalScreenDetail.dart';
 
 class PermitApprovalScreen extends GetView<PermitApprovalController> {
@@ -25,7 +26,9 @@ class PermitApprovalScreen extends GetView<PermitApprovalController> {
             'Refresh',
             style: TextStyle(color: Colors.red),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Get.to(ApprovalScreen());
+          },
         ),
       ],
     );
@@ -34,13 +37,13 @@ class PermitApprovalScreen extends GetView<PermitApprovalController> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: controller.getPermitApplication(),
+      future: controller.getPermitApproval(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
         } else {
           if (snapshot.hasError)
-            return displayListApplication();
+            return errorView();
           else
             return displayListApplication();
         }

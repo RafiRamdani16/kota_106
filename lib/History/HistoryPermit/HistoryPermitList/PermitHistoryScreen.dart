@@ -79,7 +79,7 @@ class PermitHistoryScreen extends GetView<HistoryController> {
                       ));
                     }
                     controller.formatDate(
-                        controller.permitHistory[index].permitDateSubmitted);
+                        controller.permitHistory[index].dateSubmit);
                     return AnimationConfiguration.staggeredList(
                         position: index,
                         child: SlideAnimation(

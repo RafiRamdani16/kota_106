@@ -11,7 +11,7 @@ part of 'ApiService.dart';
 class _ApiClient implements ApiClient {
   _ApiClient(this._dio, {this.baseUrl}) {
     baseUrl ??=
-        'https://bbbe-2001-448a-304c-3893-1d52-5ff3-6470-a748.ngrok.io/api/';
+        'https://e438-2001-448a-3048-620d-b4bc-9fb0-d429-7e71.ap.ngrok.io/api/';
   }
 
   final Dio _dio;
@@ -31,7 +31,7 @@ class _ApiClient implements ApiClient {
                 headers: _headers,
                 extra: _extra,
                 contentType: 'application/json')
-            .compose(_dio.options, 'auth/login',
+            .compose(_dio.options, 'auth/login_mobile',
                 queryParameters: queryParameters, data: _data)
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = ApiResponse<LoginModel>.fromJson(
@@ -43,24 +43,30 @@ class _ApiClient implements ApiClient {
 
   @override
   Future<ApiResponse<String>> checkinOnline(
-      id, checkinTime, taskList, photoSelfie, locationNow, token) async {
+      id, locationNow, photoSelfie, checkinTime, taskList, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
+    final _headers = <String, dynamic>{
+      r'Content-Type': 'application/json',
+      r'Authorization': token
+    };
     _headers.removeWhere((k, v) => v == null);
     final _data = {
       'userId': id,
-      'checkinTime': checkinTime,
-      'description': taskList,
+      'location': locationNow,
       'photoName': photoSelfie,
-      'location': locationNow
+      'checkinTime': checkinTime,
+      'description': taskList
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ApiResponse<String>>(
-            Options(method: 'POST', headers: _headers, extra: _extra)
-                .compose(_dio.options, 'attendance/checkin_online',
-                    queryParameters: queryParameters, data: _data)
-                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+        _setStreamType<ApiResponse<String>>(Options(
+                method: 'POST',
+                headers: _headers,
+                extra: _extra,
+                contentType: 'application/json')
+            .compose(_dio.options, 'attendance/checkin_online',
+                queryParameters: queryParameters, data: _data)
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = ApiResponse<String>.fromJson(
       _result.data!,
       (json) => json as String,
@@ -70,16 +76,16 @@ class _ApiClient implements ApiClient {
 
   @override
   Future<ApiResponse<String>> checkoutOnline(
-      id, checkoutTime, completedTask, locationNow, token) async {
+      id, locationNow, checkoutTime, completedTask, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = {
       'userId': id,
+      'location': locationNow,
       'checkoutTime': checkoutTime,
-      'description': completedTask,
-      'location': locationNow
+      'description': completedTask
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResponse<String>>(
@@ -174,7 +180,7 @@ class _ApiClient implements ApiClient {
 
   @override
   Future<ApiResponse<String>> activityRecord(emploeeId, activityRecordTime,
-      taskList, photoSelfie, location, token) async {
+      photoSelfie, taskList, location, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
@@ -182,8 +188,8 @@ class _ApiClient implements ApiClient {
     final _data = {
       'userId': emploeeId,
       'date': activityRecordTime,
-      'description': taskList,
       'photoName': photoSelfie,
+      'description': taskList,
       'location': location
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
@@ -326,12 +332,12 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<ApiResponse<String>> checkQRCodeO(keyword, token) async {
+  Future<ApiResponse<String>> checkQRCode(keyword, tipeQRCode, token) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'keyword': keyword};
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
+    final _data = {'QRCodeValue': keyword, 'typeQRCode': tipeQRCode};
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResponse<String>>(
             Options(method: 'POST', headers: _headers, extra: _extra)
@@ -346,27 +352,47 @@ class _ApiClient implements ApiClient {
   }
 
   @override
+  Future<ApiResponse<String>> checkStatusCheckin(checkInDate, token) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'request': checkInDate};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<ApiResponse<String>>(
+            Options(method: 'GET', headers: _headers, extra: _extra)
+                .compose(_dio.options, 'attendance/check_status',
+                    queryParameters: queryParameters, data: _data)
+                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = ApiResponse<String>.fromJson(
+      _result.data!,
+      (json) => json as String,
+    );
+    return value;
+  }
+
+  @override
   Future<ApiResponse<String>> permitForm(
       employeeId,
-      token,
       permitDateSubmit,
       permitDate,
       permitStartTime,
       permitEndTime,
       permitDescription,
-      permitAttachment) async {
+      permitAttachment,
+      token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = {
       'userId': employeeId,
-      'DateSubmit': permitDateSubmit,
-      'DatePermit': permitDate,
-      'StartTime': permitStartTime,
-      'EndTime': permitEndTime,
-      'Description': permitDescription,
-      'Attachment': permitAttachment
+      'dateSubmit': permitDateSubmit,
+      'datePermit': permitDate,
+      'startTime': permitStartTime,
+      'endTime': permitEndTime,
+      'description': permitDescription,
+      'attachment': permitAttachment
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResponse<String>>(
@@ -484,7 +510,7 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<ApiResponse<PermitApprovalModel>> getPermitApproval(
+  Future<ApiResponse<PermitApprovalListModel>> getPermitApproval(
       filters, sorts, page, limit, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -497,33 +523,33 @@ class _ApiClient implements ApiClient {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ApiResponse<PermitApprovalModel>>(
+        _setStreamType<ApiResponse<PermitApprovalListModel>>(
             Options(method: 'GET', headers: _headers, extra: _extra)
                 .compose(_dio.options, 'permit/approval',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResponse<PermitApprovalModel>.fromJson(
+    final value = ApiResponse<PermitApprovalListModel>.fromJson(
       _result.data!,
-      (json) => PermitApprovalModel.fromJson(json as Map<String, dynamic>),
+      (json) => PermitApprovalListModel.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }
 
   @override
-  Future<ApiResponse<String>> leaveForm(id, token, leaveDate, leaveStartDate,
-      leaveEndDate, leaveType, leaveDescription, leaveAttachment) async {
+  Future<ApiResponse<String>> leaveForm(id, leaveDate, leaveStartDate,
+      leaveEndDate, leaveType, leaveDescription, leaveAttachment, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = {
-      'UserId': id,
-      'DateSubmit': leaveDate,
-      'DateStart': leaveStartDate,
-      'DateEnd': leaveEndDate,
-      'Type': leaveType,
-      'Description': leaveDescription,
-      'Attachment': leaveAttachment
+      'userId': id,
+      'dateSubmit': leaveDate,
+      'dateStart': leaveStartDate,
+      'dateEnd': leaveEndDate,
+      'type': leaveType,
+      'description': leaveDescription,
+      'attachment': leaveAttachment
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResponse<String>>(
@@ -596,7 +622,7 @@ class _ApiClient implements ApiClient {
 
   @override
   Future<ApiResponse<LeaveHistoryModel>> getLeaveHistory(
-      filters, sorts, page, limit) async {
+      filters, sorts, page, limit, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'Filters': filters,
@@ -604,7 +630,8 @@ class _ApiClient implements ApiClient {
       r'Page': page,
       r'PageSize': limit
     };
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResponse<LeaveHistoryModel>>(
@@ -640,8 +667,8 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<ApiResponse<LeaveApprovalModel>> getLeaveApproval(
-      filters, sorts, page, limit) async {
+  Future<ApiResponse<LeaveApprovalListModel>> getLeaveApproval(
+      filters, sorts, page, limit, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
       r'Filters': filters,
@@ -649,41 +676,36 @@ class _ApiClient implements ApiClient {
       r'Page': page,
       r'PageSize': limit
     };
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'Authorization': token};
+    _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ApiResponse<LeaveApprovalModel>>(
+        _setStreamType<ApiResponse<LeaveApprovalListModel>>(
             Options(method: 'GET', headers: _headers, extra: _extra)
                 .compose(_dio.options, 'leave/approval',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResponse<LeaveApprovalModel>.fromJson(
+    final value = ApiResponse<LeaveApprovalListModel>.fromJson(
       _result.data!,
-      (json) => LeaveApprovalModel.fromJson(json as Map<String, dynamic>),
+      (json) => LeaveApprovalListModel.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }
 
   @override
-  Future<ApiResponse<String>> overtimeForm(
-      id,
-      token,
-      overtimeDateSubmit,
-      overtimeDate,
-      overtimeStartTime,
-      overtimeEndTime,
-      overtimeDescription) async {
+  Future<ApiResponse<String>> overtimeForm(id, overtimeDateSubmit, overtimeDate,
+      overtimeStartTime, overtimeEndTime, overtimeDescription, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = {
-      'UserId': id,
-      'DateSubmit': overtimeDateSubmit,
-      'DateOvertime': overtimeDate,
-      'StartTime': overtimeStartTime,
-      'EndTime': overtimeEndTime,
-      'Description': overtimeDescription
+      'userId': id,
+      'dateSubmit': overtimeDateSubmit,
+      'dateOvertime': overtimeDate,
+      'startTime': overtimeStartTime,
+      'endTime': overtimeEndTime,
+      'description': overtimeDescription
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResponse<String>>(
@@ -723,23 +745,23 @@ class _ApiClient implements ApiClient {
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = {
-      'OvertimeId': overtimeid,
-      'UserId': id,
-      'AfterOvertimeId': afterOvertime,
-      'DateSubmit': overtimeDateSubmit,
-      'DateOvertime': overtimeDate,
-      'StartTime': overtimeStartTime,
-      'EndTime': overtimeEndTime,
-      'Description': overtimeDescription,
-      'UserIdApproval1': idApprovalAdmin,
-      'UserIdApproval2': idApprovalHR,
-      'UserIdApproval3': idApprovalAtasan,
-      'StatusApproval1': statusApprovalAdmin,
-      'StatusApproval2': statusApprovalHR,
-      'StatusApproval3': statusApprovalAtasan,
-      'DateApproval1': dateApprovalAdmin,
-      'DateApproval2': dateApprovalHR,
-      'DateApproval3': dateApprovalAtasan
+      'overtimeId': overtimeid,
+      'userId': id,
+      'afterOvertimeId': afterOvertime,
+      'dateSubmit': overtimeDateSubmit,
+      'dateOvertime': overtimeDate,
+      'startTime': overtimeStartTime,
+      'endTime': overtimeEndTime,
+      'description': overtimeDescription,
+      'userIdApproval1': idApprovalAdmin,
+      'userIdApproval2': idApprovalHR,
+      'userIdApproval3': idApprovalAtasan,
+      'statusApproval1': statusApprovalAdmin,
+      'statusApproval2': statusApprovalHR,
+      'statusApproval3': statusApprovalAtasan,
+      'dateApproval1': dateApprovalAdmin,
+      'dateApproval2': dateApprovalHR,
+      'dateApproval3': dateApprovalAtasan
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResponse<String>>(
@@ -802,7 +824,7 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<ApiResponse<OvertimeApprovalModel>> getOvertimeApproval(
+  Future<ApiResponse<OvertimeApprovalListModel>> getOvertimeApproval(
       filters, sorts, page, limit, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -815,42 +837,41 @@ class _ApiClient implements ApiClient {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ApiResponse<OvertimeApprovalModel>>(
+        _setStreamType<ApiResponse<OvertimeApprovalListModel>>(
             Options(method: 'GET', headers: _headers, extra: _extra)
                 .compose(_dio.options, 'overtime/approval',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResponse<OvertimeApprovalModel>.fromJson(
+    final value = ApiResponse<OvertimeApprovalListModel>.fromJson(
       _result.data!,
-      (json) => OvertimeApprovalModel.fromJson(json as Map<String, dynamic>),
+      (json) =>
+          OvertimeApprovalListModel.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }
 
   @override
   Future<ApiResponse<String>> afterOvertimeForm(
-      id,
-      token,
-      afterOvertimeId,
+      overtimeId,
       afterOvertimeSubmitDate,
       afterOvertimeDate,
       afterOvertimeStartTime,
       afterOvertimeEndTime,
       afterOvertimeDescription,
-      afterOvertimeAttachment) async {
+      afterOvertimeAttachment,
+      token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = {
-      'UserId': id,
-      'id': afterOvertimeId,
-      'DateSubmit': afterOvertimeSubmitDate,
-      'DateAfterOvertime': afterOvertimeDate,
-      'StartTime': afterOvertimeStartTime,
-      'EndTime': afterOvertimeEndTime,
-      'Description': afterOvertimeDescription,
-      'Attachment': afterOvertimeAttachment
+      'overtimeId': overtimeId,
+      'dateSubmit': afterOvertimeSubmitDate,
+      'dateAfterOvertime': afterOvertimeDate,
+      'startTime': afterOvertimeStartTime,
+      'endTime': afterOvertimeEndTime,
+      'description': afterOvertimeDescription,
+      'attachment': afterOvertimeAttachment
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResponse<String>>(
@@ -890,23 +911,23 @@ class _ApiClient implements ApiClient {
     final _headers = <String, dynamic>{r'Authorization': token};
     _headers.removeWhere((k, v) => v == null);
     final _data = {
-      'AfterOvertimeId': afterOvertimeid,
-      'Overtimeid': afterOvertimeId,
-      'DateSubmit': afterOvertimeSubmitDate,
-      'DateAfterOvertime': afterOvertimeDate,
-      'StartTime': afterOvertimeStartTime,
-      'EndTime': afterOvertimeEndTime,
-      'Description': afterOvertimeDescription,
-      'Attachment': afterOvertimeAttachment,
-      'UserIdApproval1': idApprovalAdmin,
-      'UserIdApproval2': idApprovalHR,
-      'UserIdApproval3': idApprovalAtasan,
-      'StatusApproval1': statusApprovalAdmin,
-      'StatusApproval2': statusApprovalHR,
-      'StatusApproval3': statusApprovalAtasan,
-      'DateApproval1': dateApprovalAdmin,
-      'DateApproval2': dateApprovalHR,
-      'DateApproval3': dateApprovalAtasan
+      'afterOvertimeId': afterOvertimeid,
+      'overtimeid': afterOvertimeId,
+      'dateSubmit': afterOvertimeSubmitDate,
+      'dateAfterOvertime': afterOvertimeDate,
+      'startTime': afterOvertimeStartTime,
+      'endTime': afterOvertimeEndTime,
+      'description': afterOvertimeDescription,
+      'attachment': afterOvertimeAttachment,
+      'userIdApproval1': idApprovalAdmin,
+      'userIdApproval2': idApprovalHR,
+      'userIdApproval3': idApprovalAtasan,
+      'statusApproval1': statusApprovalAdmin,
+      'statusApproval2': statusApprovalHR,
+      'statusApproval3': statusApprovalAtasan,
+      'dateApproval1': dateApprovalAdmin,
+      'dateApproval2': dateApprovalHR,
+      'dateApproval3': dateApprovalAtasan
     };
     final _result = await _dio.fetch<Map<String, dynamic>>(
         _setStreamType<ApiResponse<String>>(

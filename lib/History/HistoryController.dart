@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 
 import 'package:intl/intl.dart';
 import 'package:kota_106/CacheManager.dart';
-import 'package:kota_106/DummyData/DummyData.dart';
 import 'package:kota_106/ActivityRecord/ActivityRecordModel.dart';
 import 'package:kota_106/Submission/AfterOvertime/AfterOvertimeModel.dart';
 import 'package:kota_106/Attendance/AttendanceModel.dart';
@@ -52,15 +51,12 @@ class HistoryController extends GetxController with CacheManager {
   List<PermitModel> permitHistory = <PermitModel>[];
   List<OvertimeModel> overtimeHistory = <OvertimeModel>[];
   List<LeaveModel> leaveHistory = <LeaveModel>[];
-
-  AfterOvertimeModel afterOvertimeModel = Get.put(AfterOvertimeModel());
+  List<AfterOvertimeModel> afterOvertimeModel = <AfterOvertimeModel>[]; 
 
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
 
   Future<void> attendanceHistoryList() async {
-    DummyData dummy = Get.put(DummyData());
-    attendanceHistory = dummy.dummy2;
-    isThereItemActivity.value = true;
+   
 
     employeeId = getEmployeeId()!;
     token = getToken()!;
@@ -85,95 +81,120 @@ class HistoryController extends GetxController with CacheManager {
   }
 
   Future<void> activityRecordHistory() async {
-    DummyData dummyData = Get.put(DummyData());
-    activityRecordHistoryList = dummyData.activityDummy;
-    isThereItemActivity.value = true;
-    // employeeId = getEmployeeId()!;
-    // token = getToken()!;
-    // await _apiClient
-    //     .getHistoryActivityRecord('UserId==$employeeId', "-CreatedAt",
-    //         page.value, limit.value, token)
-    //     .then((response) async {
-    //   if (response.status == 200) {
-    //     activityRecordHistoryList = response.data.data.toList();
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
+    await _apiClient
+        .getHistoryActivityRecord(
+            'UserId==$employeeId', "-CreatedAt", page.value, limit.value, token)
+        .then((response) async {
+      if (response.status == 200) {
+        activityRecordHistoryList = response.data.data.toList();
 
-    //     isThereItemActivity.value = true;
-    //     update();
-    //     await Future.delayed(Duration(seconds: 3));
-    //   } else if (response.status == 401) {
-    //     await _apiClient
-    //         .getRefreshToken(employeeId, getToken()!)
-    //         .then((response) {
-    //       saveToken(response.data);
-    //       activityRecordHistory();
-    //     });
-    //   }
-    // });
+        isThereItemActivity.value = true;
+        update();
+        await Future.delayed(Duration(seconds: 3));
+      } else if (response.status == 401) {
+        await _apiClient
+            .getRefreshToken(employeeId, getToken()!)
+            .then((response) {
+          saveToken(response.data);
+          activityRecordHistory();
+        });
+      }
+    });
   }
 
   Future<void> getPermitHistory() async {
-    DummyData dummyData = Get.put(DummyData());
-    permitHistory = dummyData.permitDummy;
-    permitHistory.add(PermitModel()
-      ..permitDateSubmitted = "2022-02-16"
-      // ..permitTimeSubmitted = "09.00"
-      ..permitStartTime = "13:00"
-      ..permitDate = "2022-05-16"
-      ..permitDescription = "Izin Ke bank ke 16"
-      ..permitEndTime = "15:00"
-      ..permitAttachment = "Photo.jpg"
-      ..statusPermit = "Remaining");
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
+
+    await _apiClient
+        .getPermitHistory(
+            "UserId==$employeeId", "-Id", page.value, limit.value, token)
+        .then((response) async {
+      if (response.status == 200) {
+        print(response.data.data.toList());
+        permitHistory = response.data.data.toList();
+      } else if (response.status == 401) {
+        await _apiClient.getRefreshToken(employeeId, token).then((response) {
+          removeToken();
+          saveToken(response.data);
+          getPermitHistory();
+        });
+      } else {
+        return false;
+      }
+    });
   }
 
   Future<void> getOvertimeHistory() async {
-    DummyData dummyData = Get.put(DummyData());
-    overtimeHistory = dummyData.overtimeDummy;
+    employeeId = await getEmployeeId()!;
+    token = await getToken()!;
+    print(token);
+    print(employeeId);
 
-    overtimeHistory.add(OvertimeModel()
-      // ..idOvertime = 2
-      ..overtimeDate = "2022-12-13"
-      ..overtimeDateSubmitted = "2022-12-15"
-      // ..overtimeTimeSubmitted = "15:00"
-      ..overtimeDescription = "Testing Aplikasi ke 15"
-      ..overtimeStartTime = "20:00"
-      ..overtimeEndTime = "21:00"
-      ..overtimeStatus = "Remaining");
+    await _apiClient
+        .getOvertimeHistory(
+            'UserId==$employeeId', "-Id", page.value, limit.value, token)
+        .then((response) async {
+      print(response.status);
+      if (response.status == 200) {
+        overtimeHistory = response.data.data.toList();
+        // isThereItemAttendance.value = true;
+      } else if (response.status == 401) {
+        await _apiClient
+            .getRefreshToken(employeeId, getToken()!)
+            .then((response) {
+          removeToken();
+          saveToken(response.data);
+          attendanceHistoryList();
+        });
+      } else {
+        return false;
+      }
+    });
   }
 
   Future<void> getLeaveHistory() async {
-    DummyData dummyData = Get.put(DummyData());
-    leaveHistory = dummyData.leaveDummy;
-    leaveHistory.add(LeaveModel()
-      // ..leaveRemainingDays = "10 days"
-      ..leaveDateSubmitted = "2022-05-16"
-      ..leaveDescription = "Testing Aplikasi ke 16"
-      ..leaveStartDate = "2022-04-15"
-      ..leaveEndDate = "2022-04-20"
-      ..leaveStatus = "Remaining"
-      // ..leaveTimeSubmitted = "09:00"
-      ..leaveType = "Annual Leave"
-      ..leaveAttachment = "photo.jpg");
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
+    await _apiClient
+        .getLeaveHistory(
+            "UserId == $employeeId", "-Id", page.value, limit.value, token)
+        .then((response) async {
+      if (response.status == 200) {
+        leaveHistory = response.data.data.toList();
+      } else if (response.status == 401) {
+        await _apiClient.getRefreshToken(employeeId, token).then((response) {
+          removeToken();
+          saveToken(token);
+          getPermitHistory();
+        });
+      } else {
+        return false;
+      }
+    });
   }
 
   Future<void> getAfterOvertimeHistory(int idOvertime) async {
-    afterOvertimeModel = AfterOvertimeModel()
-      ..afterOvertimeAttachment = ""
-      ..afterOvertimeDate = "2022-12-13"
-      ..afterOvertimeDateSubmitted = "2022-12-10"
-      ..afterOvertimeDescription = "Melakukan ShowCase"
-      ..afterOvertimeStartTime = "18:00"
-      ..afterOvertimeEndTime = "19:00"
-      ..afterOvertimeStatus = "Remaining";
-    // ..afterOvertimeTimeSubmitted = "20:00";
-
-    // employeeId = getEmployeeId()!;
-    // token = getToken()!;
-    // await _apiClient
-    //     .getAfterOvertimeHistory(
-    //         "UserId = $employeeId", "-CreatedAt", 1, 20, token)
-    //     .then((response) {
-    //   afterOvertimeModel = response.data.data[idOvertime];
-    // });
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
+    await _apiClient
+        .getAfterOvertimeHistory(
+            "UserId == $employeeId", "-CreatedAt", 1, 20, token)
+        .then((response) async {
+      if (response.status == 200) {
+        afterOvertimeModel = response.data.data;
+      } else if (response.status == 200) {
+        await _apiClient.getRefreshToken(employeeId, token).then((response) {
+          removeToken();
+          saveToken(token);
+          getAfterOvertimeHistory(idOvertime);
+        });
+      } else {
+        return false;
+      }
+    });
   }
 
   Color checkStatus(String permitStatus) {

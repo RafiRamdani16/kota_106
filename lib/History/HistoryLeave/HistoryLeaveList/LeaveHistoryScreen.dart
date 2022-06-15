@@ -43,7 +43,7 @@ class LeaveHistoryScreen extends GetView<HistoryController> {
           return Center(child: CircularProgressIndicator());
         } else {
           if (snapshot.hasError)
-            return displayHistory();
+            return errorView();
           else
             return displayHistory();
         }
@@ -79,7 +79,7 @@ class LeaveHistoryScreen extends GetView<HistoryController> {
                       ));
                     }
                     controller.formatDate(
-                        controller.leaveHistory[index].leaveDateSubmitted);
+                        controller.leaveHistory[index].dateSubmit);
                     return AnimationConfiguration.staggeredList(
                         position: index,
                         child: SlideAnimation(
@@ -205,12 +205,12 @@ class LeaveHistoryScreen extends GetView<HistoryController> {
                                       decoration: BoxDecoration(
                                           color: controller.checkStatus(
                                               controller.leaveHistory[index]
-                                                  .leaveStatus),
+                                                  .statusLeave),
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: Text(
                                         controller
-                                            .leaveHistory[index].leaveStatus,
+                                            .leaveHistory[index].statusLeave,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(color: Colors.white),
                                       ),

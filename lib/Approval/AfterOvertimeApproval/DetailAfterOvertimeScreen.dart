@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kota_106/History/HistoryController.dart';
+import 'package:kota_106/Approval/OvertimeApproval/OvertimeApprovalController.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../Submission/AfterOvertime/AfterOvertimeModel.dart';
 import '../../DetailAttachmentScreen.dart';
 
-class DetailAfterOvertimeApproval extends GetView<HistoryController> {
+class DetailAfterOvertimeApproval extends GetView<OvertimeApprovalController> {
   // final AfterOvertimeModel afterOvertimeModel;
   // const DetailAfterOvertimeApproval(this.afterOvertimeModel);
-
+  
   @override
   Widget build(BuildContext context) {
-    controller.getAfterOvertimeHistory(1);
-    var status = false;
+    controller.getAfterOvertime();
+    
     controller.description.text =
-        controller.afterOvertimeModel.afterOvertimeDescription;
+        controller.afterOvertimeApprovalModel.afterOvertimeDescription;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,7 +49,7 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                           height: 1.h,
                         ),
                         Text(
-                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel.afterOvertimeDateSubmitted))} ',
+                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeApprovalModel.afterOvertimeDateSubmitted))} ',
                           style: TextStyle(fontSize: 11.sp),
                         ),
                         SizedBox(
@@ -65,7 +63,7 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                           height: 4.h,
                         ),
                         Text(
-                          'After Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel.afterOvertimeDate))}',
+                          'After Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeApprovalModel.afterOvertimeDate))}',
                           style: TextStyle(fontSize: 11.sp),
                         ),
                         SizedBox(
@@ -85,7 +83,7 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  controller.afterOvertimeModel
+                                  controller.afterOvertimeApprovalModel
                                       .afterOvertimeStartTime,
                                   style: TextStyle(fontSize: 11.sp),
                                 )
@@ -107,7 +105,8 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                                 ),
                                 Text(
                                   controller
-                                      .afterOvertimeModel.afterOvertimeEndTime,
+                                      .afterOvertimeApprovalModel
+                                      .afterOvertimeEndTime,
                                   style: TextStyle(fontSize: 11.sp),
                                 )
                               ],
@@ -149,7 +148,7 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                 ),
                 Center(
                   child: controller.setImageView(
-                      controller.afterOvertimeModel.afterOvertimeAttachment,
+                      controller.afterOvertimeApprovalModel.afterOvertimeAttachment,
                       20.w,
                       15.h,
                       "Overtime"),
@@ -176,7 +175,7 @@ class DetailAfterOvertimeApproval extends GetView<HistoryController> {
                   ),
                 ),
                 Text(
-                  '${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel.afterOvertimeDateSubmitted))} ',
+                  '${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeApprovalModel.afterOvertimeDateSubmitted))} ',
                   style: TextStyle(fontSize: 11.sp),
                 ),
               ],

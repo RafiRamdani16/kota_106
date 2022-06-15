@@ -81,10 +81,7 @@ class ProfileScreen extends GetView<ProfileController> {
       width: Get.width,
       child: Column(
         children: [
-          CircleAvatar(
-            backgroundImage: AssetImage("assets/images/testingSelfiePhoto.jpg"),
-            radius: 7.h,
-          ),
+          controller.photo(),
           SizedBox(
             height: 2.h,
           ),
