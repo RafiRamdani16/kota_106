@@ -12,6 +12,7 @@ class AttendanceScreen extends GetView<LoginController> {
   @override
   Widget build(BuildContext context) {
     var _selectedIndex = 0.obs;
+    controller.isError.value = false;
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -47,8 +48,13 @@ class AttendanceScreen extends GetView<LoginController> {
                         ListTile(
                           leading: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                  'https://e438-2001-448a-3048-620d-b4bc-9fb0-d429-7e71.ap.ngrok.io/${controller.getPhoto() ?? "DefaultImage.jpg"}'),
-                              radius: 5.h),
+                                'https://0c3b-2001-448a-3045-5919-c20-9d39-97fc-d27a.ap.ngrok.io/${controller.getPhoto()}'),
+                            radius: 5.h,
+                            onBackgroundImageError: (_, __) {
+                              return controller.circleAvatarErrorHandle();
+                            },
+                          ),
+                              
                           title: Text(
                             controller.getName() ?? "Rafi Ramdani",
                             style: TextStyle(fontSize: 12.sp),

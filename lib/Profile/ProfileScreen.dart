@@ -59,7 +59,7 @@ class ProfileScreen extends GetView<ProfileController> {
       body: SingleChildScrollView(
         child: Container(
             height: Get.height,
-            width: MediaQuery.of(context).size.width,
+            width: Get.width,
             decoration: BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage("assets/images/BackgroundProfile.jpg"),
@@ -113,9 +113,11 @@ class ProfileScreen extends GetView<ProfileController> {
         } else {
           if (snapshot.hasError)
             return errorView(context);
-          else
+          else {
             return profile();
+          }
         }
+            
       },
     );
   }
@@ -217,7 +219,6 @@ class ProfileScreen extends GetView<ProfileController> {
                 height: 0.5.h,
               ),
               Container(
-
                 width: Get.width,
                 decoration:
                     BoxDecoration(border: Border.all(color: Colors.black)),
@@ -409,30 +410,27 @@ class ProfileScreen extends GetView<ProfileController> {
                     maxLines: 4,
                     controller: controller.address),
               ),
-             
             ],
           ),
         ));
   }
 
   Scaffold profile() {
+    
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(right: 5.w),
-            child: IconButton(
-                onPressed: () {
-                  controller.logout();
-                },
-                icon: Icon(
-                  Icons.exit_to_app,
-                  size: 40,
-                )),
-          )
+          IconButton(
+              onPressed: () {
+                controller.logout();
+              },
+              icon: Icon(
+                Icons.exit_to_app,
+                size: 40,
+              ))
         ],
       ),
       body: Container(

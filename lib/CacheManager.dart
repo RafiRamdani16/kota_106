@@ -12,6 +12,26 @@ mixin CacheManager {
     await box.remove(CacheManagerKey.TOKEN.toString());
   }
 
+  Future<void> removeName() async {
+    await box.remove(CacheManagerKey.NAME.toString());
+  }
+
+  Future<void> removePhoto() async {
+    await box.remove(CacheManagerKey.PHOTONAME.toString());
+  }
+
+  Future<void> removePosition() async {
+    await box.remove(CacheManagerKey.POSITION.toString());
+  }
+
+  Future<void> removeSuperiorId() async {
+    await box.remove(CacheManagerKey.POSITION.toString());
+  }
+
+  Future<void> removeRole() async {
+    await box.remove(CacheManagerKey.ROLE.toString());
+  }
+
   Future<bool> saveRefreshToken(String? refreshToken) async {
     await box.write(CacheManagerKey.REFRESHTOKEN.toString(), refreshToken);
     return true;
@@ -57,6 +77,31 @@ mixin CacheManager {
     await box.write(CacheManagerKey.ROLE.toString(), role);
     await box.write(CacheManagerKey.SUPERIORID.toString(), superiorID);
     await box.write(CacheManagerKey.PHOTONAME.toString(), photoName);
+    return true;
+  }
+
+  Future<bool> setName(String name) async {
+    await box.write(CacheManagerKey.NAME.toString(), name);
+    return true;
+  }
+
+  Future<bool> setPhoto(String photoName) async {
+    await box.write(CacheManagerKey.PHOTONAME.toString(), photoName);
+    return true;
+  }
+
+  Future<bool> setPosition(String position) async {
+    await box.write(CacheManagerKey.POSITION.toString(), position);
+    return true;
+  }
+
+  Future<bool> setRole(String position) async {
+    await box.write(CacheManagerKey.ROLE.toString(), position);
+    return true;
+  }
+
+  Future<bool> setSuperiorId(int superiorId) async {
+    await box.write(CacheManagerKey.SUPERIORID.toString(), superiorId);
     return true;
   }
 

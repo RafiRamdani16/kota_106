@@ -35,7 +35,8 @@ class DetailAttachmentScreen extends StatelessWidget {
       body: Container(
         constraints: BoxConstraints.expand(height: Get.height),
         child: PhotoView(
-          imageProvider: AssetImage("assets/images/$photoName.jpg"),
+          imageProvider: NetworkImage(
+              "https://c736-2001-448a-3045-5919-813a-d9cd-df47-a5eb.ap.ngrok.io/$photoName"),
           enableRotation: true,
         ),
       ),

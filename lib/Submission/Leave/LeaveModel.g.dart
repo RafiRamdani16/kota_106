@@ -7,7 +7,7 @@ part of 'LeaveModel.dart';
 // **************************************************************************
 
 LeaveModel _$LeaveModelFromJson(Map<String, dynamic> json) => LeaveModel()
-  ..leaveId = json['leaveId'] as int
+  ..submissionLeaveId = json['submissionLeaveId'] as int
   ..userId = json['userId'] as int
   ..dateSubmit = json['dateSubmit'] as String
   ..dateStart = json['dateStart'] as String
@@ -15,11 +15,14 @@ LeaveModel _$LeaveModelFromJson(Map<String, dynamic> json) => LeaveModel()
   ..type = json['type'] as String
   ..description = json['description'] as String
   ..attachment = json['attachment'] as String
-  ..statusLeave = json['statusLeave'] as String;
+  ..statusLeave = json['statusLeave'] as String
+  ..historyApprovals = (json['historyApprovals'] as List<dynamic>)
+      .map((e) => HistoryApprovalModel.fromJson(e as Map<String, dynamic>))
+      .toList();
 
 Map<String, dynamic> _$LeaveModelToJson(LeaveModel instance) =>
     <String, dynamic>{
-      'leaveId': instance.leaveId,
+      'submissionLeaveId': instance.submissionLeaveId,
       'userId': instance.userId,
       'dateSubmit': instance.dateSubmit,
       'dateStart': instance.dateStart,
@@ -28,4 +31,5 @@ Map<String, dynamic> _$LeaveModelToJson(LeaveModel instance) =>
       'description': instance.description,
       'attachment': instance.attachment,
       'statusLeave': instance.statusLeave,
+      'historyApprovals': instance.historyApprovals,
     };

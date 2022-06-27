@@ -1,14 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'PermitApprovalListModel.dart';
+part of 'ListApprovalModel.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PermitApprovalListModel _$PermitApprovalListModelFromJson(
-        Map<String, dynamic> json) =>
-    PermitApprovalListModel()
+ListApprovalModel _$ListApprovalModelFromJson(Map<String, dynamic> json) =>
+    ListApprovalModel()
       ..totalData = json['totalData'] as int
       ..totalPage = json['totalPage'] as int
       ..pageSize = json['pageSize'] as int
@@ -17,8 +16,7 @@ PermitApprovalListModel _$PermitApprovalListModelFromJson(
           .map((e) => ApprovalModel.fromJson(e as Map<String, dynamic>))
           .toList();
 
-Map<String, dynamic> _$PermitApprovalListModelToJson(
-        PermitApprovalListModel instance) =>
+Map<String, dynamic> _$ListApprovalModelToJson(ListApprovalModel instance) =>
     <String, dynamic>{
       'totalData': instance.totalData,
       'totalPage': instance.totalPage,

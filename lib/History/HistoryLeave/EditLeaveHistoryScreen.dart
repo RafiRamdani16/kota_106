@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
+import 'package:kota_106/DetailAttachmentScreen.dart';
 
 import 'package:kota_106/Submission/Leave/LeaveController.dart';
+import 'package:kota_106/Submission/Leave/LeaveModel.dart';
 
 import 'package:sizer/sizer.dart';
-
-import '../../Submission/DetailSubmissionAttachmentScreen.dart';
-
-
 class EditLeaveHistoryScreen extends GetView<LeaveController> {
-  final int leaveId;
-  const EditLeaveHistoryScreen(this.leaveId);
+  final LeaveModel leaveModel;
+  const EditLeaveHistoryScreen(this.leaveModel);
 
   @override
   Widget build(BuildContext context) {
-    controller.getDetailLeave(leaveId);
     // controller.remainingDays.text = leaveModel.leaveRemainingDays;
-    controller.leaveType.text = controller.leaveEditModel.leaveType;
-    controller.startLeaveDate.value = DateTime.parse(controller.leaveEditModel.leaveStartDate);
-    controller.endLeaveDate.value = DateTime.parse(controller.leaveEditModel.leaveEndDate);
-    controller.leaveDescription.text = controller.leaveEditModel.leaveDescription;
+    // controller.leaveType.text = leaveModel.type;
+    controller.selectedType.value = leaveModel.type;
+    controller.startLeaveDate.value = DateTime.parse(leaveModel.dateStart);
+    controller.endLeaveDate.value = DateTime.parse(leaveModel.dateEnd);
+    controller.leaveDescription.text = leaveModel.description;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -68,22 +66,40 @@ class EditLeaveHistoryScreen extends GetView<LeaveController> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Remaining Days Off"),
-                              SizedBox(
-                                height: 20.0,
-                              ),
-                              Container(
-                                width: 100,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                      fillColor: Colors.white, filled: true),
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(fontSize: 12),
-                                  maxLines: 1,
-                                  controller: controller.remainingDays,
-                                  enabled: false,
-                                ),
-                              ),
+                              Obx(() {
+                                return Visibility(
+                                    visible: controller.selectedType.value ==
+                                            "Annual Leave"
+                                        ? true
+                                        : false,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Remaining Days Off",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12.sp),
+                                        ),
+                                        SizedBox(
+                                          height: 1.h,
+                                        ),
+                                        Container(
+                                          width: 100,
+                                          child: TextFormField(
+                                            decoration: InputDecoration(
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(fontSize: 11.sp),
+                                            maxLines: 1,
+                                            controller:
+                                                controller.remainingDays,
+                                            enabled: false,
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                              }),
                               Text("Leave Type"),
                               SizedBox(
                                 height: 20.0,
@@ -268,11 +284,12 @@ class EditLeaveHistoryScreen extends GetView<LeaveController> {
                                 child: Obx((() {
                                   return GestureDetector(
                                       onTap: (() {
-                                        Get.to(DetailSubmissionAttachmentScreen(
-                                            controller.tmpFile.value));
+                                        Get.to(DetailAttachmentScreen(
+                                            leaveModel.attachment));
                                       }),
                                       child:
-                                          controller.setImageView(15.h, 30.h));
+                                          controller.setEditImageView(
+                                          leaveModel.attachment, 15.h, 30.h));
                                 })),
                               ),
                             ]),
@@ -290,7 +307,14 @@ class EditLeaveHistoryScreen extends GetView<LeaveController> {
                                   borderRadius: BorderRadius.circular(20.0)),
                               elevation: 10,
                               primary: HexColor("363636")),
-                          onPressed: () {},
+                          onPressed: () {
+                            controller.editLeaveForm(
+                                leaveModel.submissionLeaveId,
+                                "${controller.startLeaveDate.value}",
+                                "${controller.endLeaveDate.value}",
+                                controller.selectedType.value,
+                                controller.leaveDescription.text);
+                          },
                           child: Text(
                             "Apply Leave",
                             style: TextStyle(

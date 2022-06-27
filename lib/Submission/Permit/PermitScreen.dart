@@ -52,7 +52,7 @@ class PermitScreen extends GetView<PermitController> {
                     child: Padding(
                       padding: const EdgeInsets.all(20.0),
                       child: Container(
-                        height: 70.h,
+                        height: 80.h,
                         width: 335,
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

@@ -3,21 +3,18 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kota_106/History/HistoryController.dart';
 import 'package:kota_106/Submission/AfterOvertime/AfterOvertimeScreen.dart';
-import 'package:kota_106/Submission/Overtime/OvertimeModel.dart';
 
 import 'package:sizer/sizer.dart';
 
-
-import '../../History After Overtime/DetailAfterOvertimeScreen.dart';
+import '../../../Submission/SubmissionModel.dart';
 import '../EditOvertimeScreen.dart';
 
 class DetailOvertimeHistory extends GetView<HistoryController> {
-  final OvertimeModel overtimeModel;
+  final SubmissionModel overtimeModel;
   const DetailOvertimeHistory(this.overtimeModel);
 
   @override
   Widget build(BuildContext context) {
-    
     controller.description.text = overtimeModel.description;
     return SingleChildScrollView(
       child: Column(
@@ -34,7 +31,7 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
           Container(
             padding: EdgeInsets.only(left: 5.w),
             width: Get.width,
-            height: 60.h,
+            height: 70.h,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,15 +52,15 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                         SizedBox(
                           height: 3.h,
                         ),
-                        // Text(
-                        //   'Time Submitted:  ${overtimeModel.overtimeTimeSubmitted} ',
-                        //   style: TextStyle(fontSize: 12.sp),
-                        // ),
+                        Text(
+                          'Time Submitted:  ${DateFormat('HH:mm').format(DateTime.parse(overtimeModel.dateSubmit).toLocal())} ',
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
                         SizedBox(
                           height: 4.h,
                         ),
                         Text(
-                          'Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(overtimeModel.dateOvertime))}',
+                          'Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(overtimeModel.datePerform))}',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -129,61 +126,104 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                   maxLines: 4,
                   controller: controller.description,
                 ),
-                SizedBox(height: 1.h),
+                SizedBox(
+                  height: 2.h,
+                ),
+                ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: overtimeModel.historyApprovals.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                overtimeModel.historyApprovals[index].userName),
+                            // SizedBox(
+                            //   width: 20.w,
+                            // ),
+                            Container(
+                              width: 20.w,
+                              height: 2.h,
+                              decoration: BoxDecoration(
+                                  color: controller.checkStatus(overtimeModel
+                                      .historyApprovals[index].statusApproval),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text(
+                                overtimeModel
+                                    .historyApprovals[index].statusApproval,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
 
                 // Row(
                 //   children: [
-                //     Text(overtimeModel.usernameApproval1),
+                //     Text(
+                //         "Admin:  ${overtimeModel.historyApprovals[0].userName}          "),
                 //     Container(
                 //       width: 20.w,
                 //       height: 2.h,
                 //       decoration: BoxDecoration(
-                //           color: controller
-                //               .checkStatus(overtimeModel.statusApproval1),
+                //           color: controller.checkStatus(
+                //               overtimeModel.historyApprovals[0].statusApproval),
                 //           borderRadius: BorderRadius.circular(10)),
                 //       child: Text(
-                //         overtimeModel.statusApproval1,
+                //         overtimeModel.historyApprovals[0].statusApproval,
                 //         textAlign: TextAlign.center,
                 //         style: TextStyle(color: Colors.white),
                 //       ),
                 //     ),
                 //   ],
                 // ),
+                // SizedBox(
+                //   height: 2.h,
+                // ),
                 // Visibility(
                 //     visible: controller.isHR(),
                 //     child: Row(
                 //       children: [
-                //         Text(overtimeModel.usernameApproval2),
+                //         Text(
+                //             "HR:  ${overtimeModel.historyApprovals[1].userName}          "),
                 //         Container(
                 //           width: 20.w,
                 //           height: 2.h,
                 //           decoration: BoxDecoration(
-                //               color: controller
-                //                   .checkStatus(overtimeModel.statusApproval2),
+                //               color: controller.checkStatus(overtimeModel
+                //                   .historyApprovals[1].statusApproval),
                 //               borderRadius: BorderRadius.circular(10)),
                 //           child: Text(
-                //             overtimeModel.statusApproval2,
+                //             overtimeModel.historyApprovals[1].statusApproval,
                 //             textAlign: TextAlign.center,
                 //             style: TextStyle(color: Colors.white),
                 //           ),
                 //         ),
                 //       ],
                 //     )),
+                // SizedBox(
+                //   height: 2.h,
+                // ),
                 // Visibility(
                 //     visible: controller.isAtasan(),
                 //     child: Row(
                 //       children: [
-                //         Text(overtimeModel.usernameApproval3),
+                //         Text(
+                //             "Atasan:  ${overtimeModel.historyApprovals[2].userName}          "),
                 //         Container(
                 //           width: 20.w,
                 //           height: 2.h,
                 //           decoration: BoxDecoration(
-                //               color: controller
-                //                   .checkStatus(
-                //                   overtimeModel.statusApproval3),
+                //               color: controller.checkStatus(overtimeModel
+                //                   .historyApprovals[2].statusApproval),
                 //               borderRadius: BorderRadius.circular(10)),
                 //           child: Text(
-                //             overtimeModel.statusApproval3,
+                //             overtimeModel.historyApprovals[2].statusApproval,
                 //             textAlign: TextAlign.center,
                 //             style: TextStyle(color: Colors.white),
                 //           ),
@@ -204,7 +244,7 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                     side: BorderSide(color: Colors.amber),
                     primary: Colors.white),
                 onPressed: () {
-                  Get.to(EditOvertimeScreen(overtimeModel.overtimeId));
+                  Get.to(EditOvertimeScreen(overtimeModel));
                 },
                 child: Text(
                   "Edit Overtime Data",
@@ -225,8 +265,8 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                       side: BorderSide(color: Colors.amber),
                       primary: Colors.amber),
                   onPressed: () {
-                    print(overtimeModel.overtimeId);
-                    Get.to(AfterOvertimeScreen(overtimeModel.overtimeId));
+                    print(overtimeModel.submissionId);
+                    Get.to(AfterOvertimeScreen(overtimeModel.submissionId));
                   },
                   child: Text(
                     "Form After Overtime",
@@ -234,8 +274,11 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                   )),
             ),
           ),
+          SizedBox(
+            height: 2.h,
+          ),
           Visibility(
-            visible: false,
+            visible: true,
             child: Container(
               height: 5.h,
               width: 90.w,
@@ -246,13 +289,10 @@ class DetailOvertimeHistory extends GetView<HistoryController> {
                       elevation: 10,
                       side: BorderSide(color: Colors.amber),
                       primary: Colors.amber),
-                  onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return DetailAfterOvertimeHistory(
-                              overtimeModel.overtimeId);
-                        });
+                  onPressed: () async {
+                    await controller.getAfterOvertimeHistory(
+                        overtimeModel.submissionId, context);
+                   
                   },
                   child: Text(
                     "Detail After Overtime",

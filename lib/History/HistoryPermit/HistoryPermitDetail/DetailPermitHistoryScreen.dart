@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:kota_106/Submission/Permit/PermitModel.dart';
 
 import 'package:sizer/sizer.dart';
 import '../../../DetailAttachmentScreen.dart';
+import '../../../Submission/SubmissionModel.dart';
 import '../../HistoryController.dart';
 import '../EditPermitHistoryScreen.dart';
 
 class DetailPermitHistoryScreen extends GetView<HistoryController> {
-  final PermitModel permitModel;
+  final SubmissionModel permitModel;
   const DetailPermitHistoryScreen(this.permitModel);
 
   @override
@@ -30,7 +30,7 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
           Container(
             padding: EdgeInsets.only(left: 5.w),
             width: Get.width,
-            height: 70.h,
+            height: 90.h,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,15 +51,15 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
                         SizedBox(
                           height: 3.h,
                         ),
-                        // Text(
-                        //   'Time Submitted:  ${permitModel.permitTimeSubmitted} ',
-                        //   style: TextStyle(fontSize: 12.sp),
-                        // ),
+                        Text(
+                          'Time Submitted:  ${DateFormat('HH:mm').format(DateTime.parse(permitModel.dateSubmit).toLocal())} ',
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
                         SizedBox(
                           height: 4.h,
                         ),
                         Text(
-                          'Permit Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(permitModel.datePermit))}',
+                          'Permit Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(permitModel.datePerform))}',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -151,7 +151,7 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
                             side: BorderSide(color: Colors.amber),
                             primary: Colors.amber),
                         onPressed: () {
-                          Get.to(DetailAttachmentScreen("TestingSuketSakit2"));
+                          Get.to(DetailAttachmentScreen(permitModel.attachment));
                         },
                         child: Text(
                           "See Full Attachment",
@@ -160,61 +160,102 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
                         )),
                   ),
                 ),
+                SizedBox(
+                  height: 5.h,
+                ),
+                ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: permitModel.historyApprovals.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(permitModel.historyApprovals[index].userName),
+                            // SizedBox(
+                            //   width: 20.w,
+                            // ),
+                            Container(
+                              width: 20.w,
+                              height: 2.h,
+                              decoration: BoxDecoration(
+                                  color: controller.checkStatus(permitModel
+                                      .historyApprovals[index].statusApproval),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text(
+                                permitModel
+                                    .historyApprovals[index].statusApproval,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
                 // Row(
                 //   children: [
-                //     Text(permitModel.usernameApproval1),
-                //     SizedBox(width: 20.w),
+                //     Text(
+                //         "Admin: ${permitModel.historyApprovals[0].userName}          "),
                 //     Container(
                 //       width: 20.w,
                 //       height: 2.h,
                 //       decoration: BoxDecoration(
-                //           color: controller
-                //               .checkStatus(permitModel.statusApproval1),
+                //           color: controller.checkStatus(
+                //               permitModel.historyApprovals[0].statusApproval),
                 //           borderRadius: BorderRadius.circular(10)),
                 //       child: Text(
-                //         permitModel.statusApproval1,
+                //         permitModel.historyApprovals[0].statusApproval,
                 //         textAlign: TextAlign.center,
                 //         style: TextStyle(color: Colors.white),
                 //       ),
                 //     ),
                 //   ],
                 // ),
+                // SizedBox(
+                //   height: 2.h,
+                // ),
                 // Visibility(
                 //     visible: controller.isHR(),
                 //     child: Row(
                 //       children: [
-                //         Text(permitModel.usernameApproval2),
-                //         SizedBox(width: 20.w),
+                //         Text(
+                //             "HR:  ${permitModel.historyApprovals[1].userName}          "),
                 //         Container(
                 //           width: 20.w,
                 //           height: 2.h,
                 //           decoration: BoxDecoration(
-                //               color: controller
-                //                   .checkStatus(permitModel.statusApproval2),
+                //               color: controller.checkStatus(permitModel
+                //                   .historyApprovals[1].statusApproval),
                 //               borderRadius: BorderRadius.circular(10)),
                 //           child: Text(
-                //             permitModel.statusApproval3,
+                //             permitModel.historyApprovals[1].statusApproval,
                 //             textAlign: TextAlign.center,
                 //             style: TextStyle(color: Colors.white),
                 //           ),
                 //         ),
                 //       ],
                 //     )),
+                // SizedBox(
+                //   height: 2.h,
+                // ),
                 // Visibility(
                 //     visible: controller.isAtasan(),
                 //     child: Row(
                 //       children: [
-                //         Text(permitModel.usernameApproval3),
-                //         SizedBox(width: 20.w),
+                //         Text(
+                //             "Atasan:  ${permitModel.historyApprovals[2].userName}          "),
                 //         Container(
                 //           width: 20.w,
                 //           height: 2.h,
                 //           decoration: BoxDecoration(
-                //               color: controller.checkStatus(
-                //                   permitModel.statusApproval3),
+                //               color: controller.checkStatus(permitModel
+                //                   .historyApprovals[2].statusApproval),
                 //               borderRadius: BorderRadius.circular(10)),
                 //           child: Text(
-                //             permitModel.statusApproval3,
+                //             permitModel.historyApprovals[2].statusApproval,
                 //             textAlign: TextAlign.center,
                 //             style: TextStyle(color: Colors.white),
                 //           ),
@@ -235,7 +276,7 @@ class DetailPermitHistoryScreen extends GetView<HistoryController> {
                     side: BorderSide(color: Colors.amber),
                     primary: Colors.amber),
                 onPressed: () {
-                  Get.to(EditPermitHistoryScreen(permitModel.permitId));
+                  Get.to(EditPermitHistoryScreen(permitModel));
                 },
                 child: Text(
                   "Edit Permit Data",

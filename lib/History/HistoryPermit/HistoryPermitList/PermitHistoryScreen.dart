@@ -43,7 +43,7 @@ class PermitHistoryScreen extends GetView<HistoryController> {
           return Center(child: CircularProgressIndicator());
         } else {
           if (snapshot.hasError)
-            return displayHistory();
+            return errorView();
           else
             return displayHistory();
         }
@@ -204,12 +204,12 @@ class PermitHistoryScreen extends GetView<HistoryController> {
                                       decoration: BoxDecoration(
                                           color: controller.checkStatus(
                                               controller.permitHistory[index]
-                                                  .statusPermit),
+                                                  .statusSubmission),
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: Text(
                                         controller
-                                            .permitHistory[index].statusPermit,
+                                            .permitHistory[index].statusSubmission,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(color: Colors.white),
                                       ),

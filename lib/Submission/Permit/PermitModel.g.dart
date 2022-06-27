@@ -15,7 +15,10 @@ PermitModel _$PermitModelFromJson(Map<String, dynamic> json) => PermitModel()
   ..endTime = json['endTime'] as String
   ..description = json['description'] as String
   ..attachment = json['attachment'] as String
-  ..statusPermit = json['statusPermit'] as String;
+  ..statusPermit = json['statusPermit'] as String
+  ..historyApprovals = (json['historyApprovals'] as List<dynamic>)
+      .map((e) => HistoryApprovalModel.fromJson(e as Map<String, dynamic>))
+      .toList();
 
 Map<String, dynamic> _$PermitModelToJson(PermitModel instance) =>
     <String, dynamic>{
@@ -28,4 +31,5 @@ Map<String, dynamic> _$PermitModelToJson(PermitModel instance) =>
       'description': instance.description,
       'attachment': instance.attachment,
       'statusPermit': instance.statusPermit,
+      'historyApprovals': instance.historyApprovals,
     };

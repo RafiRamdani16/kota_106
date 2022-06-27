@@ -59,27 +59,40 @@ class LeaveScreen extends GetView<LeaveController> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Remaining Days Off",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12.sp),
-                              ),
-                              SizedBox(
-                                height: 1.h,
-                              ),
-                              Container(
-                                width: 100,
-                                child: TextFormField(
-                                  decoration: InputDecoration(
-                                      fillColor: Colors.white, filled: true),
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(fontSize: 11.sp),
-                                  maxLines: 1,
-                                  controller: controller.remainingDays,
-                                  enabled: false,
-                                ),
-                              ),
+                              Obx(() {
+                                return Visibility(
+                                    visible: controller.selectedType.value ==
+                                            "Annual Leave"
+                                        ? true
+                                        : false,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "Remaining Days Off",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12.sp),
+                                        ),
+                                        SizedBox(
+                                          height: 1.h,
+                                        ),
+                                        Container(
+                                          width: 100,
+                                          child: TextFormField(
+                                            decoration: InputDecoration(
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(fontSize: 11.sp),
+                                            maxLines: 1,
+                                            controller:
+                                                controller.remainingDays,
+                                            enabled: false,
+                                          ),
+                                        ),
+                                      ],
+                                    ));
+                              }),
                               SizedBox(height: 2.h),
                               Text(
                                 "Leave Type",
@@ -280,6 +293,7 @@ class LeaveScreen extends GetView<LeaveController> {
                                             fontWeight: FontWeight.bold,
                                             fontSize: 11.sp),
                                       )),
+                                
                                 ],
                               ),
                               SizedBox(

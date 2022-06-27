@@ -8,15 +8,11 @@ import '../../DetailAttachmentScreen.dart';
 import 'EditAfterOvertimeScreen.dart';
 
 class DetailAfterOvertimeHistory extends GetView<HistoryController> {
-  final int idOvertime;
-  const DetailAfterOvertimeHistory(this.idOvertime);
 
   @override
   Widget build(BuildContext context) {
-    controller.getAfterOvertimeHistory(idOvertime);
     
-    controller.description.text =
-        controller.afterOvertimeModel[idOvertime].afterOvertimeDescription;
+    controller.description.text = controller.afterOvertimeModel[0].description;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,13 +56,11 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                               height: 2.h,
                               decoration: BoxDecoration(
                                   color: controller.checkStatus(controller
-                                      .afterOvertimeModel[idOvertime]
-                                      .afterOvertimeStatus),
+                                      .afterOvertimeModel[0].statusSubmission),
                                   borderRadius: BorderRadius.circular(10)),
                               child: Text(
                                 controller
-                                    .afterOvertimeModel[idOvertime]
-                                    .afterOvertimeStatus,
+                                    .afterOvertimeModel[0].statusSubmission,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(color: Colors.white),
                               ),
@@ -77,21 +71,21 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                           height: 1.h,
                         ),
                         Text(
-                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel[idOvertime].afterOvertimeDateSubmitted))} ',
+                          'Date Submitted:  ${DateFormat('dd-MMMM-yyyy').format(DateTime.parse(controller.afterOvertimeModel[0].dateSubmit))} ',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
                           height: 3.h,
                         ),
-                        // Text(
-                        //   'Time Submitted:  ${controller.afterOvertimeModel.afterOvertimeTimeSubmitted} ',
-                        //   style: TextStyle(fontSize: 12.sp),
-                        // ),
+                        Text(
+                          'Time Submitted:  ${DateFormat('HH:mm').format(DateTime.parse(controller.afterOvertimeModel[0].dateSubmit).toLocal())} ',
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
                         SizedBox(
                           height: 4.h,
                         ),
                         Text(
-                          'Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(controller.afterOvertimeModel[idOvertime].afterOvertimeDate))}',
+                          'Overtime Date:  ${DateFormat('dd-MMMM-yyyy').format(DateTime.parse(controller.afterOvertimeModel[0].datePerform))}',
                           style: TextStyle(fontSize: 12.sp),
                         ),
                         SizedBox(
@@ -111,8 +105,7 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  controller.afterOvertimeModel[idOvertime]
-                                      .afterOvertimeStartTime,
+                                  controller.afterOvertimeModel[0].startTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -132,9 +125,7 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  controller
-                                      .afterOvertimeModel[idOvertime]
-                                      .afterOvertimeEndTime,
+                                  controller.afterOvertimeModel[0].endTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -176,8 +167,7 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                 ),
                 Center(
                   child: controller.setImageView(
-                      controller.afterOvertimeModel[idOvertime]
-                          .afterOvertimeAttachment,
+                      controller.afterOvertimeModel[0].attachment,
                       20.w,
                       15.h,
                       "Overtime"),
@@ -194,7 +184,8 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                             side: BorderSide(color: Colors.amber),
                             primary: Colors.amber),
                         onPressed: () {
-                          Get.to(DetailAttachmentScreen("testingProfile"));
+                          Get.to(DetailAttachmentScreen(
+                              controller.afterOvertimeModel[0].attachment));
                         },
                         child: Text(
                           "See Full Attachment",
@@ -221,7 +212,7 @@ class DetailAfterOvertimeHistory extends GetView<HistoryController> {
                       primary: Colors.amber),
                   onPressed: () {
                     Get.to(EditAfterOvertimeScreen(
-                        controller.afterOvertimeModel[idOvertime]));
+                        controller.afterOvertimeModel[0]));
                   },
                   child: Text(
                     "Edit After Overtime",

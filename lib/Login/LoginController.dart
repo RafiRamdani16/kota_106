@@ -13,12 +13,13 @@ class LoginController extends GetxController with CacheManager {
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
 
   RxBool isLogged = false.obs;
-
+  RxBool isCheckIn = false.obs;
   final formkey = GlobalKey<FormState>();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   late RxBool isObsecure;
   LoginModel loginModel = Get.put(LoginModel());
+  RxBool isError = false.obs;
   @override
   void onInit() {
     isObsecure = true.obs;
@@ -39,6 +40,8 @@ class LoginController extends GetxController with CacheManager {
               response.data.superiorId,
               response.data.role,
               response.data.photoName);
+          this.email.clear();
+          this.password.clear();
           Get.offAndToNamed('/');
         } else {
           message("FAILED", "User Tidak Ditemukan");
@@ -47,6 +50,9 @@ class LoginController extends GetxController with CacheManager {
     } catch (e) {
       message("ALERT", "Terjadi Kesalahan Silahkan Ulangi");
     }
+    // saveLoginData("Rafi Ramdani", "Junior Programmer", 4, 5, "Karyawan",
+    //     "DefaultImage.jpg");
+    // Get.offAndToNamed('/');
   }
 
   void securePassword() {
@@ -66,6 +72,10 @@ class LoginController extends GetxController with CacheManager {
     } else {
       isLogged.value = false;
     }
+  }
+
+  void circleAvatarErrorHandle() {
+    isError.value = true;
   }
 
   Widget cekLogin() {

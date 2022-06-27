@@ -204,12 +204,12 @@ class HistoryOvertimePage extends GetView<HistoryController> {
                                       decoration: BoxDecoration(
                                           color: controller.checkStatus(
                                               controller.overtimeHistory[index]
-                                                  .statusOvertime),
+                                                  .statusSubmission),
                                           borderRadius:
                                               BorderRadius.circular(10)),
                                       child: Text(
                                         controller.overtimeHistory[index]
-                                            .statusOvertime,
+                                            .statusSubmission,
                                         textAlign: TextAlign.center,
                                         style: TextStyle(color: Colors.white),
                                       ),

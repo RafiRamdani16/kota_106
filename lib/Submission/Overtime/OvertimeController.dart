@@ -12,7 +12,6 @@ import 'package:kota_106/Submission/AfterOvertime/AfterOvertimeModel.dart';
 import 'package:time_range_picker/time_range_picker.dart';
 
 import '../../APIService/ApiService.dart';
-import '../../Approval/OvertimeApproval/OvertimeApprovalDetail/OvertimeApprovalModel.dart';
 
 class OvertimeController extends GetxController with CacheManager {
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
@@ -20,11 +19,9 @@ class OvertimeController extends GetxController with CacheManager {
   TextEditingController overtimeDate = TextEditingController();
   TextEditingController overtimeDescription = TextEditingController();
 
-  OvertimeApprovalModel overtimeEditModel = Get.put(OvertimeApprovalModel());
-
   Rx<DateTime> overtimeSelectedDate = DateTime.now().obs;
-  Rx<TimeOfDay> overtimeStartTime = TimeOfDay(hour: 7, minute: 0).obs;
-  Rx<TimeOfDay> overtimeEndTime = TimeOfDay(hour: 15, minute: 0).obs;
+  Rx<TimeOfDay> overtimeStartTime = TimeOfDay(hour: 17, minute: 0).obs;
+  Rx<TimeOfDay> overtimeEndTime = TimeOfDay(hour: 18, minute: 0).obs;
   RxString afterOvertimeAttachment = "".obs;
   int employeeId = -1;
   String token = "";
@@ -65,7 +62,10 @@ class OvertimeController extends GetxController with CacheManager {
       interval: Duration(minutes: 5),
       start: overtimeStartTime.value,
       end: overtimeEndTime.value,
-      maxDuration: Duration(hours: 8),
+      disabledTime: TimeRange(
+          startTime: TimeOfDay(hour: 7, minute: 59),
+          endTime: TimeOfDay(hour: 17, minute: 1)),
+      maxDuration: Duration(hours: 6),
       disabledColor: Colors.white,
       strokeColor: HexColor("FCBC45"),
       ticksColor: HexColor("FCBC45"),
@@ -84,17 +84,24 @@ class OvertimeController extends GetxController with CacheManager {
     String overtimeSubmit = "${DateTime.now()}";
     token = getToken()!;
     employeeId = getEmployeeId()!;
-
-    // print("Date $overtimeDate");
-    // print("start $overtimeStartTime");
-    // print("end $overtimeEndTime");
     try {
       await _apiClient
-          .overtimeForm(employeeId, overtimeSubmit, overtimeDate,
-              overtimeStartTime, overtimeEndTime, overtimeDescription, token)
+          .submissionForm(
+              employeeId,
+              0,
+              overtimeSubmit,
+              overtimeDate,
+              overtimeStartTime,
+              overtimeEndTime,
+              "Overtime",
+              overtimeDescription,
+              "",
+              token)
           .then(
         (response) {
           if (response.status == 200) {
+            this.overtimeDate.clear();
+            this.overtimeDescription.clear();
             message("SUCCESS", "Pengajuan Lembur Berhasil");
           } else if (response.status == 401) {
             _apiClient.getRefreshToken(employeeId, token).then((response) {
@@ -115,6 +122,36 @@ class OvertimeController extends GetxController with CacheManager {
     }
   }
 
+  Future<void> editOvertimeForm(
+    int overtimeId,
+    String overtimeDate,
+    String overtimeStartTime,
+    String overtimeEndTime,
+    String overtimeDescription,
+  ) async {
+    token = getToken()!;
+    String overtimeSubmit = "${DateTime.now()}";
+    await _apiClient
+        .editSubmissionForm(overtimeId, overtimeSubmit, overtimeDate,
+            overtimeStartTime, overtimeEndTime, overtimeDescription, "", token)
+        .then((response) {
+      if (response.status == 200) {
+        this.overtimeDate.clear();
+        this.overtimeDescription.clear();
+        message("SUCCESS", "Pembaruan Pengajuan Lembur Berhasil");
+      } else if (response.status == 401) {
+        _apiClient.getRefreshToken(employeeId, token).then((response) {
+          removeToken();
+          saveToken(token);
+          editOvertimeForm(overtimeId, overtimeDate, overtimeStartTime,
+              overtimeEndTime, overtimeDescription);
+        });
+      } else {
+        message("FAILED", "Terjadi Kesalahan Silahkan Ulangi Pengajuan");
+      }
+    });
+  }
+
   Future<void> afterOvertimeForm(
       int overtimeId,
       String overtimeDate,
@@ -122,23 +159,29 @@ class OvertimeController extends GetxController with CacheManager {
       String overtimeEndTime,
       String overtimeDescription,
       String overtimeAttachment) async {
+    employeeId = getEmployeeId()!;
     token = getToken()!;
     String afterOvertimeSubmitDate = "${DateTime.now()}";
-    
+
     try {
       await _apiClient
-          .afterOvertimeForm(
+          .submissionForm(
+        employeeId,
         overtimeId,
         afterOvertimeSubmitDate,
         overtimeDate,
         overtimeStartTime,
         overtimeEndTime,
+        "AfterOvertime",
         overtimeDescription,
         'data:image/jpeg;base64,$overtimeAttachment',
         token,
       )
           .then((response) {
         if (response.status == 200) {
+          this.overtimeDate.clear();
+          this.overtimeDescription.clear();
+        
           message("SUCCESS", "Pengajuan Setelah Lembur Berhasil");
         } else if (response.status == 401) {
           _apiClient.getRefreshToken(employeeId, token).then((response) {
@@ -154,6 +197,48 @@ class OvertimeController extends GetxController with CacheManager {
     } catch (e) {
       message("ALERT", "Terjadi Kesalahan Jaringan");
     }
+  }
+
+  Future<void> editAfterOvertimeForm(
+    int afterOvertimeId,
+    String afterOvertimeDate,
+    String afterOvertimeStartTime,
+    String afterOvertimeEndTime,
+    String afterOvertimeDescription,
+  ) async {
+    token = getToken()!;
+    String overtimeSubmit = "${DateTime.now()}";
+    await _apiClient
+        .editSubmissionForm(
+            afterOvertimeId,
+            overtimeSubmit,
+            afterOvertimeDate,
+            afterOvertimeStartTime,
+            afterOvertimeEndTime,
+            afterOvertimeDescription,
+            'data:image/jpeg;base64,$afterOvertimeAttachment',
+            token)
+        .then((response) {
+      if (response.status == 200) {
+        this.overtimeDate.clear();
+        this.overtimeDescription.clear();
+
+        message("SUCCESS", "Pembaruan Pengajuan Lembur Berhasil");
+      } else if (response.status == 401) {
+        _apiClient.getRefreshToken(employeeId, token).then((response) {
+          removeToken();
+          saveToken(token);
+          editAfterOvertimeForm(
+              afterOvertimeId,
+              afterOvertimeDate,
+              afterOvertimeStartTime,
+              afterOvertimeEndTime,
+              afterOvertimeDescription);
+        });
+      } else {
+        message("FAILED", "Terjadi Kesalahan Silahkan Ulangi Pengajuan");
+      }
+    });
   }
 
   void message(String message, String content) {
@@ -178,6 +263,25 @@ class OvertimeController extends GetxController with CacheManager {
     );
   }
 
+  Widget setEditImageView(String photoName, double height, double width) {
+    if (imageFile.value.path != '') {
+      tmpFile.value = File(imageFile.value.path);
+      afterOvertimeAttachment.value =
+          base64Encode(File(imageFile.value.path).readAsBytesSync()).trim();
+      return Image.file(
+        tmpFile.value,
+        height: height,
+        width: width,
+      );
+    } else {
+      return Image.network(
+        "https://c736-2001-448a-3045-5919-813a-d9cd-df47-a5eb.ap.ngrok.io/$photoName",
+        height: height,
+        width: width,
+      );
+    }
+  }
+
   Widget setImageView(double height, double width) {
     if (imageFile.value.path != '') {
       tmpFile.value = File(imageFile.value.path);
@@ -200,7 +304,8 @@ class OvertimeController extends GetxController with CacheManager {
 
   void openCamera() async {
     try {
-      imageFile.value = (await _image.pickImage(source: ImageSource.camera))!;
+      imageFile.value = (await _image.pickImage(
+          source: ImageSource.camera, imageQuality: 25))!;
     } catch (e) {
       // return 'Terjadi Kesalahan';
     }
@@ -208,21 +313,11 @@ class OvertimeController extends GetxController with CacheManager {
 
   Future<void> openGallery() async {
     try {
-      imageFile.value = (await _image.pickImage(source: ImageSource.gallery))!;
+      imageFile.value = (await _image.pickImage(
+          source: ImageSource.gallery, imageQuality: 25))!;
     } catch (e) {
       // return 'Terjadi Kesalahan';
     }
-  }
-
-  void getDetailOvertime(int overtimeId) {
-    token = getToken()!;
-    _apiClient.getDetailOvertime(overtimeId, token).then((response) {
-      if (response.status == 200) {
-        overtimeEditModel = response.data;
-      } else {
-        message("FAILED", "Terjadi Kesalahan");
-      }
-    });
   }
 
   // Future<void> afterOvertime(int idOvertime) async {

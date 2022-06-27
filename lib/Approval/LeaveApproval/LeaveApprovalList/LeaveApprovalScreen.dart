@@ -79,7 +79,7 @@ class LeaveApprovalScreen extends GetView<LeaveApprovalController> {
                       ));
                     }
                     controller.formatDate(
-                        controller.leaveApplication[index].leaveDateSubmitted);
+                        controller.leaveApplication[index].dateSubmit);
                     return AnimationConfiguration.staggeredList(
                         position: index,
                         child: SlideAnimation(

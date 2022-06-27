@@ -13,6 +13,7 @@ import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../APIService/ApiService.dart';
 import '../CacheManager.dart';
+import 'Offline/CheckOut/CheckOutOfflineScreen.dart';
 
 class AttendanceController extends GetxController with CacheManager {
   QRViewController? controller;
@@ -65,6 +66,7 @@ class AttendanceController extends GetxController with CacheManager {
     }
 
     if (now == formatedCheckinTime) {
+      statusTimeCheckIn.value = false;
       return false;
     } else {
       return true;
@@ -136,7 +138,8 @@ class AttendanceController extends GetxController with CacheManager {
   void openCamera() async {
     ImagePicker _image = Get.put(ImagePicker());
     try {
-      imageFile.value = (await _image.pickImage(source: ImageSource.camera))!;
+      imageFile.value = (await _image.pickImage(
+          source: ImageSource.camera, imageQuality: 25))!;
       photoName.value = imageFile.value.name;
     } catch (e) {
       // return 'Terjadi Kesalahan';
@@ -192,23 +195,26 @@ class AttendanceController extends GetxController with CacheManager {
             cutOutSize: 300,
           ),
           onQRViewCreated: (controller) {
-            controller.scannedDataStream.listen((kodeQRCode) async {
+            controller.scannedDataStream.listen((kodeQRCode) {
+              print(kodeQRCode.code);
               controller.pauseCamera();
               if (typeScan == 'check-in') {
                 checkQRCode(kodeQRCode.code!, "Checkin");
-                // ignore: unrelated_type_equality_checks
-                if (statusQRCode.value == false) {
-                  statusCheckinScan.value = false;
+                print("status QRCode: ${statusQRCode.value}");
+                Future.delayed(Duration(seconds: 1));
+                if (statusCheckinScan.value == true) {
+                  controller.stopCamera();
                 } else {
-                  statusCheckinScan.value = true;
+                  controller.resumeCamera();
                 }
               } else {
                 checkQRCode(kodeQRCode.code!, "Checkout");
-                // ignore: unrelated_type_equality_checks
-                if (statusQRCode.value == false) {
-                  statusCheckoutScan.value = false;
+                print("status QRCode: ${statusQRCode.value}");
+                Future.delayed(Duration(seconds: 1));
+                if (statusCheckoutScan.value == true) {
+                  controller.stopCamera();
                 } else {
-                  statusCheckoutScan.value = true;
+                  controller.resumeCamera();
                 }
               }
             });
@@ -216,36 +222,49 @@ class AttendanceController extends GetxController with CacheManager {
     );
   }
 
-  void checkQRCode(String kodeQRCode, String typeQRCode) async {
-    if (kodeQRCode == "2022-06-15" || kodeQRCode == "2022-06-15C") {
-      statusQRCode.value = true;
-    } else {
-      statusQRCode.value = false;
+  void checkQRCode(String kodeQRCode, String typeQRCode) {
+    token = getToken()!;
+    print(kodeQRCode);
+    print(typeQRCode);
+    try {
+      _apiClient.checkQRCode(typeQRCode, kodeQRCode, token).then((response) {
+        if (response.status == 200) {
+          statusQRCode.value = true;
+          if (typeQRCode == "Checkin") {
+            statusCheckinScan.value = true;
+          } else {
+            statusCheckoutScan.value = true;
+          }
+        } else {
+          statusQRCode.value = false;
+          if (typeQRCode == "Checkin") {
+            statusCheckinScan.value = false;
+          } else {
+            statusCheckoutScan.value = false;
+          }
+          message("FAILED", "Kode QR Code Tidak Valid");
+        }
+      });
+    } catch (e) {
+      print(e);
     }
-    // token = getToken()!;
-    // await _apiClient
-    //     .checkQRCode(kodeQRCode, typeQRCode, token)
-    //     .then((response) {
-    //   if (response.status == 200) {
-    //     statusQRCode.value = true;
-    //   } else {
-    //     message("FAILED", "Kode QR Code Tidak Valid");
-    //     statusQRCode.value = false;
-    //   }
-    // });
   }
 
   void checkTimeCheckIn() async {
     String checkInDate = "${DateTime.now()}";
     token = getToken()!;
     print("checkIndate: $checkInDate");
-    await _apiClient.checkStatusCheckin(checkInDate, token).then((response) {
-      if (response.status == 200) {
-        statusTimeCheckIn.value = true;
-      } else {
-        statusTimeCheckIn.value = false;
-      }
-    });
+    try {
+      await _apiClient.checkStatusCheckin(checkInDate, token).then((response) {
+        if (response.status == 200) {
+          statusTimeCheckIn.value = true;
+        } else if (response.status == 401) {
+          statusTimeCheckIn.value = false;
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   void message(String message, String content) {

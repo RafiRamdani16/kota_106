@@ -3,25 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
+import 'package:kota_106/DetailAttachmentScreen.dart';
 import 'package:kota_106/Submission/Permit/PermitController.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../Submission/DetailSubmissionAttachmentScreen.dart';
+import '../../Submission/SubmissionModel.dart';
 
 class EditPermitHistoryScreen extends GetView<PermitController> {
-  final int permitId;
-  const EditPermitHistoryScreen(this.permitId);
+  final SubmissionModel permitModel;
+  const EditPermitHistoryScreen(this.permitModel);
   @override
   Widget build(BuildContext context) {
-    controller.getEditPermit(permitId);
     controller.permitSelectedDate.value =
-        DateTime.parse(controller.permitModel.permitDate);
+        DateTime.parse(permitModel.datePerform);
     controller.permitStartTime.value = TimeOfDay.fromDateTime(
-        DateFormat("HH:mm").parse("${controller.permitModel.permitStartTime}"));
+        DateFormat("HH:mm").parse("${permitModel.startTime}"));
     controller.permitEndTime.value = TimeOfDay.fromDateTime(
-        DateFormat("HH:mm").parse("${controller.permitModel.permitEndTime}"));
-    controller.permitDescription.text =
-        controller.permitModel.permitDescription;
+        DateFormat("HH:mm").parse("${permitModel.endTime}"));
+    controller.permitDescription.text = permitModel.description;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -77,7 +75,7 @@ class EditPermitHistoryScreen extends GetView<PermitController> {
                                     width: 120,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                          elevation: 0, primary: Colors.white),
+                                          elevation: 5, primary: Colors.white),
                                       onPressed: () {
                                         controller
                                             .editPermitDatePicker(context);
@@ -108,7 +106,7 @@ class EditPermitHistoryScreen extends GetView<PermitController> {
                                         width: 100,
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                              elevation: 0,
+                                              elevation: 5,
                                               primary: Colors.white),
                                           onPressed: () {
                                             controller
@@ -129,7 +127,7 @@ class EditPermitHistoryScreen extends GetView<PermitController> {
                                         width: 100.0,
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
-                                              elevation: 0,
+                                              elevation: 5,
                                               primary: Colors.white),
                                           onPressed: () {
                                             controller
@@ -154,7 +152,7 @@ class EditPermitHistoryScreen extends GetView<PermitController> {
                                     fillColor: Colors.white, filled: true),
                                 maxLines: 2,
                                 controller: controller.permitDescription,
-                                enabled: false,
+                                enabled: true,
                               ),
                               SizedBox(
                                 height: 20,
@@ -244,11 +242,12 @@ class EditPermitHistoryScreen extends GetView<PermitController> {
                                 child: Obx((() {
                                   return GestureDetector(
                                       onTap: (() {
-                                        Get.to(DetailSubmissionAttachmentScreen(
-                                            controller.tmpFile.value));
+                                        Get.to(DetailAttachmentScreen(
+                                            permitModel.attachment));
                                       }),
                                       child:
-                                          controller.setImageView(20.h, 30.h));
+                                          controller.setEditImageView(
+                                          permitModel.attachment, 20.h, 30.h));
                                 })),
                               ),
                             ]),
@@ -266,7 +265,14 @@ class EditPermitHistoryScreen extends GetView<PermitController> {
                                   borderRadius: BorderRadius.circular(20.0)),
                               elevation: 10,
                               primary: HexColor("363636")),
-                          onPressed: () {},
+                          onPressed: () {
+                            controller.editPermitForm(
+                                permitModel.submissionId,
+                                "${controller.permitSelectedDate.value}",
+                                "${controller.permitStartTime.value.format(context)}",
+                                "${controller.permitEndTime.value.format(context)}",
+                                permitModel.description);
+                          },
                           child: Text(
                             "Apply Permit",
                             style: TextStyle(

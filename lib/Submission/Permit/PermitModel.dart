@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../Approval/HistoryApprovalModel.dart';
+
 part 'PermitModel.g.dart';
 
 @JsonSerializable()
@@ -22,7 +24,8 @@ class PermitModel {
   late String attachment;
   @JsonKey()
   late String statusPermit;
-  
+  @JsonKey()
+  late List<HistoryApprovalModel> historyApprovals;
   PermitModel();
 
   factory PermitModel.fromJson(Map<String, dynamic> json) =>

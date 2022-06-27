@@ -18,15 +18,9 @@ AfterOvertimeModel _$AfterOvertimeModelFromJson(Map<String, dynamic> json) =>
       ..afterOvertimeDescription = json['afterOvertimeDescription'] as String
       ..afterOvertimeAttachment = json['afterOvertimeAttachment'] as String
       ..afterOvertimeStatus = json['afterOvertimeStatus'] as String
-      ..nameApprovalAdmin = json['nameApprovalAdmin'] as String
-      ..nameApprovalHR = json['nameApprovalHR'] as String
-      ..nameApprovalAtasan = json['nameApprovalAtasan'] as String
-      ..statusApprovalAdmin = json['statusApprovalAdmin'] as String
-      ..statusApprovalHR = json['statusApprovalHR'] as String
-      ..statusApprovalAtasan = json['statusApprovalAtasan'] as String
-      ..dateApprovalAdmin = json['dateApprovalAdmin'] as String
-      ..dateApprovalHR = json['dateApprovalHR'] as String
-      ..dateApprovalAtasan = json['dateApprovalAtasan'] as String;
+      ..historyApprovals = (json['historyApprovals'] as List<dynamic>)
+          .map((e) => HistoryApprovalModel.fromJson(e as Map<String, dynamic>))
+          .toList();
 
 Map<String, dynamic> _$AfterOvertimeModelToJson(AfterOvertimeModel instance) =>
     <String, dynamic>{
@@ -39,13 +33,5 @@ Map<String, dynamic> _$AfterOvertimeModelToJson(AfterOvertimeModel instance) =>
       'afterOvertimeDescription': instance.afterOvertimeDescription,
       'afterOvertimeAttachment': instance.afterOvertimeAttachment,
       'afterOvertimeStatus': instance.afterOvertimeStatus,
-      'nameApprovalAdmin': instance.nameApprovalAdmin,
-      'nameApprovalHR': instance.nameApprovalHR,
-      'nameApprovalAtasan': instance.nameApprovalAtasan,
-      'statusApprovalAdmin': instance.statusApprovalAdmin,
-      'statusApprovalHR': instance.statusApprovalHR,
-      'statusApprovalAtasan': instance.statusApprovalAtasan,
-      'dateApprovalAdmin': instance.dateApprovalAdmin,
-      'dateApprovalHR': instance.dateApprovalHR,
-      'dateApprovalAtasan': instance.dateApprovalAtasan,
+      'historyApprovals': instance.historyApprovals,
     };

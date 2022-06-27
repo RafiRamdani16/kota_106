@@ -64,6 +64,30 @@ class EditProfileScreen extends GetView<ProfileController> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                Container(
+                                  width: Get.width,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black)),
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                        prefixIcon: Icon(Icons.image),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(Icons.upload),
+                                          onPressed: () {
+                                            controller.uploadButton(context);
+                                          },
+                                        ),
+                                        hintText: "Upload Photo Profile....",
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    style: TextStyle(fontSize: fontSize),
+                                    maxLines: 1,
+                                    controller: controller.editPhotoName,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
                                 Text(
                                   'Name',
                                   style: TextStyle(
@@ -76,7 +100,7 @@ class EditProfileScreen extends GetView<ProfileController> {
                                       border: Border.all(color: Colors.black)),
                                   child: TextFormField(
                                     validator: (value) {
-                                      RegExp regx = RegExp(r"^[a-z_]*$",
+                                      RegExp regx = RegExp(r"^[a-z_ ]*$",
                                           caseSensitive: false);
                                       if (value == "") {
                                         return "Name Can't Be Empty";
@@ -91,6 +115,47 @@ class EditProfileScreen extends GetView<ProfileController> {
                                     controller: controller.name,
                                   ),
                                 ),
+                                SizedBox(
+                                  height: 2.h,
+                                ),
+                                Text(
+                                  'Gender',
+                                  style: TextStyle(
+                                      fontFamily: 'Roboto',
+                                      fontSize: headFontSize),
+                                ),
+                                Container(
+                                    width: Get.width,
+                                    child: Obx(
+                                      () {
+                                        return DropdownButton<String>(
+                                          isExpanded: true,
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          value:
+                                              controller.selectedGender.value,
+                                          onChanged: (String? value) {
+                                            controller.selectedGender.value =
+                                                value!;
+                                          },
+                                          items: <DropdownMenuItem<String>>[
+                                            DropdownMenuItem(
+                                              child: Text(
+                                                "Pria",
+                                                style:
+                                                    TextStyle(fontSize: 11.sp),
+                                              ),
+                                              value: "Pria",
+                                            ),
+                                            DropdownMenuItem(
+                                              child: Text("Wanita",
+                                                  style: TextStyle(
+                                                      fontSize: 11.sp)),
+                                              value: "Wanita",
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    )),
                                 SizedBox(
                                   height: 1.h,
                                 ),
@@ -193,26 +258,55 @@ class EditProfileScreen extends GetView<ProfileController> {
                                       fontSize: headFontSize),
                                 ),
                                 Container(
-                                  width: Get.width,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black)),
-                                  child: TextFormField(
-                                    validator: (value) {
-                                      RegExp regx = RegExp(r"^[a-z_]*$",
-                                          caseSensitive: false);
-                                      if (value == "") {
-                                        return "Religion Can't Be Empty";
-                                      } else if (!(regx.hasMatch(value!))) {
-                                        return "Religion Can Only Use Letters";
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                        fillColor: Colors.white, filled: true),
-                                    style: TextStyle(fontSize: fontSize),
-                                    maxLines: 1,
-                                    controller: controller.religion,
-                                  ),
-                                ),
+                                    width: Get.width,
+                                    child: Obx(
+                                      () {
+                                        return DropdownButton<String>(
+                                          isExpanded: true,
+                                          icon: Icon(Icons.arrow_drop_down),
+                                          value:
+                                              controller.selectedReligion.value,
+                                          onChanged: (String? value) {
+                                            controller.selectedReligion.value =
+                                                value!;
+                                          },
+                                          items: <DropdownMenuItem<String>>[
+                                            DropdownMenuItem(
+                                              child: Text(
+                                                "Islam",
+                                                style:
+                                                    TextStyle(fontSize: 11.sp),
+                                              ),
+                                              value: "Islam",
+                                            ),
+                                            DropdownMenuItem(
+                                              child: Text("Kristen",
+                                                  style: TextStyle(
+                                                      fontSize: 11.sp)),
+                                              value: "Kristen",
+                                            ),
+                                            DropdownMenuItem(
+                                              child: Text("Hindu",
+                                                  style: TextStyle(
+                                                      fontSize: 11.sp)),
+                                              value: "Hindu",
+                                            ),
+                                            DropdownMenuItem(
+                                              child: Text("Budha",
+                                                  style: TextStyle(
+                                                      fontSize: 11.sp)),
+                                              value: "Budha",
+                                            ),
+                                            DropdownMenuItem(
+                                              child: Text("Khonghucu",
+                                                  style: TextStyle(
+                                                      fontSize: 11.sp)),
+                                              value: "Khonghucu",
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    )),
                                 SizedBox(
                                   height: 1.h,
                                 ),

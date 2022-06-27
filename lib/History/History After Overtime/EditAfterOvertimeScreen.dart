@@ -1,31 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kota_106/DetailAttachmentScreen.dart';
 import 'package:kota_106/Submission/Overtime/OvertimeController.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
-import 'package:kota_106/Submission/AfterOvertime/AfterOvertimeModel.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../Submission/DetailSubmissionAttachmentScreen.dart';
-
-
+import '../../Submission/SubmissionModel.dart';
 
 class EditAfterOvertimeScreen extends GetView<OvertimeController> {
-  final AfterOvertimeModel afterOvertimeModel;
+  final SubmissionModel afterOvertimeModel;
   const EditAfterOvertimeScreen(this.afterOvertimeModel);
   @override
   Widget build(BuildContext context) {
+    print(afterOvertimeModel.attachment);
     controller.overtimeSelectedDate.value =
-        DateTime.parse(afterOvertimeModel.afterOvertimeDate);
+        DateTime.parse(afterOvertimeModel.datePerform);
     controller.overtimeStartTime.value = TimeOfDay.fromDateTime(
-        DateFormat("HH:mm")
-            .parse("${afterOvertimeModel.afterOvertimeStartTime}"));
+        DateFormat("HH:mm").parse("${afterOvertimeModel.startTime}"));
     ;
     controller.overtimeEndTime.value = TimeOfDay.fromDateTime(
-        DateFormat("HH:mm")
-            .parse("${afterOvertimeModel.afterOvertimeEndTime}"));
-    controller.overtimeDescription.text =
-        afterOvertimeModel.afterOvertimeDescription;
+        DateFormat("HH:mm").parse("${afterOvertimeModel.endTime}"));
+    controller.overtimeDescription.text = afterOvertimeModel.description;
 
     return Scaffold(
       appBar: AppBar(
@@ -251,11 +246,13 @@ class EditAfterOvertimeScreen extends GetView<OvertimeController> {
                                 child: Obx((() {
                                   return GestureDetector(
                                       onTap: (() {
-                                        Get.to(DetailSubmissionAttachmentScreen(
-                                            controller.tmpFile.value));
+                                        Get.to(DetailAttachmentScreen(
+                                            afterOvertimeModel.attachment));
                                       }),
-                                      child:
-                                          controller.setImageView(15.h, 30.h));
+                                      child: controller.setEditImageView(
+                                          afterOvertimeModel.attachment,
+                                          15.h,
+                                          30.h));
                                 })),
                               ),
                             ]),
@@ -273,8 +270,16 @@ class EditAfterOvertimeScreen extends GetView<OvertimeController> {
                                   borderRadius: BorderRadius.circular(20.0)),
                               elevation: 10,
                               primary: HexColor("363636")),
-                          onPressed: () {},
-                          child: Text("Apply After Overtime",
+                          onPressed: () {
+                            controller.editAfterOvertimeForm(
+                                afterOvertimeModel.submissionId,
+                                controller.overtimeSelectedDate.value
+                                    .toString(),
+                                "${controller.overtimeStartTime.value.hour}:${controller.overtimeStartTime.value.minute}",
+                                "${controller.overtimeEndTime.value.hour}:${controller.overtimeEndTime.value.minute}",
+                                controller.overtimeDescription.text);
+                          },
+                          child: Text("Apply Edit After Overtime",
                               style: TextStyle(
                                   fontSize: 13.sp,
                                   fontWeight: FontWeight.bold,

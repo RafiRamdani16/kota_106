@@ -72,9 +72,6 @@ class PermitController extends GetxController with CacheManager {
       selectedColor: HexColor("FCBC45").withOpacity(0.5),
     );
     if (newTime == null) {
-    } else if (newTime.startTime.hour > DateTime.now().hour ||
-        newTime.startTime.hour == DateTime.now().hour &&
-            newTime.startTime.minute >= DateTime.now().minute) {
     } else {
       permitStartTime.value = newTime.startTime;
       permitEndTime.value = newTime.endTime;
@@ -103,6 +100,25 @@ class PermitController extends GetxController with CacheManager {
     );
   }
 
+  Widget setEditImageView(String photoName, double height, double width) {
+    if (imageFile.value.path != '') {
+      tmpFile.value = File(imageFile.value.path);
+      permitAttachment.value =
+          base64Encode(File(imageFile.value.path).readAsBytesSync()).trim();
+      return Image.file(
+        tmpFile.value,
+        height: height,
+        width: width,
+      );
+    } else {
+      return Image.network(
+        'https://c736-2001-448a-3045-5919-813a-d9cd-df47-a5eb.ap.ngrok.io/$photoName',
+        width: 100,
+        height: 100,
+      );
+    }
+  }
+
   Widget setImageView(double height, double width) {
     if (imageFile.value.path != '') {
       tmpFile.value = File(imageFile.value.path);
@@ -125,7 +141,8 @@ class PermitController extends GetxController with CacheManager {
 
   void openCamera() async {
     try {
-      imageFile.value = (await _image.pickImage(source: ImageSource.camera))!;
+      imageFile.value = (await _image.pickImage(
+          source: ImageSource.camera, imageQuality: 25))!;
       print(imageFile.value.name);
       permitAttachment.value = imageFile.value.name;
     } catch (e) {
@@ -135,23 +152,13 @@ class PermitController extends GetxController with CacheManager {
 
   Future<void> openGallery() async {
     try {
-      imageFile.value = (await _image.pickImage(source: ImageSource.gallery))!;
+      imageFile.value = (await _image.pickImage(
+          source: ImageSource.gallery, imageQuality: 25))!;
       print(imageFile.value.name);
       permitAttachment.value = imageFile.value.name;
     } catch (e) {
       // return 'Terjadi Kesalahan';
     }
-  }
-
-  void getEditPermit(int permitId) {
-    token = getToken()!;
-    _apiClient.getDetailPermit(permitId, token).then((response) {
-      if (response.status == 200) {
-        permitModel = response.data;
-      } else {
-        message("FAILED", "TERJADI KESALAHAN");
-      }
-    });
   }
 
   Future<void> permitForm(
@@ -162,29 +169,23 @@ class PermitController extends GetxController with CacheManager {
       String permitAttachment) async {
     employeeId = getEmployeeId()!;
     token = getToken()!;
-    print("attachment: $permitAttachment");
-    print("permitDate: $permitDate");
-    print("permitStartTime: $permitStartTime");
-    print("permitEndTime: $permitEndTime");
-    print("permitEndTime: $permitDescription");
-    print("token: $token");
-    print("employee: $employeeId");
     String permitDateSubmit = "${DateTime.now()}";
     try {
       await _apiClient
-          .permitForm(
+          .submissionForm(
         employeeId,
+        0,
         permitDateSubmit,
         permitDate,
         permitStartTime,
         permitEndTime,
+        "Permit",
         permitDescription,
         'data:image/jpeg;base64,${this.permitAttachment.value}',
         token,
       )
           .then((response) {
         if (response.status == 200) {
-          
           message("SUCCESS", "Pengajuan Izin Berhasil");
         } else if (response.status == 401) {
           _apiClient.getRefreshToken(employeeId, token).then((response) {
@@ -192,6 +193,46 @@ class PermitController extends GetxController with CacheManager {
             saveToken(token);
             permitForm(permitDate, permitStartTime, permitEndTime,
                 permitDescription, permitAttachment);
+          });
+        } else {
+          message("FAILED", "Terjadi Kesalahan Silahkan Ulangi Pengajuan");
+        }
+      });
+    } catch (e) {
+      print("error $e");
+      message("ALERT", "Terjadi Kesalahan Jaringan");
+    }
+  }
+
+  Future<void> editPermitForm(
+      int permitId,
+      String permitDate,
+      String permitStartTime,
+      String permitEndTime,
+      String permitDescription) async {
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
+    String permitDateSubmit = "${DateTime.now()}";
+    try {
+      await _apiClient
+          .editSubmissionForm(
+              permitId,
+              permitDateSubmit,
+              permitDate,
+              permitStartTime,
+              permitEndTime,
+              permitDescription,
+              'data:image/jpeg;base64,${this.permitAttachment.value}',
+              token)
+          .then((response) {
+        if (response.status == 200) {
+          message("SUCCESS", "Pembaruan Pengajuan Izin Berhasil");
+        } else if (response.status == 401) {
+          _apiClient.getRefreshToken(employeeId, token).then((response) {
+            removeToken();
+            saveToken(token);
+            editPermitForm(permitId, permitDate, permitStartTime, permitEndTime,
+                permitDescription);
           });
         } else {
           message("FAILED", "Terjadi Kesalahan Silahkan Ulangi Pengajuan");

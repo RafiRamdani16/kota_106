@@ -2,9 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kota_106/Approval/ApprovalModel.dart';
 import 'package:kota_106/CacheManager.dart';
-
-import 'package:kota_106/Approval/PermitApproval/PermitApprovalDetail/PermitApprovalModel.dart';
 
 import '../../APIService/ApiService.dart';
 
@@ -22,7 +21,7 @@ class PermitApprovalController extends GetxController with CacheManager {
   String token = "";
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
 
-  List<PermitApprovalModel> permitApplication = <PermitApprovalModel>[];
+  List<ApprovalModel> permitApplication = <ApprovalModel>[];
 
   Future<void> getPermitApproval() async {
     employeeId = getEmployeeId()!;
@@ -31,7 +30,12 @@ class PermitApprovalController extends GetxController with CacheManager {
     // permitApplication = dummyData.permitApplicationDummy;
 
     _apiClient
-        .getPermitApproval("UserIdApproval3 == $employeeId", "", 1, 1000, token)
+        .getApproval(
+            "UserIdApproval == $employeeId,SubmissionType==Permit,StatusApproval==Remaining",
+            "-SubmissionId",
+            1,
+            1000,
+            token)
         .then((response) async {
       if (response.status == 200) {
         permitApplication = response.data.data;
@@ -48,37 +52,25 @@ class PermitApprovalController extends GetxController with CacheManager {
     });
   }
 
-  void giveDecision(
-      String decision, PermitApprovalModel permitApprovalModel) async {
+  void giveDecision(String decision, int approvalId, int submissionId) async {
+    token = getToken()!;
+    employeeId = getEmployeeId()!;
+    String dateApproval = "${DateTime.now()}";
     try {
       await _apiClient
-          .editPermitForm(
-              permitApprovalModel.permitId,
+          .giveDecision(approvalId,
               employeeId,
-              token,
-              permitApprovalModel.permitDateSubmitted,
-              permitApprovalModel.permitDate,
-              permitApprovalModel.permitStartTime,
-              permitApprovalModel.permitEndTime,
-              permitApprovalModel.permitDescription,
-              permitApprovalModel.permitAttachment,
-              permitApprovalModel.idApprovalAdmin,
-              permitApprovalModel.idApprovalHR,
-              employeeId,
-              permitApprovalModel.statusApprovalAdmin,
-              permitApprovalModel.statusApprovalHR,
+              submissionId,
               decision,
-              permitApprovalModel.dateApprovalAdmin,
-              permitApprovalModel.dateApprovalHR,
-              "${DateTime.now()}")
+              dateApproval, token)
           .then((response) async {
         if (response.status == 200) {
-          message("SUCCESS", "Pengajuan Setelah Lembur Berhasil");
+          message("SUCCESS", "Keputusan Pengajuan Permit Berhasil Diberikan");
         } else if (response.status == 401) {
           await _apiClient.getRefreshToken(employeeId, token).then((response) {
             removeToken();
             saveToken(token);
-            giveDecision(decision, permitApprovalModel);
+            giveDecision(decision, approvalId, submissionId);
           });
         } else {
           message("ALERT",
@@ -100,10 +92,14 @@ class PermitApprovalController extends GetxController with CacheManager {
 
   Widget setImageView(
       String photoName, double width, double height, String type) {
-    return Image.asset(
-      'assets/images/TestingSuketSakit2.jpg',
+    return Image.network(
+      'https://c736-2001-448a-3045-5919-813a-d9cd-df47-a5eb.ap.ngrok.io/$photoName',
       width: width,
       height: height,
+      errorBuilder:
+          (BuildContext context, Object exception, StackTrace? stackTrace) {
+        return Text("Tidak ada Attachment");
+      },
     );
   }
 

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kota_106/Approval/ApprovalModel.dart';
 import 'package:kota_106/Approval/PermitApproval/PermitApprovalController.dart';
-import 'package:kota_106/Approval/PermitApproval/PermitApprovalDetail/PermitApprovalModel.dart';
 
 import 'package:sizer/sizer.dart';
 
 import '../../../DetailAttachmentScreen.dart';
 
 class PermitApprovalScreenDetail extends GetView<PermitApprovalController> {
-  final PermitApprovalModel permitModel;
+  final ApprovalModel permitModel;
 
   const PermitApprovalScreenDetail(this.permitModel);
 
   @override
   Widget build(BuildContext context) {
-    controller.permitDescription.value = permitModel.permitDescription;
+    controller.permitDescription.value = permitModel.description;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -46,7 +46,7 @@ class PermitApprovalScreenDetail extends GetView<PermitApprovalController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(permitModel.permitDateSubmitted))} ',
+                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(permitModel.dateSubmit))} ',
                           style: TextStyle(
                               fontSize: 12.sp, fontWeight: FontWeight.bold),
                         ),
@@ -54,7 +54,7 @@ class PermitApprovalScreenDetail extends GetView<PermitApprovalController> {
                           height: 3.h,
                         ),
                         Text(
-                          'Time Submitted:  ${permitModel.permitTimeSubmitted} ',
+                          'Time Submitted:  ${DateFormat('HH:mm').format(DateTime.parse(permitModel.dateSubmit).toLocal())} ',
                           style: TextStyle(
                               fontSize: 12.sp, fontWeight: FontWeight.bold),
                         ),
@@ -62,7 +62,7 @@ class PermitApprovalScreenDetail extends GetView<PermitApprovalController> {
                           height: 4.h,
                         ),
                         Text(
-                          'Permit Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(permitModel.permitDate))}',
+                          'Permit Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(permitModel.datePerform))}',
                           style: TextStyle(
                               fontSize: 12.sp, fontWeight: FontWeight.bold),
                         ),
@@ -83,7 +83,7 @@ class PermitApprovalScreenDetail extends GetView<PermitApprovalController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  permitModel.permitStartTime,
+                                  permitModel.startTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -103,7 +103,7 @@ class PermitApprovalScreenDetail extends GetView<PermitApprovalController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  permitModel.permitEndTime,
+                                  permitModel.endTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -152,7 +152,7 @@ class PermitApprovalScreenDetail extends GetView<PermitApprovalController> {
                 ),
                 Center(
                   child: controller.setImageView(
-                      permitModel.permitAttachment, 200, 100, "Permit"),
+                      permitModel.attachment, 200, 100, "Permit"),
                 ),
                 SizedBox(
                   height: 1.h,
@@ -191,7 +191,8 @@ class PermitApprovalScreenDetail extends GetView<PermitApprovalController> {
                     side: BorderSide(color: Colors.lightGreen),
                     primary: Colors.lightGreen),
                 onPressed: () {
-                  controller.giveDecision("Approved", permitModel);
+                  controller.giveDecision("Approved", permitModel.approvalId,
+                      permitModel.submissionAttributeId);
                 },
                 child: Text(
                   "Approve",
@@ -210,7 +211,8 @@ class PermitApprovalScreenDetail extends GetView<PermitApprovalController> {
                     side: BorderSide(color: Colors.red),
                     primary: Colors.red),
                 onPressed: () {
-                  controller.giveDecision("Rejected", permitModel);
+                  controller.giveDecision("Rejected", permitModel.approvalId,
+                      permitModel.submissionAttributeId);
                 },
                 child: Text(
                   "Disapprove",

@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 import 'package:kota_106/CacheManager.dart';
 import 'package:kota_106/Approval/LeaveApproval/LeaveApprovalDetail/LeaveApprovalModel.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../APIService/ApiService.dart';
 
@@ -37,24 +37,6 @@ class LeaveController extends GetxController with CacheManager {
   DateTimeRange leaveDateTimeRange = DateTimeRange(
       start: DateTime.now(), end: DateTime.now().add(Duration(days: 31)));
 
-  // List<DropdownMenuItem<String>> typeLeave = [
-  //   DropdownMenuItem(
-  //     child: Text(
-  //       "Annual Leave",
-  //       style: TextStyle(fontSize: 11.sp),
-  //     ),
-  //     value: "Annual Leave",
-  //   ),
-  //   DropdownMenuItem(
-  //     child: Text("Sick Leave", style: TextStyle(fontSize: 11.sp)),
-  //     value: "Sick Leave",
-  //   ),
-  //   DropdownMenuItem(
-  //     child: Text("Other Leave", style: TextStyle(fontSize: 11.sp)),
-  //     value: "Other Leave",
-  //   ),
-  // ];
-
   void pickLeaveDate(BuildContext context) async {
     DateTimeRange? newLeaveDateTime = await showDateRangePicker(
         initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -74,7 +56,7 @@ class LeaveController extends GetxController with CacheManager {
     endLeaveDate.value = leaveDateTimeRange.end;
   }
 
-  Widget setImageView(double height, double width) {
+  Widget setEditImageView(String photoName, double height, double width) {
     if (imageFile.value.path != '') {
       tmpFile.value = File(imageFile.value.path);
       leaveAttachment.value =
@@ -85,7 +67,25 @@ class LeaveController extends GetxController with CacheManager {
         width: width,
       );
     } else {
-      // photoName.value = 'assets/images/Icon/AccountBox.png';
+      return Image.network(
+        'https://c736-2001-448a-3045-5919-813a-d9cd-df47-a5eb.ap.ngrok.io/$photoName',
+        width: 100,
+        height: 100,
+      );
+    }
+  }
+
+  Widget setImageView(double height, double width) {
+    if (imageFile.value.path != '') {
+      tmpFile.value = File(imageFile.value.path);
+      leaveAttachment.value =
+          "data:image/jpeg;base64,${base64Encode(File(imageFile.value.path).readAsBytesSync()).trim()}";
+      return Image.file(
+        tmpFile.value,
+        height: height,
+        width: width,
+      );
+    } else {
       return Image.asset(
         'assets/images/Icon/AccountBox.png',
         width: 100,
@@ -96,7 +96,8 @@ class LeaveController extends GetxController with CacheManager {
 
   void openCamera() async {
     try {
-      imageFile.value = (await _image.pickImage(source: ImageSource.camera))!;
+      imageFile.value = (await _image.pickImage(
+          source: ImageSource.camera, imageQuality: 25))!;
     } catch (e) {
       // return 'Terjadi Kesalahan';
     }
@@ -104,7 +105,8 @@ class LeaveController extends GetxController with CacheManager {
 
   Future<void> openGallery() async {
     try {
-      imageFile.value = (await _image.pickImage(source: ImageSource.gallery))!;
+      imageFile.value = (await _image.pickImage(
+          source: ImageSource.gallery, imageQuality: 25))!;
     } catch (e) {
       // return 'Terjadi Kesalahan';
     }
@@ -129,12 +131,17 @@ class LeaveController extends GetxController with CacheManager {
         leaveEndDate,
         leaveType,
         leaveDescription,
-        'data:image/jpeg;base64,$leaveAttachment',
+        leaveAttachment,
         token,
       )
           .then((response) {
         if (response.status == 200) {
           message("SUCCESS", "Pengajuan Cuti Berhasil");
+          this.leaveType.clear();
+          this.leaveDescription.clear();
+          this.leaveRemaining.clear();
+          imageFile.value = XFile("");
+          setImageView(30.h, 30.h);
         } else if (response.status == 401) {
           removeToken();
           saveToken(token);
@@ -149,11 +156,35 @@ class LeaveController extends GetxController with CacheManager {
     }
   }
 
-  void getDetailLeave(int leaveId) {
+  Future<void> editLeaveForm(int leaveId, String leaveStartDate,
+      String leaveEndDate, String leaveType, String leaveDescription) async {
     token = getToken()!;
-    _apiClient.getDetailLeave(leaveId, token).then((response) {
+    String leaveDateSubmit = "${DateTime.now()}";
+    await _apiClient
+        .editLeaveForm(
+            leaveId,
+            leaveDateSubmit,
+            leaveStartDate,
+            leaveEndDate,
+            leaveType,
+            leaveDescription,
+            "data:image/jpeg;base64,${leaveAttachment.value}",
+            token)
+        .then((response) {
       if (response.status == 200) {
-        leaveEditModel = response.data;
+        this.leaveType.clear();
+        this.leaveDescription.clear();
+        this.leaveRemaining.clear();
+        imageFile.value = XFile("");
+        setImageView(30.h, 30.h);
+        message("SUCCESS", " Pembaruan Pengajuan Cuti Berhasil");
+      } else if (response.status == 401) {
+        removeToken();
+        saveToken(token);
+        editLeaveForm(
+            leaveId, leaveStartDate, leaveEndDate, leaveType, leaveDescription);
+      } else {
+        message("FAILED", "Terjadi Kesalahan Silahkan Ulangi Pengajuan");
       }
     });
   }

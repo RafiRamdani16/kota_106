@@ -5,16 +5,15 @@ part 'UserModel.g.dart';
 class UserModel {
   @JsonKey()
   late int userId;
-  @JsonKey()
-  late int scheduleId;
+ 
   @JsonKey()
   late String name;
   @JsonKey()
   late String religion;
   @JsonKey()
   late String position;
-  @JsonKey()
-  late int currentSalary;
+    @JsonKey()
+  late String gender;
   @JsonKey()
   late String status;
   @JsonKey()

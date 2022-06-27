@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../../Approval/HistoryApprovalModel.dart';
+
 part 'AfterOvertimeModel.g.dart';
 
 @JsonSerializable()
@@ -23,23 +25,7 @@ class AfterOvertimeModel {
   @JsonKey()
   late String afterOvertimeStatus;
   @JsonKey()
-  late String nameApprovalAdmin;
-  @JsonKey()
-  late String nameApprovalHR;
-  @JsonKey()
-  late String nameApprovalAtasan;
-  @JsonKey()
-  late String statusApprovalAdmin;
-  @JsonKey()
-  late String statusApprovalHR;
-  @JsonKey()
-  late String statusApprovalAtasan;
-  @JsonKey()
-  late String dateApprovalAdmin;
-  @JsonKey()
-  late String dateApprovalHR;
-  @JsonKey()
-  late String dateApprovalAtasan;
+  late List<HistoryApprovalModel> historyApprovals;
 
   AfterOvertimeModel();
 

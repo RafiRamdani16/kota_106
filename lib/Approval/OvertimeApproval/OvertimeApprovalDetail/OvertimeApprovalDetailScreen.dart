@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kota_106/Approval/ApprovalModel.dart';
 import 'package:kota_106/Approval/OvertimeApproval/OvertimeApprovalController.dart';
 
 import 'package:sizer/sizer.dart';
 
 import '../../AfterOvertimeApproval/DetailAfterOvertimeScreen.dart';
-import 'OvertimeApprovalModel.dart';
+
 
 class OvertimeApprovalDetailScreen
     extends GetView<OvertimeApprovalController> {
-  final OvertimeApprovalModel overtimeModel;
+  final ApprovalModel overtimeModel;
   const OvertimeApprovalDetailScreen(this.overtimeModel);
 
   @override
   Widget build(BuildContext context) {
     
-    controller.overtimeDescription.value = overtimeModel.overtimeDescription;
+    controller.overtimeDescription.value = overtimeModel.description;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -32,7 +33,7 @@ class OvertimeApprovalDetailScreen
           Container(
             padding: EdgeInsets.only(left: 5.w),
             width: Get.width,
-            height: 70.h,
+            height: 50.h,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,7 +48,7 @@ class OvertimeApprovalDetailScreen
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(overtimeModel.overtimeDateSubmitted))} ',
+                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(overtimeModel.dateSubmit))} ',
                           style: TextStyle(
                               fontSize: 12.sp, fontWeight: FontWeight.bold),
                         ),
@@ -55,7 +56,7 @@ class OvertimeApprovalDetailScreen
                           height: 3.h,
                         ),
                         Text(
-                          'Time Submitted:  ${overtimeModel.overtimeTimeSubmitted} ',
+                          'Time Submitted:  ${DateFormat('HH:mm').format(DateTime.parse(overtimeModel.dateSubmit).toLocal())} ',
                           style: TextStyle(
                               fontSize: 12.sp, fontWeight: FontWeight.bold),
                         ),
@@ -63,7 +64,7 @@ class OvertimeApprovalDetailScreen
                           height: 4.h,
                         ),
                         Text(
-                          'Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(overtimeModel.overtimeDate))}',
+                          'Overtime Date:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(overtimeModel.datePerform))}',
                           style: TextStyle(
                               fontSize: 12.sp, fontWeight: FontWeight.bold),
                         ),
@@ -84,7 +85,7 @@ class OvertimeApprovalDetailScreen
                                   height: 1.h,
                                 ),
                                 Text(
-                                  overtimeModel.overtimeStartTime,
+                                  overtimeModel.startTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -104,7 +105,7 @@ class OvertimeApprovalDetailScreen
                                   height: 1.h,
                                 ),
                                 Text(
-                                  overtimeModel.overtimeEndTime,
+                                  overtimeModel.endTime,
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -138,27 +139,35 @@ class OvertimeApprovalDetailScreen
               ],
             ),
           ),
-          Container(
-            height: 5.h,
-            width: 90.w,
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0)),
-                    elevation: 10,
-                    side: BorderSide(color: Colors.lightGreen),
-                    primary: Colors.lightGreen),
-                onPressed: () {
-                  controller.giveDecision("Approved", overtimeModel);
-                },
-                child: Text(
-                  "Approve",
-                  style: TextStyle(fontSize: 14.sp, color: Colors.white),
-                )),
+          Visibility(
+            visible: controller
+                .checkStatusOvertimeApproval(overtimeModel.statusApproval),
+            child: Container(
+              height: 5.h,
+              width: 90.w,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
+                      elevation: 10,
+                      side: BorderSide(color: Colors.lightGreen),
+                      primary: Colors.lightGreen),
+                  onPressed: () {
+                    controller.giveOvertimeDecision(
+                        "Approved",
+                        overtimeModel.approvalId,
+                        overtimeModel.submissionAttributeId);
+                  },
+                  child: Text(
+                    "Approve",
+                    style: TextStyle(fontSize: 14.sp, color: Colors.white),
+                  )),
+            ),
           ),
           SizedBox(height: 2.h),
           Visibility(
-            visible: true,
+            visible: controller
+                .checkStatusOvertimeApproval(overtimeModel.statusApproval),
             child: Container(
               height: 5.h,
               width: 90.w,
@@ -170,7 +179,10 @@ class OvertimeApprovalDetailScreen
                       side: BorderSide(color: Colors.red),
                       primary: Colors.red),
                   onPressed: () {
-                    controller.giveDecision("Rejected", overtimeModel);
+                    controller.giveOvertimeDecision(
+                        "Rejected",
+                        overtimeModel.approvalId,
+                        overtimeModel.submissionAttributeId);
                   },
                   child: Text(
                     "Disapprove",
@@ -197,7 +209,8 @@ class OvertimeApprovalDetailScreen
                     showModalBottomSheet(
                         context: context,
                         builder: (BuildContext context) {
-                          return DetailAfterOvertimeApproval();
+                          return DetailAfterOvertimeApproval(
+                              overtimeModel.submissionId);
                         });
                   },
                   child: Text(

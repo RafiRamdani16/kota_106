@@ -1,9 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:kota_106/Approval/ApprovalModel.dart';
-part 'PermitApprovalListModel.g.dart';
+
+part 'ListApprovalModel.g.dart';
 
 @JsonSerializable()
-class PermitApprovalListModel {
+class ListApprovalModel {
   @JsonKey()
   late int totalData;
   @JsonKey()
@@ -15,10 +16,10 @@ class PermitApprovalListModel {
   @JsonKey()
   late List<ApprovalModel> data;
 
-  PermitApprovalListModel();
+  ListApprovalModel();
 
-  factory PermitApprovalListModel.fromJson(Map<String, dynamic> json) =>
-      _$PermitApprovalListModelFromJson(json);
+  factory ListApprovalModel.fromJson(Map<String, dynamic> json) =>
+      _$ListApprovalModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PermitApprovalListModelToJson(this);
+  Map<String, dynamic> toJson() => _$ListApprovalModelToJson(this);
 }

@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kota_106/APIService/ApiService.dart';
-import 'package:kota_106/Approval/AfterOvertimeApproval/AfterOvertimeApprovalModel.dart';
+import 'package:kota_106/Approval/ApprovalModel.dart';
 import 'package:kota_106/CacheManager.dart';
-
-import 'OvertimeApprovalDetail/OvertimeApprovalModel.dart';
 
 class OvertimeApprovalController extends GetxController with CacheManager {
   RxString employeeName = "".obs;
@@ -24,17 +22,17 @@ class OvertimeApprovalController extends GetxController with CacheManager {
   String token = "";
   int employeeId = 0;
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
-  AfterOvertimeApprovalModel afterOvertimeApprovalModel =
-      Get.put(AfterOvertimeApprovalModel());
-  List<OvertimeApprovalModel> overtimeApproval = <OvertimeApprovalModel>[];
+
+  List<ApprovalModel> overtimeApproval = <ApprovalModel>[];
+  List<ApprovalModel> afterOvertimeApprovalModel = <ApprovalModel>[];
 
   Future<void> getOvertimeApplication() async {
     employeeId = getEmployeeId()!;
     token = getToken()!;
     try {
       await _apiClient
-          .getOvertimeApproval(
-              "UserIdApproval3 == $employeeId", "", 1, 1000, token)
+          .getApproval("UserIdApproval == $employeeId,SubmissionType==Overtime",
+              "-SubmissionId", 1, 1000, token)
           .then((response) async {
         if (response.status == 200) {
           overtimeApproval = response.data.data;
@@ -50,44 +48,34 @@ class OvertimeApprovalController extends GetxController with CacheManager {
         }
       });
     } catch (e) {
+      print(e);
       message("ALERT", "Terjadi Kesalahan Jaringan");
     }
   }
 
-  void giveDecision(
-      String decision, OvertimeApprovalModel overtimeApprovalModel) async {
+  void giveOvertimeDecision(
+      String decision, int approvalId, int submissionId) async {
     employeeId = getEmployeeId()!;
     token = getToken()!;
-
+    String dateApproval = "${DateTime.now()}";
     try {
       await _apiClient
-          .editOvertimeForm(
-              overtimeApprovalModel.overtimeId,
-              employeeId,
-              overtimeApprovalModel.afterOvertimeId,
-              token,
-              overtimeApprovalModel.overtimeDateSubmitted,
-              overtimeApprovalModel.overtimeDate,
-              overtimeApprovalModel.overtimeStartTime,
-              overtimeApprovalModel.overtimeEndTime,
-              overtimeApprovalModel.overtimeDescription,
-              overtimeApprovalModel.idApprovalAdmin,
-              overtimeApprovalModel.idApprovalHR,
-              employeeId,
-              overtimeApprovalModel.statusApprovalAdmin,
-              overtimeApprovalModel.statusApprovalHR,
-              decision,
-              overtimeApprovalModel.dateApprovalAdmin,
-              overtimeApprovalModel.dateApprovalHR,
-              "${DateTime.now()}")
+          .giveDecision(
+        approvalId,
+        employeeId,
+        submissionId,
+        decision,
+        dateApproval,
+        token,
+      )
           .then((response) async {
         if (response.status == 200) {
-          message("SUCCESS", "Pengajuan Setelah Lembur Berhasil");
+          message("SUCCESS", "Keputusan Pengajuan Lembur Berhasil Diberikan");
         } else if (response.status == 401) {
           await _apiClient.getRefreshToken(employeeId, token).then((response) {
             removeToken();
             saveToken(token);
-            giveDecision(decision, overtimeApprovalModel);
+            giveOvertimeDecision(decision, approvalId, submissionId);
           });
         } else {
           message("ALERT",
@@ -99,7 +87,80 @@ class OvertimeApprovalController extends GetxController with CacheManager {
     }
   }
 
-  void getAfterOvertime() {}
+  Future<void> getAfterOvertime(int overtimeId) async {
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
+    try {
+      await _apiClient
+          .getApproval(
+              "OvertimeId == $overtimeId", "-SubmissionId", 1, 1000, token)
+          .then((response) async {
+        if (response.status == 200) {
+          if (response.data.data.isEmpty) {
+            message(
+                "ALERT", "Tidak Ada Pengajuan Setelah Lembur Untuk Saat Ini");
+          } else {
+            afterOvertimeApprovalModel[0] = response.data.data[0];
+          }
+        } else if (response.status == 401) {
+          await _apiClient.getRefreshToken(employeeId, token).then((response) {
+            removeToken();
+            saveToken(token);
+            getOvertimeApplication();
+          });
+        } else {
+          message("ALERT",
+              "Terjadi Kesalahan, Silahkan Coba Lagi Setelah Beberapa Saat");
+        }
+      });
+    } catch (e) {
+      print(e);
+      message("ALERT", "Terjadi Kesalahan Jaringan");
+    }
+  }
+
+  void giveAfterOvertimeDecision(
+      String decision, int approvalId, int submissionId) async {
+    employeeId = getEmployeeId()!;
+    token = getToken()!;
+    String dateApproval = "${DateTime.now()}";
+    try {
+      await _apiClient
+          .giveDecision(
+        approvalId,
+        employeeId,
+        submissionId,
+        decision,
+        dateApproval,
+        token,
+      )
+          .then((response) async {
+        if (response.status == 200) {
+          message("SUCCESS",
+              "Keputusan Pengajuan Setelah Lembur Berhasil Diberikan");
+        } else if (response.status == 401) {
+          await _apiClient.getRefreshToken(employeeId, token).then((response) {
+            removeToken();
+            saveToken(token);
+            giveAfterOvertimeDecision(decision, approvalId, submissionId);
+          });
+        } else {
+          message("ALERT",
+              "Terjadi Kesalahan, Silahkan Coba Lagi Setelah Beberapa Saat");
+        }
+      });
+    } catch (e) {
+      message("ALERT", "Terjadi Kesalahan Jaringan");
+    }
+  }
+
+  bool checkStatusOvertimeApproval(String status) {
+    if (status == "Remaining") {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   void formatDate(String rawDate) async {
     DateTime formatedDateTime = DateTime.parse(rawDate);
@@ -111,10 +172,14 @@ class OvertimeApprovalController extends GetxController with CacheManager {
 
   Widget setImageView(
       String photoName, double width, double height, String type) {
-    return Image.asset(
-      'assets/images/TestingSuketSakit2.jpg',
+    return Image.network(
+      'https://c736-2001-448a-3045-5919-813a-d9cd-df47-a5eb.ap.ngrok.io/$photoName',
       width: width,
       height: height,
+      errorBuilder:
+          (BuildContext context, Object exception, StackTrace? stackTrace) {
+        return Text("Tidak ada Attachment");
+      },
     );
   }
 

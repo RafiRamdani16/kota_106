@@ -79,7 +79,7 @@ class PermitApprovalScreen extends GetView<PermitApprovalController> {
                       ));
                     }
                     controller.formatDate(controller
-                        .permitApplication[index].permitDateSubmitted);
+                        .permitApplication[index].dateSubmit);
                     return AnimationConfiguration.staggeredList(
                         position: index,
                         child: SlideAnimation(

@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:kota_106/Submission/Permit/PermitModel.dart';
+
+import '../../../Submission/SubmissionModel.dart';
 
 part 'PermitHistoryModel.g.dart';
 
@@ -14,7 +15,7 @@ class PermitHistoryModel {
   @JsonKey()
   late int currentPage;
   @JsonKey()
-  late List<PermitModel> data;
+  late List<SubmissionModel> data;
   PermitHistoryModel();
 
   factory PermitHistoryModel.fromJson(Map<String, dynamic> json) =>

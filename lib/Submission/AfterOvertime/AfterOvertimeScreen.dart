@@ -263,7 +263,7 @@ class AfterOvertimeScreen extends GetView<OvertimeController> {
                             
                             controller.afterOvertimeForm(
                                 index,
-                                controller.overtimeDate.text,
+                                controller.overtimeSelectedDate.toString(),
                                 "${controller.overtimeStartTime.value.hour}:${controller.overtimeStartTime.value.minute}",
                                 "${controller.overtimeEndTime.value.hour}:${controller.overtimeEndTime.value.minute}",
                                 controller.overtimeDescription.text,

@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:kota_106/APIService/ApiService.dart';
 import 'package:kota_106/CacheManager.dart';
 
-
 import 'LeaveApprovalDetail/LeaveApprovalModel.dart';
 
 class LeaveApprovalController extends GetxController with CacheManager {
@@ -26,15 +25,17 @@ class LeaveApprovalController extends GetxController with CacheManager {
   List<LeaveApprovalModel> leaveApplication = <LeaveApprovalModel>[];
 
   Future<void> getLeaveApproval() async {
-    // DummyData dummyData = Get.put(DummyData());
-    // leaveApplication = dummyData.leaveApplicationDummy;
     employeeId = getEmployeeId()!;
     token = getToken()!;
 
     try {
       await _apiClient
           .getLeaveApproval(
-              "UserIdApproval3 == $employeeId", "", 1, 1000, token)
+              "UserIdApproval == $employeeId, StatusApproval==Remaining",
+              "",
+              1,
+              1000,
+              token)
           .then((response) async {
         if (response.status == 200) {
           leaveApplication = response.data.data;
@@ -54,40 +55,22 @@ class LeaveApprovalController extends GetxController with CacheManager {
     }
   }
 
-  void giveDecision(
-      String decision, LeaveApprovalModel leaveApprovalModel) async {
+  void giveDecision(String decision, int approvalId, int submissionId) async {
     employeeId = getEmployeeId()!;
     token = getToken()!;
-
+    String dateApproval = "${DateTime.now()}";
     try {
       await _apiClient
-          .editLeaveForm(
-              leaveApprovalModel.leaveId,
-              employeeId,
-              token,
-              leaveApprovalModel.leaveDateSubmitted,
-              leaveApprovalModel.leaveStartDate,
-              leaveApprovalModel.leaveEndDate,
-              leaveApprovalModel.leaveType,
-              leaveApprovalModel.leaveDescription,
-              leaveApprovalModel.leaveAttachment,
-              leaveApprovalModel.idApprovalAdmin,
-              leaveApprovalModel.idApprovalHR,
-              leaveApprovalModel.idApprovalAtasan,
-              leaveApprovalModel.statusApprovalAdmin,
-              leaveApprovalModel.statusApprovalHR,
-              decision,
-              leaveApprovalModel.dateApprovalAdmin,
-              leaveApprovalModel.dateApprovalHR,
-              "${DateTime.now()}")
+          .giveDecision(approvalId, employeeId, submissionId, decision,
+              dateApproval, token)
           .then((response) async {
         if (response.status == 200) {
-          message("SUCCESS", "Pengajuan Setelah Lembur Berhasil");
+          message("SUCCESS", "Keputusan Pengajuan Cuti Berhasil Diberikan");
         } else if (response.status == 401) {
           await _apiClient.getRefreshToken(employeeId, token).then((response) {
             removeToken();
             saveToken(token);
-            giveDecision(decision, leaveApprovalModel);
+            giveDecision(decision, approvalId, submissionId);
           });
         } else {
           message("ALERT",
@@ -109,10 +92,14 @@ class LeaveApprovalController extends GetxController with CacheManager {
 
   Widget setImageView(
       String photoName, double width, double height, String type) {
-    return Image.asset(
-      'assets/images/TestingSuketSakit2.jpg',
+    return Image.network(
+      'https://c736-2001-448a-3045-5919-813a-d9cd-df47-a5eb.ap.ngrok.io/$photoName',
       width: width,
       height: height,
+      errorBuilder:
+          (BuildContext context, Object exception, StackTrace? stackTrace) {
+        return Text("Tidak ada Attachment");
+      },
     );
   }
 
@@ -125,7 +112,9 @@ class LeaveApprovalController extends GetxController with CacheManager {
       middleText: content,
       textConfirm: 'Confirm',
       confirm: OutlinedButton.icon(
-        onPressed: () => Get.back(),
+        onPressed: () {
+          Get.back();
+        },
         icon: const Icon(
           Icons.check,
           color: Colors.blue,

@@ -16,6 +16,13 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
 
   @override
   Widget build(BuildContext context) {
+    print(leaveModel.submissionLeaveId);
+    print(leaveModel.historyApprovals[0].userName);
+    print(leaveModel.historyApprovals[0].statusApproval);
+    print(leaveModel.historyApprovals[1].userName);
+    print(leaveModel.historyApprovals[1].statusApproval);
+    print(leaveModel.historyApprovals[2].userName);
+    print(leaveModel.historyApprovals[2].statusApproval);
     controller.description.text = leaveModel.description;
     return SingleChildScrollView(
       child: Column(
@@ -32,7 +39,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
           Container(
             padding: EdgeInsets.only(left: 5.w),
             width: Get.width,
-            height: 70.h,
+            height: 80.h,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,10 +60,10 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                         SizedBox(
                           height: 3.h,
                         ),
-                        // Text(
-                        //   'Time Submitted:  ${leaveModel.leaveTimeSubmitted}',
-                        //   style: TextStyle(fontSize: 12.sp),
-                        // ),
+                        Text(
+                          'Time Submitted:  ${DateFormat('HH:mm').format(DateTime.parse(leaveModel.dateSubmit).toLocal())}',
+                          style: TextStyle(fontSize: 12.sp),
+                        ),
                         SizedBox(
                           height: 4.h,
                         ),
@@ -148,8 +155,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                             side: BorderSide(color: Colors.amber),
                             primary: Colors.amber),
                         onPressed: () {
-                          Get.to(DetailAttachmentScreen(
-                              leaveModel.attachment));
+                          Get.to(DetailAttachmentScreen(leaveModel.attachment));
                         },
                         child: Text(
                           "See Full Attachment",
@@ -158,58 +164,102 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                         )),
                   ),
                 ),
+                SizedBox(
+                  height: 2.h,
+                ),
+                ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: leaveModel.historyApprovals.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(leaveModel.historyApprovals[index].userName),
+                            // SizedBox(
+                            //   width: 20.w,
+                            // ),
+                            Container(
+                              width: 20.w,
+                              height: 2.h,
+                              decoration: BoxDecoration(
+                                  color: controller.checkStatus(leaveModel
+                                      .historyApprovals[index].statusApproval),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text(
+                                leaveModel
+                                    .historyApprovals[index].statusApproval,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
                 // Row(
                 //   children: [
-                //     Text(leaveModel.usernameApproval1),
+                //     Text(
+                //         "Admin:  ${leaveModel.historyApprovals[0].userName}          "),
                 //     Container(
                 //       width: 20.w,
                 //       height: 2.h,
                 //       decoration: BoxDecoration(
-                //           color: controller
-                //               .checkStatus(leaveModel.usernameApproval1),
+                //           color: controller.checkStatus(
+                //               leaveModel.historyApprovals[0].statusApproval),
                 //           borderRadius: BorderRadius.circular(10)),
                 //       child: Text(
-                //         leaveModel.statusApproval1,
+                //         leaveModel.historyApprovals[0].statusApproval,
                 //         textAlign: TextAlign.center,
                 //         style: TextStyle(color: Colors.white),
                 //       ),
                 //     ),
                 //   ],
                 // ),
+                // SizedBox(
+                //   height: 2.h,
+                // ),
                 // Visibility(
                 //     visible: controller.isHR(),
                 //     child: Row(
                 //       children: [
-                //         Text(leaveModel.usernameApproval2),
+                //         Text(
+                //             "HR:  ${leaveModel.historyApprovals[1].userName}          "),
                 //         Container(
                 //           width: 20.w,
                 //           height: 2.h,
                 //           decoration: BoxDecoration(
-                //               color: controller
-                //                   .checkStatus(leaveModel.usernameApproval2),
+                //               color: controller.checkStatus(leaveModel
+                //                   .historyApprovals[1].statusApproval),
                 //               borderRadius: BorderRadius.circular(10)),
                 //           child: Text(
-                //             leaveModel.statusApproval2,
+                //             leaveModel.historyApprovals[1].statusApproval,
                 //             textAlign: TextAlign.center,
                 //             style: TextStyle(color: Colors.white),
                 //           ),
                 //         ),
                 //       ],
                 //     )),
+                // SizedBox(
+                //   height: 2.h,
+                // ),
                 // Visibility(
                 //     visible: controller.isAtasan(),
                 //     child: Row(
                 //       children: [
-                //         Text(leaveModel.usernameApproval3),
+                //         Text(
+                //             "Atasan:  ${leaveModel.historyApprovals[2].userName}          "),
                 //         Container(
                 //           width: 20.w,
                 //           height: 2.h,
                 //           decoration: BoxDecoration(
-                //               color: controller
-                //                   .checkStatus(leaveModel.usernameApproval3),
+                //               color: controller.checkStatus(leaveModel
+                //                   .historyApprovals[2].statusApproval),
                 //               borderRadius: BorderRadius.circular(10)),
                 //           child: Text(
-                //             leaveModel.statusApproval3,
+                //             leaveModel.historyApprovals[2].statusApproval,
                 //             textAlign: TextAlign.center,
                 //             style: TextStyle(color: Colors.white),
                 //           ),
@@ -230,7 +280,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
                     side: BorderSide(color: Colors.amber),
                     primary: Colors.amber),
                 onPressed: () {
-                  Get.to(EditLeaveHistoryScreen(leaveModel.leaveId));
+                  Get.to(EditLeaveHistoryScreen(leaveModel));
                 },
                 child: Text(
                   "Edit Leave Data",

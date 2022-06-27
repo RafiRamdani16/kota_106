@@ -13,7 +13,7 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
   const LeaveApprovalDetailScreen(this.leaveModel);
   @override
   Widget build(BuildContext context) {
-    controller.leaveDescription.value = leaveModel.leaveDescription;
+    controller.leaveDescription.value = leaveModel.description;
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,7 +44,7 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.leaveDateSubmitted))} ',
+                          'Date Submitted:  ${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.dateSubmit))} ',
                           style: TextStyle(
                               fontSize: 12.sp, fontWeight: FontWeight.bold),
                         ),
@@ -52,7 +52,7 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                           height: 3.h,
                         ),
                         Text(
-                          'Time Submitted:  ${leaveModel.leaveTimeSubmitted}',
+                          'Time Submitted:  ${DateFormat('HH:mm').format(DateTime.parse(leaveModel.dateSubmit).toLocal())}',
                           style: TextStyle(
                               fontSize: 12.sp, fontWeight: FontWeight.bold),
                         ),
@@ -60,7 +60,7 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                           height: 4.h,
                         ),
                         Text(
-                          'Leave Type:  ${leaveModel.leaveType}',
+                          'Leave Type:  ${leaveModel.type}',
                           style: TextStyle(
                               fontSize: 12.sp, fontWeight: FontWeight.bold),
                         ),
@@ -81,7 +81,7 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  "${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.leaveStartDate))}",
+                                  "${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.dateStart))}",
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -101,7 +101,7 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                                   height: 1.h,
                                 ),
                                 Text(
-                                  "${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.leaveEndDate))}",
+                                  "${DateFormat('dd MMMM yyyy').format(DateTime.parse(leaveModel.dateEnd))}",
                                   style: TextStyle(fontSize: 12.sp),
                                 )
                               ],
@@ -140,7 +140,7 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                 ),
                 Center(
                   child: controller.setImageView(
-                      leaveModel.leaveAttachment, 200, 100, "Permit"),
+                      leaveModel.attachment, 200, 100, "Permit"),
                 ),
                 SizedBox(
                   height: 1.h,
@@ -179,7 +179,8 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                     side: BorderSide(color: Colors.lightGreen),
                     primary: Colors.lightGreen),
                 onPressed: () {
-                  controller.giveDecision("Approved", leaveModel);
+                  controller.giveDecision("Approved", leaveModel.approvalId,
+                      leaveModel.submissionAttributeId);
                 },
                 child: Text(
                   "Approve",
@@ -198,7 +199,8 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                     side: BorderSide(color: Colors.red),
                     primary: Colors.red),
                 onPressed: () {
-                  controller.giveDecision("Rejected", leaveModel);
+                  controller.giveDecision("Rejected", leaveModel.approvalId,
+                      leaveModel.submissionAttributeId);
                 },
                 child: Text(
                   "Disapprove",

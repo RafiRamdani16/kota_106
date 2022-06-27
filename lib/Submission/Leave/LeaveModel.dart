@@ -1,11 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:kota_106/Approval/HistoryApprovalModel.dart';
 
 part 'LeaveModel.g.dart';
 
 @JsonSerializable()
 class LeaveModel {
   @JsonKey()
-  late int leaveId;
+  late int submissionLeaveId;
   @JsonKey()
   late int userId;
   @JsonKey()
@@ -22,7 +23,8 @@ class LeaveModel {
   late String attachment;
   @JsonKey()
   late String statusLeave;
- 
+  @JsonKey()
+  late List<HistoryApprovalModel> historyApprovals;
 
   LeaveModel();
 

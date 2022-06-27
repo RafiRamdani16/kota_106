@@ -81,7 +81,7 @@ class OvertimeApplicationScreen extends GetView<OvertimeApprovalController> {
                       ));
                     }
                     controller.formatDate(controller
-                        .overtimeApproval[index].overtimeDateSubmitted);
+                        .overtimeApproval[index].dateSubmit);
                     return AnimationConfiguration.staggeredList(
                         position: index,
                         child: SlideAnimation(

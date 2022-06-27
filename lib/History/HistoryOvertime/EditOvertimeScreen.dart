@@ -6,26 +6,24 @@ import 'package:intl/intl.dart';
 
 import 'package:sizer/sizer.dart';
 
+import '../../Submission/SubmissionModel.dart';
+
 class EditOvertimeScreen extends GetView<OvertimeController> {
-  final int overtimeId;
-  const EditOvertimeScreen(this.overtimeId);
+  final SubmissionModel overtimeModel;
+  const EditOvertimeScreen(this.overtimeModel);
 
   @override
   Widget build(BuildContext context) {
-    controller.getDetailOvertime(overtimeId);
     controller.overtimeSelectedDate.value =
-        DateTime.parse(controller.overtimeEditModel.overtimeDate);
+        DateTime.parse(overtimeModel.datePerform);
     // DateTime formated = DateTime.parse(overtimeModel.overtimeStartTime);
 
     // DateTime format = DateTime.parse(formatedStartTIme);
     controller.overtimeStartTime.value = TimeOfDay.fromDateTime(
-        DateFormat("HH:mm")
-            .parse("${controller.overtimeEditModel.overtimeStartTime}"));
+        DateFormat("HH:mm").parse("${overtimeModel.startTime}"));
     controller.overtimeEndTime.value = TimeOfDay.fromDateTime(
-        DateFormat("HH:mm")
-            .parse("${controller.overtimeEditModel.overtimeEndTime}"));
-    controller.overtimeDescription.text =
-        controller.overtimeEditModel.overtimeDescription;
+        DateFormat("HH:mm").parse("${overtimeModel.endTime}"));
+    controller.overtimeDescription.text = overtimeModel.description;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -175,7 +173,14 @@ class EditOvertimeScreen extends GetView<OvertimeController> {
                                   borderRadius: BorderRadius.circular(20.0)),
                               elevation: 10,
                               primary: HexColor("363636")),
-                          onPressed: () {},
+                          onPressed: () {
+                            controller.editOvertimeForm(
+                                overtimeModel.submissionId,
+                                "${controller.overtimeSelectedDate.value}",
+                                "${controller.overtimeStartTime.value.format(context)}",
+                                "${controller.overtimeEndTime.value.format(context)}",
+                                controller.overtimeDescription.text);
+                          },
                           child: Text(
                             "Apply Overtime",
                             style: TextStyle(

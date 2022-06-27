@@ -92,6 +92,10 @@ class ActivityRecordController extends GetxController with CacheManager {
               token)
           .then((response) async {
         if (response.status == 200) {
+          this.dateNow.clear();
+          this.timeNow.clear();
+          this.locationNow.clear();
+          this.taskList.clear();
           message('SUCCESS', 'Activity Record Berhasil');
         } else if (response.status == 401) {
           await _apiClient.getRefreshToken(employeeId, token).then((response) {

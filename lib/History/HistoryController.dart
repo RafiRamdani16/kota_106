@@ -5,13 +5,12 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kota_106/CacheManager.dart';
 import 'package:kota_106/ActivityRecord/ActivityRecordModel.dart';
-import 'package:kota_106/Submission/AfterOvertime/AfterOvertimeModel.dart';
 import 'package:kota_106/Attendance/AttendanceModel.dart';
 import 'package:kota_106/Submission/Leave/LeaveModel.dart';
-import 'package:kota_106/Submission/Overtime/OvertimeModel.dart';
-import 'package:kota_106/Submission/Permit/PermitModel.dart';
 
 import '../APIService/ApiService.dart';
+import '../Submission/SubmissionModel.dart';
+import 'History After Overtime/DetailAfterOvertimeScreen.dart';
 
 class HistoryController extends GetxController with CacheManager {
   TextEditingController locationCheckin2 = TextEditingController();
@@ -48,16 +47,14 @@ class HistoryController extends GetxController with CacheManager {
 
   List<AttendanceModel> attendanceHistory = <AttendanceModel>[];
   List<ActivityRecordModel> activityRecordHistoryList = <ActivityRecordModel>[];
-  List<PermitModel> permitHistory = <PermitModel>[];
-  List<OvertimeModel> overtimeHistory = <OvertimeModel>[];
+  List<SubmissionModel> permitHistory = <SubmissionModel>[];
+  List<SubmissionModel> overtimeHistory = <SubmissionModel>[];
   List<LeaveModel> leaveHistory = <LeaveModel>[];
-  List<AfterOvertimeModel> afterOvertimeModel = <AfterOvertimeModel>[]; 
+  List<SubmissionModel> afterOvertimeModel = <SubmissionModel>[];
 
   ApiClient _apiClient = Get.put(ApiClient(Dio()));
 
   Future<void> attendanceHistoryList() async {
-   
-
     employeeId = getEmployeeId()!;
     token = getToken()!;
 
@@ -92,7 +89,6 @@ class HistoryController extends GetxController with CacheManager {
 
         isThereItemActivity.value = true;
         update();
-        await Future.delayed(Duration(seconds: 3));
       } else if (response.status == 401) {
         await _apiClient
             .getRefreshToken(employeeId, getToken()!)
@@ -109,8 +105,8 @@ class HistoryController extends GetxController with CacheManager {
     token = getToken()!;
 
     await _apiClient
-        .getPermitHistory(
-            "UserId==$employeeId", "-Id", page.value, limit.value, token)
+        .getSubmissionHistory("UserId==$employeeId, SubmissionType==Permit",
+            "-SubmissionId", page.value, limit.value, token)
         .then((response) async {
       if (response.status == 200) {
         print(response.data.data.toList());
@@ -134,8 +130,8 @@ class HistoryController extends GetxController with CacheManager {
     print(employeeId);
 
     await _apiClient
-        .getOvertimeHistory(
-            'UserId==$employeeId', "-Id", page.value, limit.value, token)
+        .getSubmissionHistory('UserId == $employeeId, SubmissionType==Overtime',
+            "-SubmissionId", page.value, limit.value, token)
         .then((response) async {
       print(response.status);
       if (response.status == 200) {
@@ -159,8 +155,8 @@ class HistoryController extends GetxController with CacheManager {
     employeeId = getEmployeeId()!;
     token = getToken()!;
     await _apiClient
-        .getLeaveHistory(
-            "UserId == $employeeId", "-Id", page.value, limit.value, token)
+        .getLeaveHistory("UserId == $employeeId", "-SubmissionLeaveId",
+            page.value, limit.value, token)
         .then((response) async {
       if (response.status == 200) {
         leaveHistory = response.data.data.toList();
@@ -176,20 +172,31 @@ class HistoryController extends GetxController with CacheManager {
     });
   }
 
-  Future<void> getAfterOvertimeHistory(int idOvertime) async {
+  Future<void> getAfterOvertimeHistory(
+      int idOvertime, BuildContext context) async {
     employeeId = getEmployeeId()!;
     token = getToken()!;
     await _apiClient
-        .getAfterOvertimeHistory(
-            "UserId == $employeeId", "-CreatedAt", 1, 20, token)
+        .getSubmissionHistory(
+            'OvertimeId == $idOvertime', "", page.value, limit.value, token)
         .then((response) async {
       if (response.status == 200) {
         afterOvertimeModel = response.data.data;
-      } else if (response.status == 200) {
+        if (afterOvertimeModel.isEmpty) {
+          Get.back();
+          message("ALERT", "Tidak Terdapat Pengajuan Setelah Lembur");
+        } else {
+          showModalBottomSheet(
+              context: context,
+              builder: (BuildContext context) {
+                return DetailAfterOvertimeHistory();
+              });
+        }
+      } else if (response.status == 401) {
         await _apiClient.getRefreshToken(employeeId, token).then((response) {
           removeToken();
           saveToken(token);
-          getAfterOvertimeHistory(idOvertime);
+          getAfterOvertimeHistory(idOvertime, context);
         });
       } else {
         return false;
@@ -227,37 +234,15 @@ class HistoryController extends GetxController with CacheManager {
 
   Widget setImageView(
       String photoName, double width, double height, String type) {
-    if (type == "Attendance") {
-      return Image.asset(
-        'assets/images/selfie2.jpg',
-        width: width,
-        height: height,
-      );
-    } else if (type == "Activity Record") {
-      return Image.asset(
-        'assets/images/selfie.jpg',
-        width: width,
-        height: height,
-      );
-    } else if (type == "Permit") {
-      return Image.asset(
-        'assets/images/TestingSuketSakit.jpg',
-        width: width,
-        height: height,
-      );
-    } else if (type == "Overtime") {
-      return Image.asset(
-        'assets/images/testingProfile.jpg',
-        width: width,
-        height: height,
-      );
-    } else {
-      return Image.asset(
-        'assets/images/TestingSuketSakit.jpg',
-        width: width,
-        height: height,
-      );
-    }
+    return Image.network(
+      'https://0c3b-2001-448a-3045-5919-c20-9d39-97fc-d27a.ap.ngrok.io/$photoName',
+      width: width,
+      height: height,
+      errorBuilder:
+          (BuildContext context, Object exception, StackTrace? stackTrace) {
+        return Text("Tidak ada Attachment");
+      },
+    );
   }
 
   void formatDate(String rawDate) async {
@@ -272,27 +257,34 @@ class HistoryController extends GetxController with CacheManager {
     DateTime formatedDateTime = DateTime.parse(rawDate);
     activityRecordDate.value =
         DateFormat('dd MMMM yyyy').format(formatedDateTime);
-    activityRecordTime.value = DateFormat('HH:mm').format(formatedDateTime);
+    activityRecordTime.value =
+        DateFormat('HH:mm').format(formatedDateTime.toLocal());
     day.value = formatedDateTime.day;
     month.value =
         DateFormat('MMMM').format(DateTime(0, formatedDateTime.month));
   }
 
   void changeFormatCheckinDateForAttendanceHistory(String rawDate) async {
-    DateTime formatedTime = DateTime.parse(rawDate);
+    print(rawDate);
+    DateTime formatedTime = DateTime.parse(rawDate).toLocal();
 
-    checkInDate.value = DateFormat('yyyy-MM-dd').format(formatedTime);
-    checkInTime.value = DateFormat('HH:mm').format(formatedTime);
+    checkInDate.value = DateFormat('yyyy-MM-dd', "id_ID").format(formatedTime);
+    checkInTime.value =
+        DateFormat('HH:mm', "id_ID").format(formatedTime.toLocal());
+    print(checkInTime);
+    print(formatedTime);
+    print(DateTime.parse(rawDate).isUtc);
     checkInHour.value = formatedTime.hour;
     day.value = formatedTime.day;
     month.value = DateFormat('MMMM').format(DateTime(0, formatedTime.month));
   }
 
   void changeFormatCheckoutDateForAttendanceHistory(String rawDate) async {
-    DateTime formatedTime = DateTime.parse(rawDate);
+    DateTime formatedTime = DateTime.parse(rawDate).toLocal();
 
     checkOutDate.value = DateFormat('yyyy-MM-dd').format(formatedTime);
-    checkOutTime.value = DateFormat('HH:mm').format(formatedTime);
+    checkOutTime.value =
+        DateFormat('HH:mm', "id_ID").format(formatedTime.toLocal());
 
     checkOutHour.value = formatedTime.hour;
     getWorkingTime();
@@ -300,5 +292,27 @@ class HistoryController extends GetxController with CacheManager {
 
   void getWorkingTime() {
     workingTime.value = checkOutHour.value - checkInHour.value;
+  }
+
+  void message(String message, String content) {
+    Get.defaultDialog(
+      radius: 10.0,
+      contentPadding: const EdgeInsets.all(20.0),
+      title: message,
+      titleStyle: TextStyle(fontFamily: 'ROBOTO'),
+      middleText: content,
+      textConfirm: 'Confirm',
+      confirm: OutlinedButton.icon(
+        onPressed: () => Get.back(),
+        icon: const Icon(
+          Icons.check,
+          color: Colors.blue,
+        ),
+        label: const Text(
+          'Confirm',
+          style: TextStyle(color: Colors.blue),
+        ),
+      ),
+    );
   }
 }

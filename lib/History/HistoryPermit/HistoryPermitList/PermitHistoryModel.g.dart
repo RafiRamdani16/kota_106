@@ -13,7 +13,7 @@ PermitHistoryModel _$PermitHistoryModelFromJson(Map<String, dynamic> json) =>
       ..pageSize = json['pageSize'] as int
       ..currentPage = json['currentPage'] as int
       ..data = (json['data'] as List<dynamic>)
-          .map((e) => PermitModel.fromJson(e as Map<String, dynamic>))
+          .map((e) => SubmissionModel.fromJson(e as Map<String, dynamic>))
           .toList();
 
 Map<String, dynamic> _$PermitHistoryModelToJson(PermitHistoryModel instance) =>

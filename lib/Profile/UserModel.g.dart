@@ -8,11 +8,10 @@ part of 'UserModel.dart';
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel()
   ..userId = json['userId'] as int
-  ..scheduleId = json['scheduleId'] as int
   ..name = json['name'] as String
   ..religion = json['religion'] as String
   ..position = json['position'] as String
-  ..currentSalary = json['currentSalary'] as int
+  ..gender = json['gender'] as String
   ..status = json['status'] as String
   ..joinDate = json['joinDate'] as String
   ..endDate = json['endDate'] as String
@@ -30,11 +29,10 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel()
 
 Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'userId': instance.userId,
-      'scheduleId': instance.scheduleId,
       'name': instance.name,
       'religion': instance.religion,
       'position': instance.position,
-      'currentSalary': instance.currentSalary,
+      'gender': instance.gender,
       'status': instance.status,
       'joinDate': instance.joinDate,
       'endDate': instance.endDate,
