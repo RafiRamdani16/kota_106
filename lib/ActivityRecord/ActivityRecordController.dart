@@ -15,12 +15,11 @@ import 'package:location/location.dart';
 
 import '../APIService/ApiService.dart';
 
-
 class ActivityRecordController extends GetxController with CacheManager {
   Location location = new Location();
   late LocationData _locationData;
   AttendanceController attendanceController = Get.put(AttendanceController());
-
+  RxBool visible = true.obs;
   TextEditingController dateNow = TextEditingController();
   TextEditingController timeNow = TextEditingController();
   TextEditingController locationNow = TextEditingController();
@@ -57,6 +56,20 @@ class ActivityRecordController extends GetxController with CacheManager {
     } catch (e) {}
   }
 
+  void openGallery() async {
+    ImagePicker _image = Get.put(ImagePicker());
+    try {
+      imageFile.value = (await _image.pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 25,
+          maxHeight: 480,
+          maxWidth: 640))!;
+      photoSelfie.value = imageFile.value.name;
+    } catch (e) {
+      // return 'Terjadi Kesalahan';
+    }
+  }
+
   void getLocation() async {
     _locationData = await location.getLocation();
     List<Placemark> p = await GeocodingPlatform.instance
@@ -78,10 +91,11 @@ class ActivityRecordController extends GetxController with CacheManager {
     update();
   }
 
-  Future<void> activityRecordForm(String taskList, String photoSelfie) async {
+  void activityRecordForm(String taskList, String photoSelfie) async {
     employeeId = getEmployeeId()!;
     token = getToken()!;
     try {
+      visible.value = false;
       await _apiClient
           .activityRecord(
               employeeId,
@@ -92,22 +106,25 @@ class ActivityRecordController extends GetxController with CacheManager {
               token)
           .then((response) async {
         if (response.status == 200) {
-          this.dateNow.clear();
-          this.timeNow.clear();
-          this.locationNow.clear();
           this.taskList.clear();
+          imageFile.value = XFile('');
           message('SUCCESS', 'Activity Record Berhasil');
+          visible.value = true;
         } else if (response.status == 401) {
           await _apiClient.getRefreshToken(employeeId, token).then((response) {
             saveToken(response.data);
             activityRecordForm(taskList, photoSelfie);
           });
         } else {
+          this.taskList.clear();
+          imageFile.value = XFile('');
+          visible.value = true;
           message('ALERT',
               'Activity Record untuk jadwal ini sudah ditambahkan sebelumnya');
         }
-      });
+      }).timeout(Duration(seconds: 60));
     } catch (e) {
+      visible.value = true;
       message('ALERT', 'Terjadi Kesalahan');
     }
   }

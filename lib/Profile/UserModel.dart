@@ -12,7 +12,7 @@ class UserModel {
   late String religion;
   @JsonKey()
   late String position;
-    @JsonKey()
+  @JsonKey()
   late String gender;
   @JsonKey()
   late String status;

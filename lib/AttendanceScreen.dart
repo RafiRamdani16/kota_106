@@ -48,7 +48,7 @@ class AttendanceScreen extends GetView<LoginController> {
                         ListTile(
                           leading: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                'https://0c3b-2001-448a-3045-5919-c20-9d39-97fc-d27a.ap.ngrok.io/${controller.getPhoto()}'),
+                                'https://62fe-2001-448a-304b-15a6-14bf-8f81-47ae-195d.ngrok.io/${controller.getPhoto()}'),
                             radius: 5.h,
                             onBackgroundImageError: (_, __) {
                               return controller.circleAvatarErrorHandle();

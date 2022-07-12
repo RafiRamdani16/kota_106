@@ -156,7 +156,7 @@ class LeaveApprovalDetailScreen extends GetView<LeaveApprovalController> {
                             side: BorderSide(color: Colors.amber),
                             primary: Colors.amber),
                         onPressed: () {
-                          Get.to(DetailAttachmentScreen("TestingSuketSakit2"));
+                          Get.to(DetailAttachmentScreen(leaveModel.attachment));
                         },
                         child: Text(
                           "See Full Attachment",

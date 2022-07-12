@@ -168,7 +168,8 @@ class PermitApprovalScreenDetail extends GetView<PermitApprovalController> {
                             side: BorderSide(color: Colors.amber),
                             primary: Colors.amber),
                         onPressed: () {
-                          Get.to(DetailAttachmentScreen("TestingSuketSakit2"));
+                          Get.to(
+                              DetailAttachmentScreen(permitModel.attachment));
                         },
                         child: Text(
                           "See Full Attachment",

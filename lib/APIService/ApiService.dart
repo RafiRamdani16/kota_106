@@ -9,7 +9,6 @@ import '../History/History Attendance/HistoryAttendanceList/HistoryAttendanceMod
 import '../History/HistoryLeave/HistoryLeaveList/LeaveHistoryModel.dart';
 import '../History/HistoryPermit/HistoryPermitList/PermitHistoryModel.dart';
 import '../Login/LoginModel.dart';
-import '../Profile/ReligionModel.dart';
 import '../Profile/UserModel.dart';
 import 'ApiResponse.dart';
 
@@ -17,7 +16,7 @@ part 'ApiService.g.dart';
 
 @RestApi(
     baseUrl:
-        "https://0c3b-2001-448a-3045-5919-c20-9d39-97fc-d27a.ap.ngrok.io/api/")
+        "https://62fe-2001-448a-304b-15a6-14bf-8f81-47ae-195d.ngrok.io/api/")
 abstract class ApiClient {
   factory ApiClient(Dio dio) = _ApiClient;
 
@@ -119,15 +118,6 @@ abstract class ApiClient {
     @Header("Authorization") String token,
   );
 
-  @GET('religion')
-  Future<ApiResponse<List<ReligionModel>>> getReligion(
-    @Header("Authorization") String token,
-  );
-
-  @GET('position')
-  Future<ApiResponse<List<ReligionModel>>> getPosition(
-    @Header("Authorization") String token,
-  );
 
   @POST('refresh')
   Future<ApiResponse<String>> getRefreshToken(
@@ -175,7 +165,7 @@ abstract class ApiClient {
   );
 
   @GET('submission')
-  Future<ApiResponse<PermitHistoryModel>> getSubmissionHistory(
+  Future<ApiResponse<SubmissionHistoryModel>> getSubmissionHistory(
     @Query("Filters") String filters,
     @Query("Sorts") String sorts,
     @Query("Page") int page,

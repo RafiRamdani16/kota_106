@@ -5,7 +5,7 @@ import '../../../Submission/SubmissionModel.dart';
 part 'PermitHistoryModel.g.dart';
 
 @JsonSerializable()
-class PermitHistoryModel {
+class SubmissionHistoryModel {
   @JsonKey()
   late int totalData;
   @JsonKey()
@@ -16,11 +16,11 @@ class PermitHistoryModel {
   late int currentPage;
   @JsonKey()
   late List<SubmissionModel> data;
-  PermitHistoryModel();
+  SubmissionHistoryModel();
 
-  factory PermitHistoryModel.fromJson(Map<String, dynamic> json) =>
-      _$PermitHistoryModelFromJson(json);
+  factory SubmissionHistoryModel.fromJson(Map<String, dynamic> json) =>
+      _$SubmissionHistoryModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PermitHistoryModelToJson(this);
+  Map<String, dynamic> toJson() => _$SubmissionHistoryModelToJson(this);
 
 }

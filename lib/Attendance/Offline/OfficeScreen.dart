@@ -36,16 +36,22 @@ class OfficePresensiPage extends GetView<AttendanceController> {
               child: TabBarView(children: [
                 // OfficeCheckInForm(),
                 // OfficeCheckOutForm()
-                Obx(() {
-                  return controller.statusCheckinScan.value
-                      ? CheckInOfflineScreen()
-                      : controller.scanQRPage('check-in');
-                }),
-                Obx(() {
-                  return controller.statusCheckoutScan.value
-                      ? CheckOutOfflineScreen()
-                      : controller.scanQRPage('check-out');
-                })
+                controller.checkInStatus()
+                    ? Obx(() {
+                        return controller.statusCheckinScan.value
+                            ? CheckInOfflineScreen()
+                            : controller.scanQRPage('check-in');
+                      })
+                    : controller.showAlert(),
+
+                controller.checkOutStatus()
+                    ? Obx(() {
+                        return controller.statusCheckoutScan.value
+                            ? CheckOutOfflineScreen()
+                            : controller.scanQRPage('check-out');
+                      })
+                    : controller.showAlert()
+                
               ]),
             ),
           )

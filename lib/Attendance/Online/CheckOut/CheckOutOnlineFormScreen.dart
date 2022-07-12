@@ -9,8 +9,9 @@ class CheckOutForm extends GetView<AttendanceController> {
 
   @override
   Widget build(BuildContext context) {
-    controller.getLocation();
     controller.getDateTimeNow();
+    controller.getLocation();
+    
     return SingleChildScrollView(
       child: Center(
         child: Form(
@@ -25,7 +26,7 @@ class CheckOutForm extends GetView<AttendanceController> {
                   width: 40,
                   height: 40,
                 ),
-                Text('Check-in Location'),
+                Text('Check-Out Location'),
               ]),
               Padding(padding: EdgeInsets.only(top: 10)),
               TextFormField(
@@ -42,13 +43,13 @@ class CheckOutForm extends GetView<AttendanceController> {
                   SizedBox(
                     width: 5.0,
                   ),
-                  Text('Check-in Date'),
+                  Text('Check-Out Date'),
                   Padding(padding: EdgeInsets.only(left: 50)),
                   Image.asset('assets/images/Icon/Clock.png'),
                   SizedBox(
                     width: 5.0,
                   ),
-                  Text('Check-in Time')
+                  Text('Check-out Time')
                 ],
               ),
               Row(

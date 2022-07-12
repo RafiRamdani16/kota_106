@@ -49,7 +49,46 @@ class CheckInOnlineScreen extends GetView<AttendanceController> {
                   })),
                   ElevatedButton(
                       onPressed: () {
-                        controller.openCamera();
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Foto"),
+                                content: Text("Upload Foto From..."),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {
+                                        controller.openCamera();
+                                      },
+                                      child: Text(
+                                        "Camera",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                  TextButton(
+                                      onPressed: () {
+                                        controller.openGallery();
+                                      },
+                                      child: Text(
+                                        "Gallery",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                  TextButton(
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                      child: Text(
+                                        "Oke",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ))
+                                ],
+                              );
+                            });
                       },
                       child: Text('Take Picture')),
                 ],

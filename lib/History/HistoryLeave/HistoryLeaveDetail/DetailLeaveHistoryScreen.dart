@@ -16,13 +16,6 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
 
   @override
   Widget build(BuildContext context) {
-    print(leaveModel.submissionLeaveId);
-    print(leaveModel.historyApprovals[0].userName);
-    print(leaveModel.historyApprovals[0].statusApproval);
-    print(leaveModel.historyApprovals[1].userName);
-    print(leaveModel.historyApprovals[1].statusApproval);
-    print(leaveModel.historyApprovals[2].userName);
-    print(leaveModel.historyApprovals[2].statusApproval);
     controller.description.text = leaveModel.description;
     return SingleChildScrollView(
       child: Column(
@@ -39,7 +32,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
           Container(
             padding: EdgeInsets.only(left: 5.w),
             width: Get.width,
-            height: 80.h,
+            height: 90.h,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,6 +262,7 @@ class DetailLeaveHistoryScreen extends GetView<HistoryController> {
               ],
             ),
           ),
+          SizedBox(),
           Container(
             height: 5.h,
             width: 90.w,

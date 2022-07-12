@@ -114,6 +114,8 @@ class LoginScreen extends GetView<LoginController> {
                             validator: (value) {
                               if (value == "") {
                                 return "Password tidak boleh kosong";
+                              } else if (value!.length < 8) {
+                                return "Password minimal 8 karakter";
                               }
                             },
                           ),

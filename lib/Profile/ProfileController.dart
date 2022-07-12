@@ -95,7 +95,6 @@ class ProfileController extends GetxController with CacheManager {
     } catch (e) {
       print(e);
     }
-    // await Future.delayed(Duration(seconds: 3));
   }
 
   void editProfileForm() async {
@@ -125,7 +124,6 @@ class ProfileController extends GetxController with CacheManager {
               photoName.value,
               token)
           .then((response) {
-        print("response${response.status}");
         if (response.status == 200) {
           removeName();
           setName(name.text);
@@ -179,7 +177,7 @@ class ProfileController extends GetxController with CacheManager {
     String photoName = getPhoto()!;
     return CircleAvatar(
         backgroundImage: NetworkImage(
-            'https://c736-2001-448a-3045-5919-813a-d9cd-df47-a5eb.ap.ngrok.io/$photoName'),
+            'https://62fe-2001-448a-304b-15a6-14bf-8f81-47ae-195d.ngrok.io/$photoName'),
         radius: 7.h);
   }
 
@@ -244,7 +242,10 @@ class ProfileController extends GetxController with CacheManager {
   void openCamera() async {
     try {
       imageFile.value = (await _image.pickImage(
-          source: ImageSource.camera, imageQuality: 25))!;
+          source: ImageSource.camera,
+          imageQuality: 25,
+          maxHeight: 480,
+          maxWidth: 640))!;
       setPhotoProfile();
     } catch (e) {
       // return 'Terjadi Kesalahan';
@@ -254,7 +255,10 @@ class ProfileController extends GetxController with CacheManager {
   Future<void> openGallery() async {
     try {
       imageFile.value = (await _image.pickImage(
-          source: ImageSource.gallery, imageQuality: 25))!;
+          source: ImageSource.gallery,
+          imageQuality: 25,
+          maxHeight: 480,
+          maxWidth: 640))!;
       setPhotoProfile();
     } catch (e) {
       // return 'Terjadi Kesalahan';

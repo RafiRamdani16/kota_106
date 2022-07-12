@@ -6,7 +6,6 @@ import 'package:kota_106/Approval/OvertimeApproval/OvertimeApprovalController.da
 
 import 'package:sizer/sizer.dart';
 
-import '../../AfterOvertimeApproval/DetailAfterOvertimeScreen.dart';
 
 
 class OvertimeApprovalDetailScreen
@@ -206,12 +205,8 @@ class OvertimeApprovalDetailScreen
                       side: BorderSide(color: Colors.amber),
                       primary: Colors.amber),
                   onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return DetailAfterOvertimeApproval(
-                              overtimeModel.submissionId);
-                        });
+                    controller.getAfterOvertime(
+                        overtimeModel.submissionId, context);
                   },
                   child: Text(
                     "After Overtime Details",

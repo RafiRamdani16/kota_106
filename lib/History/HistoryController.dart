@@ -66,6 +66,9 @@ class HistoryController extends GetxController with CacheManager {
       if (response.status == 200) {
         attendanceHistory = response.data.data.toList();
         isThereItemAttendance.value = true;
+        if (attendanceHistory.isEmpty) {
+          message("ALERT", "Tidak Ada Riwayat");
+        }
       } else if (response.status == 401) {
         await _apiClient
             .getRefreshToken(employeeId, getToken()!)
@@ -86,8 +89,10 @@ class HistoryController extends GetxController with CacheManager {
         .then((response) async {
       if (response.status == 200) {
         activityRecordHistoryList = response.data.data.toList();
-
         isThereItemActivity.value = true;
+        if (activityRecordHistoryList.isEmpty) {
+          message("ALERT", "Tidak Ada Riwayat");
+        }
         update();
       } else if (response.status == 401) {
         await _apiClient
@@ -111,6 +116,9 @@ class HistoryController extends GetxController with CacheManager {
       if (response.status == 200) {
         print(response.data.data.toList());
         permitHistory = response.data.data.toList();
+        if (permitHistory.isEmpty) {
+          message("ALERT", "Tidak Ada Riwayat");
+        }
       } else if (response.status == 401) {
         await _apiClient.getRefreshToken(employeeId, token).then((response) {
           removeToken();
@@ -137,6 +145,9 @@ class HistoryController extends GetxController with CacheManager {
       if (response.status == 200) {
         overtimeHistory = response.data.data.toList();
         // isThereItemAttendance.value = true;
+        if (overtimeHistory.isEmpty) {
+          message("ALERT", "Tidak Ada Riwayat");
+        }
       } else if (response.status == 401) {
         await _apiClient
             .getRefreshToken(employeeId, getToken()!)
@@ -160,6 +171,9 @@ class HistoryController extends GetxController with CacheManager {
         .then((response) async {
       if (response.status == 200) {
         leaveHistory = response.data.data.toList();
+        if (leaveHistory.isEmpty) {
+          message("ALERT", "Tidak Ada Riwayat");
+        }
       } else if (response.status == 401) {
         await _apiClient.getRefreshToken(employeeId, token).then((response) {
           removeToken();
@@ -235,7 +249,7 @@ class HistoryController extends GetxController with CacheManager {
   Widget setImageView(
       String photoName, double width, double height, String type) {
     return Image.network(
-      'https://0c3b-2001-448a-3045-5919-c20-9d39-97fc-d27a.ap.ngrok.io/$photoName',
+      'https://62fe-2001-448a-304b-15a6-14bf-8f81-47ae-195d.ngrok.io/$photoName',
       width: width,
       height: height,
       errorBuilder:

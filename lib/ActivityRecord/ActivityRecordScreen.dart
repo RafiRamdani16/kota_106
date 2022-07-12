@@ -7,9 +7,8 @@ import 'package:sizer/sizer.dart';
 class ActivityRecordScreen extends GetView<ActivityRecordController> {
   @override
   Widget build(BuildContext context) {
-    
-    controller.getLocation();
     controller.dateTimeNow();
+    controller.getLocation();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -125,7 +124,6 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                                     fillColor: Colors.white, filled: true),
                                 maxLines: 2,
                                 controller: controller.locationNow,
-                                enabled: false,
                               ),
                               SizedBox(
                                 height: 20,
@@ -164,7 +162,54 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                                                   BorderRadius.circular(15.0)),
                                           primary: HexColor('FFC368')),
                                       onPressed: () {
-                                        controller.openCamera();
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text("Foto"),
+                                                content:
+                                                    Text("Upload Foto From..."),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        controller.openCamera();
+                                                      },
+                                                      child: Text(
+                                                        "Camera",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        controller
+                                                            .openGallery();
+                                                      },
+                                                      child: Text(
+                                                        "Gallery",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      )),
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                      child: Text(
+                                                        "Oke",
+                                                        style: TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ))
+                                                ],
+                                              );
+                                            });
                                       },
                                       child: Text(
                                         'Add Photo',
@@ -181,27 +226,26 @@ class ActivityRecordScreen extends GetView<ActivityRecordController> {
                     height: 1.h,
                   ),
                   Container(
-                    width: 90.w,
-                    height: 4.h,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                            elevation: 10,
-                            primary: HexColor("363636")),
-                        onPressed: () {
-                          controller.activityRecordForm(
-                              controller.taskList.text,
-                              controller.photoSelfie.value);
-                        },
-                        child: Text(
-                          "New Activity",
-                          style: TextStyle(
-                              fontFamily: "Roboto",
-                              fontSize: 14.sp,
-                              color: Colors.white),
-                        )),
-                  ),
+                      width: 90.w,
+                      height: 4.h,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                              elevation: 10,
+                              primary: HexColor("363636")),
+                          onPressed: () {
+                            controller.activityRecordForm(
+                                controller.taskList.text,
+                                controller.photoSelfie.value);
+                          },
+                          child: Text(
+                            "Add Activity",
+                            style: TextStyle(
+                                fontFamily: "Roboto",
+                                fontSize: 14.sp,
+                                color: Colors.white),
+                          ))),
                 ],
               ),
             ),

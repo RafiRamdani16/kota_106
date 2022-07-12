@@ -6,12 +6,10 @@ import 'package:sizer/sizer.dart';
 import '../../DetailAttachmentScreen.dart';
 
 class DetailAfterOvertimeApproval extends GetView<OvertimeApprovalController> {
-  final int overtimeId;
-  const DetailAfterOvertimeApproval(this.overtimeId);
+ 
   
   @override
   Widget build(BuildContext context) {
-    controller.getAfterOvertime(overtimeId);
     controller.description.text =
         controller.afterOvertimeApprovalModel[0].description;
     return SingleChildScrollView(
@@ -162,7 +160,8 @@ class DetailAfterOvertimeApproval extends GetView<OvertimeApprovalController> {
                             side: BorderSide(color: Colors.amber),
                             primary: Colors.amber),
                         onPressed: () {
-                          Get.to(DetailAttachmentScreen("testingProfile"));
+                          Get.to(DetailAttachmentScreen(controller
+                              .afterOvertimeApprovalModel[0].attachment));
                         },
                         child: Text(
                           "See Full Attachment",

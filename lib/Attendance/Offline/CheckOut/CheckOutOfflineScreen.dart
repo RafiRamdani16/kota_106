@@ -21,7 +21,7 @@ class CheckOutOfflineScreen extends GetView<AttendanceController> {
                   width: 40,
                   height: 40,
                 ),
-                Text('Check-in Location'),
+                Text('Check-out Location'),
               ]),
               Padding(padding: EdgeInsets.only(top: 10)),
               TextFormField(
@@ -35,10 +35,10 @@ class CheckOutOfflineScreen extends GetView<AttendanceController> {
               Row(
                 children: [
                   Image.asset('assets/images/Icon/Calendar.png'),
-                  Text('Check-in Date'),
+                  Text('Check-out Date'),
                   Padding(padding: EdgeInsets.only(left: 60)),
                   Image.asset('assets/images/Icon/Clock.png'),
-                  Text('Check-in Time')
+                  Text('Check-out Time')
                 ],
               ),
               Row(

@@ -11,7 +11,7 @@ part of 'ApiService.dart';
 class _ApiClient implements ApiClient {
   _ApiClient(this._dio, {this.baseUrl}) {
     baseUrl ??=
-        'https://0c3b-2001-448a-3045-5919-c20-9d39-97fc-d27a.ap.ngrok.io/api/';
+        'https://62fe-2001-448a-304b-15a6-14bf-8f81-47ae-195d.ngrok.io/api/';
   }
 
   final Dio _dio;
@@ -313,52 +313,6 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<ApiResponse<List<ReligionModel>>> getReligion(token) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ApiResponse<List<ReligionModel>>>(
-            Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, 'religion',
-                    queryParameters: queryParameters, data: _data)
-                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResponse<List<ReligionModel>>.fromJson(
-      _result.data!,
-      (json) => (json as List<dynamic>)
-          .map<ReligionModel>(
-              (i) => ReligionModel.fromJson(i as Map<String, dynamic>))
-          .toList(),
-    );
-    return value;
-  }
-
-  @override
-  Future<ApiResponse<List<ReligionModel>>> getPosition(token) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': token};
-    _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ApiResponse<List<ReligionModel>>>(
-            Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, 'position',
-                    queryParameters: queryParameters, data: _data)
-                .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResponse<List<ReligionModel>>.fromJson(
-      _result.data!,
-      (json) => (json as List<dynamic>)
-          .map<ReligionModel>(
-              (i) => ReligionModel.fromJson(i as Map<String, dynamic>))
-          .toList(),
-    );
-    return value;
-  }
-
-  @override
   Future<ApiResponse<String>> getRefreshToken(id, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'refreshToken': id};
@@ -495,7 +449,7 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<ApiResponse<PermitHistoryModel>> getSubmissionHistory(
+  Future<ApiResponse<SubmissionHistoryModel>> getSubmissionHistory(
       filters, sorts, page, limit, token) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -508,14 +462,14 @@ class _ApiClient implements ApiClient {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<ApiResponse<PermitHistoryModel>>(
+        _setStreamType<ApiResponse<SubmissionHistoryModel>>(
             Options(method: 'GET', headers: _headers, extra: _extra)
                 .compose(_dio.options, 'submission',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = ApiResponse<PermitHistoryModel>.fromJson(
+    final value = ApiResponse<SubmissionHistoryModel>.fromJson(
       _result.data!,
-      (json) => PermitHistoryModel.fromJson(json as Map<String, dynamic>),
+      (json) => SubmissionHistoryModel.fromJson(json as Map<String, dynamic>),
     );
     return value;
   }

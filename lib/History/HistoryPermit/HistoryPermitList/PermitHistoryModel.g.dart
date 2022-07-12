@@ -6,8 +6,9 @@ part of 'PermitHistoryModel.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PermitHistoryModel _$PermitHistoryModelFromJson(Map<String, dynamic> json) =>
-    PermitHistoryModel()
+SubmissionHistoryModel _$SubmissionHistoryModelFromJson(
+        Map<String, dynamic> json) =>
+    SubmissionHistoryModel()
       ..totalData = json['totalData'] as int
       ..totalPage = json['totalPage'] as int
       ..pageSize = json['pageSize'] as int
@@ -16,7 +17,8 @@ PermitHistoryModel _$PermitHistoryModelFromJson(Map<String, dynamic> json) =>
           .map((e) => SubmissionModel.fromJson(e as Map<String, dynamic>))
           .toList();
 
-Map<String, dynamic> _$PermitHistoryModelToJson(PermitHistoryModel instance) =>
+Map<String, dynamic> _$SubmissionHistoryModelToJson(
+        SubmissionHistoryModel instance) =>
     <String, dynamic>{
       'totalData': instance.totalData,
       'totalPage': instance.totalPage,

@@ -13,7 +13,7 @@ import 'package:geocoding/geocoding.dart' hide Location;
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../APIService/ApiService.dart';
 import '../CacheManager.dart';
-import 'Offline/CheckOut/CheckOutOfflineScreen.dart';
+
 
 class AttendanceController extends GetxController with CacheManager {
   QRViewController? controller;
@@ -37,10 +37,8 @@ class AttendanceController extends GetxController with CacheManager {
   RxBool _permission = false.obs;
   RxString date = "".obs;
   RxString time = "".obs;
-  // RxString nameMonth = "".obs;
   Rx<File> tmpFile = File('').obs;
   Rx<XFile> imageFile = XFile('').obs;
-  //  Rx<bool> event;
   RxString photoName = "".obs;
   String token = "";
   int employeeId = -1;
@@ -139,8 +137,24 @@ class AttendanceController extends GetxController with CacheManager {
     ImagePicker _image = Get.put(ImagePicker());
     try {
       imageFile.value = (await _image.pickImage(
-          source: ImageSource.camera, imageQuality: 25))!;
+          source: ImageSource.camera,
+          imageQuality: 25,
+          maxHeight: 480,
+          maxWidth: 640))!;
       photoName.value = imageFile.value.name;
+    } catch (e) {
+      // return 'Terjadi Kesalahan';
+    }
+  }
+
+  void openGallery() async {
+    ImagePicker _image = Get.put(ImagePicker());
+    try {
+      imageFile.value = (await _image.pickImage(
+          source: ImageSource.gallery,
+          imageQuality: 25,
+          maxHeight: 480,
+          maxWidth: 640))!;
     } catch (e) {
       // return 'Terjadi Kesalahan';
     }
@@ -153,7 +167,6 @@ class AttendanceController extends GetxController with CacheManager {
           base64Encode(File(imageFile.value.path).readAsBytesSync()).trim();
       return Image.file(tmpFile.value, width: 100, height: 100);
     } else {
-      // photoName.value = 'assets/images/Icon/AccountBox.png';
       return Image.asset(
         'assets/images/Icon/AccountBox.png',
         width: 100,
@@ -311,6 +324,7 @@ class AttendanceController extends GetxController with CacheManager {
           removeCheckinTime();
           saveCheckInTime(checkInTime);
           message('SUCCESS', 'CHECK-IN BERHASIL');
+          update();
           this.taskList.text = "";
           clocation.text = "";
         } else if (response.status == 401) {
@@ -345,6 +359,7 @@ class AttendanceController extends GetxController with CacheManager {
         removeCheckoutTime();
         saveCheckOutTime(checkOutTime);
         message('SUCCESS', 'CHECK-OUT BERHASIL');
+        update();
         this.taskList.text = "";
         clocation.text = "";
       } else if (response.status == 401) {
@@ -356,8 +371,6 @@ class AttendanceController extends GetxController with CacheManager {
         message('ALERT', 'CHECK-OUT GAGAL');
       }
     });
-    saveCheckOutTime(checkOutTime);
-    message('SUCCESS', 'CHECK-OUT BERHASIL');
   }
 
   void checkInOfflineForm(String taskList) async {
@@ -372,6 +385,7 @@ class AttendanceController extends GetxController with CacheManager {
         removeCheckinTime();
         saveCheckInTime(checkInTime);
         message('SUCCESS', 'CHECK-IN BERHASIL');
+        update();
         this.taskList.text = "";
         clocation.text = "";
       } else if (response.status == 401) {
@@ -385,8 +399,7 @@ class AttendanceController extends GetxController with CacheManager {
         message('ALERT', 'CHECK-IN GAGAL');
       }
     });
-    // saveCheckInTime(checkInTime);
-    // message('SUCCESS', 'CHECK-IN BERHASIL');
+  
   }
 
   void checkOutOffline(String taskList) async {
@@ -401,6 +414,7 @@ class AttendanceController extends GetxController with CacheManager {
         removeCheckoutTime();
         saveCheckOutTime(checkOutTime);
         message('SUCCESS', 'CHECK-OUT BERHASIL');
+        update();
         this.taskList.text = "";
         clocation.text = "";
       } else if (response.status == 401) {
@@ -413,7 +427,6 @@ class AttendanceController extends GetxController with CacheManager {
         message('ALERT', 'CHECK-OUT GAGAL');
       }
     });
-    // saveCheckOutTime(checkOutTime);
-    // message('SUCCESS', 'CHECK-OUT BERHASIL');
+  
   }
 }

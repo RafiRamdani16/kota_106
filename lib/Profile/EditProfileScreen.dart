@@ -292,10 +292,10 @@ class EditProfileScreen extends GetView<ProfileController> {
                                               value: "Hindu",
                                             ),
                                             DropdownMenuItem(
-                                              child: Text("Budha",
+                                              child: Text("Buddha",
                                                   style: TextStyle(
                                                       fontSize: 11.sp)),
-                                              value: "Budha",
+                                              value: "Buddha",
                                             ),
                                             DropdownMenuItem(
                                               child: Text("Khonghucu",

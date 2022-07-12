@@ -6,6 +6,8 @@ import 'package:kota_106/APIService/ApiService.dart';
 import 'package:kota_106/Approval/ApprovalModel.dart';
 import 'package:kota_106/CacheManager.dart';
 
+import '../AfterOvertimeApproval/DetailAfterOvertimeScreen.dart';
+
 class OvertimeApprovalController extends GetxController with CacheManager {
   RxString employeeName = "".obs;
   RxString employeePosition = "".obs;
@@ -87,7 +89,7 @@ class OvertimeApprovalController extends GetxController with CacheManager {
     }
   }
 
-  Future<void> getAfterOvertime(int overtimeId) async {
+  Future<void> getAfterOvertime(int overtimeId, BuildContext context) async {
     employeeId = getEmployeeId()!;
     token = getToken()!;
     try {
@@ -96,11 +98,16 @@ class OvertimeApprovalController extends GetxController with CacheManager {
               "OvertimeId == $overtimeId", "-SubmissionId", 1, 1000, token)
           .then((response) async {
         if (response.status == 200) {
-          if (response.data.data.isEmpty) {
+          afterOvertimeApprovalModel = response.data.data;
+          if (afterOvertimeApprovalModel.isEmpty) {
             message(
                 "ALERT", "Tidak Ada Pengajuan Setelah Lembur Untuk Saat Ini");
           } else {
-            afterOvertimeApprovalModel[0] = response.data.data[0];
+            showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return DetailAfterOvertimeApproval();
+                });
           }
         } else if (response.status == 401) {
           await _apiClient.getRefreshToken(employeeId, token).then((response) {
@@ -173,7 +180,7 @@ class OvertimeApprovalController extends GetxController with CacheManager {
   Widget setImageView(
       String photoName, double width, double height, String type) {
     return Image.network(
-      'https://c736-2001-448a-3045-5919-813a-d9cd-df47-a5eb.ap.ngrok.io/$photoName',
+      'https://62fe-2001-448a-304b-15a6-14bf-8f81-47ae-195d.ngrok.io/$photoName',
       width: width,
       height: height,
       errorBuilder:

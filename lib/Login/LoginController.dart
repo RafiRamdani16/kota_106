@@ -25,7 +25,7 @@ class LoginController extends GetxController with CacheManager {
     isObsecure = true.obs;
     super.onInit();
   }
-
+  
   void login(String email, String password) async {
     try {
       await _apiClient.authentication(email, password).then((response) async {
